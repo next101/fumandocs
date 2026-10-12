@@ -1,0 +1,47 @@
+---
+title: Cards
+description: Link grids and navigation cards for docs home pages
+---
+
+**Cards** and **Card** help you build navigation grids — ideal for index pages
+and “next steps” sections.
+
+## Example
+
+<Cards>
+  <Card
+    title="Getting started"
+    href="/docs/getting-started"
+    description="Scaffold with create-fumandocs"
+  />
+  <Card
+    title="Theming"
+    href="/docs/guides/theming"
+    description="Mantine theme on RootProvider"
+  />
+  <Card
+    title="Fumadocs upstream"
+    href="https://fumadocs.dev"
+    description="Core, MDX, and content APIs"
+  />
+</Cards>
+
+## Props
+
+| Prop          | Description                               |
+| ------------- | ----------------------------------------- |
+| `title`       | Card heading (required)                   |
+| `description` | Optional subtitle                         |
+| `href`        | Internal or external link; wraps the card |
+| `icon`        | Optional icon node                        |
+
+Cards render in a responsive **SimpleGrid** (one column on mobile, two on larger
+screens).
+
+## Markdown-only usage
+
+```mdx
+<Cards>
+  <Card title="Page title" href="/docs/some-page" description="Short blurb" />
+</Cards>
+```

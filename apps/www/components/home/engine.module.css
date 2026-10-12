@@ -1,0 +1,135 @@
+/**
+ * MIT License
+ *
+ * Copyright (c) 2026 Xiao Hanyu (https://xiaohanyu.me)
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *
+ */
+
+/* VS Code-like editor window for the engine section MDX preview —
+   always dark, like a real editor, regardless of the site color scheme */
+
+.editor {
+  overflow: hidden;
+  background-color: var(--mantine-color-dark-7);
+  border-color: var(--mantine-color-dark-4);
+}
+
+/* The CodeBlock inside the editor is a Mantine Paper (component="figure");
+   its copy button is the only ActionIcon descendant. */
+.editor :global(.mantine-Paper-root) {
+  border: 0;
+  border-radius: 0;
+  margin: 0;
+  background: transparent;
+  box-shadow: none;
+  color: var(--mantine-color-dark-0);
+}
+
+.editor :global(.mantine-ActionIcon-root) {
+  color: var(--mantine-color-dark-1);
+}
+
+/* Force the dark shiki theme inside the editor, even on light pages */
+.editor :global(.shiki),
+.editor :global(.shiki span) {
+  color: var(--shiki-dark);
+}
+
+/* macOS window buttons, same as the hero browser chrome */
+
+.dot {
+  display: inline-block;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.dotClose {
+  background-color: #ff5f57;
+}
+
+.dotMinimize {
+  background-color: #febc2e;
+}
+
+.dotMaximize {
+  background-color: #28c840;
+}
+
+.tabBar {
+  display: flex;
+  align-items: stretch;
+  background-color: var(--mantine-color-dark-6);
+  border-bottom: 1px solid var(--mantine-color-dark-4);
+}
+
+.tab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  font-size: var(--mantine-font-size-sm);
+  color: var(--mantine-color-dark-2);
+  border-top: 2px solid transparent;
+  user-select: none;
+}
+
+.tabActive {
+  color: var(--mantine-color-dark-0);
+  background-color: var(--mantine-color-dark-7);
+  border-top-color: var(--mantine-color-blue-5);
+  border-right: 1px solid var(--mantine-color-dark-4);
+  margin-bottom: -1px;
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 16px;
+  font-size: var(--mantine-font-size-xs);
+  color: var(--mantine-color-dark-2);
+  border-bottom: 1px solid var(--mantine-color-dark-5);
+}
+
+.breadcrumbSeparator {
+  opacity: 0.6;
+}
+
+.statusBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--mantine-spacing-md);
+  padding: 2px 12px;
+  font-size: var(--mantine-font-size-xs);
+  color: var(--mantine-color-dark-2);
+  background-color: var(--mantine-color-dark-6);
+  border-top: 1px solid var(--mantine-color-dark-4);
+  user-select: none;
+}
+
+.statusBarItems {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}

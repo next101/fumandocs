@@ -1,0 +1,55 @@
+---
+title: Introduction
+description: What Fumandocs is and how it fits the Fumadocs + Mantine stack
+---
+
+Fumandocs is a **community UI layer** for [Fumadocs](https://fumadocs.dev): you
+keep `fumadocs-core` and `fumadocs-mdx` for content, routing, and search, and
+use **[Mantine](https://mantine.dev)** for docs chrome via the
+[`fumandocs-ui`](https://www.npmjs.com/package/fumandocs-ui) package.
+
+<Callout type="info" title="Not the official Fumadocs UI">
+  Fumandocs is maintained separately from the upstream Fumadocs project. Install
+  **`fumandocs-ui`** and import **`fumandocs-ui/...`** — do not alias the
+  dependency name to `fumadocs-ui`.
+</Callout>
+
+## What you get
+
+- **Docs layout** — sidebar page tree, top nav, mobile drawer, theme toggle,
+  search dialog
+- **MDX components** — callouts, cards, headings with anchor links, code blocks
+  with copy
+- **No Tailwind** — Mantine styles + `fumandocs-ui/style.css` only
+
+## Stack at a glance
+
+| Layer            | Package                          |
+| ---------------- | -------------------------------- |
+| Content & source | `fumadocs-mdx`, `fumadocs-core`  |
+| UI (Mantine)     | `fumandocs-ui`                   |
+| App              | Next.js App Router (recommended) |
+
+<Cards>
+  <Card
+    title="Create a new site"
+    href="/docs/getting-started"
+    description="Use create-fumandocs in one command"
+  />
+  <Card
+    title="MDX components"
+    href="/docs/components/callouts"
+    description="Callouts, cards, code, typography"
+  />
+  <Card
+    title="Project layout"
+    href="/docs/guides/project-structure"
+    description="Where content and UI live"
+  />
+</Cards>
+
+## This site
+
+This repository’s `apps/www` app is the **official Fumandocs demo**. It uses the
+workspace build of `fumandocs-ui` and the same patterns you get from
+`npx create-fumandocs`.

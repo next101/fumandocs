@@ -1,0 +1,75 @@
+---
+title: Installation
+description: Add fumandocs-ui to an existing Next.js + Fumadocs MDX project
+---
+
+Use this path when you already have **fumadocs-core** and **fumadocs-mdx**, or
+when you are migrating from the default Fumadocs UI.
+
+## Install packages
+
+```bash
+pnpm add fumandocs-ui @mantine/core @mantine/hooks fumadocs-core fumadocs-mdx
+```
+
+Import from **`fumandocs-ui/...`** (for example `fumandocs-ui/provider/next`).
+
+<Callout type="idea" title="Upstream Fumadocs docs">
+  Official guides often show `fumadocs-ui/...`. Use **`fumandocs-ui/...`**
+  instead — we are not a drop-in replacement for the official Radix/Tailwind
+  package. See [Export compatibility](/docs/export-compatibility).
+</Callout>
+
+## Styles
+
+In `app/global.css` (or equivalent):
+
+```css
+@import "@mantine/core/styles.css";
+@import "fumandocs-ui/style.css";
+```
+
+Remove Tailwind and PostCSS setup if you no longer need them for the docs UI.
+
+## Root layout
+
+The styles are already pulled in by `app/global.css`; the layout only needs the
+providers:
+
+```tsx
+import { ColorSchemeScript } from "@mantine/core";
+import { RootProvider } from "fumandocs-ui/provider/next";
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <ColorSchemeScript defaultColorScheme="auto" />
+      </head>
+      <body>
+        <RootProvider theme={{ primaryColor: "gray", defaultRadius: "xs" }}>
+          {children}
+        </RootProvider>
+      </body>
+    </html>
+  );
+}
+```
+
+## Docs routes
+
+Wire `DocsLayout` and `DocsPage` from `fumandocs-ui/layouts/docs` — same API
+shape as upstream examples where we implement it. Copy `app/docs/layout.tsx` and
+`app/docs/[[...slug]]/page.tsx` from the
+[create-fumandocs template](https://github.com/next101/fumandocs) or from this
+repo’s `apps/www`.
+
+<Callout type="warn" title="Ecosystem plugins">
+  Packages like OpenAPI or Twoslash often import Tailwind-specific official
+  `fumadocs-ui` paths. They may need extra shims or are not supported yet with
+  the Mantine adapter.
+</Callout>

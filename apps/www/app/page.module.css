@@ -1,0 +1,68 @@
+/**
+ * MIT License
+ *
+ * Copyright (c) 2026 Xiao Hanyu (https://xiaohanyu.me)
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *
+ */
+
+/* Landing page root tokens, adapted from mantine.dev */
+.home {
+  position: relative;
+  background-color: var(--mantine-color-body);
+
+  --hp-block-spacing: 120px;
+  --hp-primary-bg:
+    linear-gradient(
+      45deg,
+      var(--mantine-color-blue-6) 15%,
+      var(--mantine-color-blue-7)
+    ),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.3) 25%, transparent),
+    linear-gradient(45deg, rgba(0, 0, 0, 0.3) 15%, transparent);
+  --hp-primary-shadow: 0 0 15px 2px
+    color-mix(in srgb, var(--mantine-color-blue-filled) 20%, transparent);
+  --hp-primary-border: 3px solid var(--mantine-color-blue-7);
+
+  @media (max-width: 62em) {
+    --hp-block-spacing: 48px;
+  }
+}
+
+:where([data-mantine-color-scheme="dark"]) .home {
+  --hp-primary-bg:
+    linear-gradient(
+      45deg,
+      var(--mantine-color-blue-7) 15%,
+      var(--mantine-color-blue-8)
+    ),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.3) 25%, transparent),
+    linear-gradient(45deg, rgba(0, 0, 0, 0.3) 15%, transparent);
+  --hp-primary-shadow: 0 0 15px 2px
+    color-mix(in srgb, var(--mantine-color-blue-5) 30%, transparent);
+  --hp-primary-border: 3px solid var(--mantine-color-blue-8);
+}
+
+/* Main content sits above the fixed footer */
+.main {
+  position: relative;
+  z-index: 5;
+  background-color: var(--mantine-color-body);
+}

@@ -1,0 +1,46 @@
+---
+title: Callouts
+description:
+  Highlight notes, warnings, and tips in MDX with Mantine-styled callouts
+---
+
+Callouts draw attention to important information. They map to Mantine `Paper`
+with a colored accent bar and work in any MDX page.
+
+## Types
+
+<Callout type="info" title="Info">
+  Use for neutral context or background information.
+</Callout>
+
+<Callout type="warn" title="Warning">
+  Use when something might break or needs caution.
+</Callout>
+
+<Callout type="error" title="Error">
+  Use for mistakes, deprecations, or hard failures.
+</Callout>
+
+<Callout type="success" title="Success">
+  Use when confirming a step worked or a recommendation is safe.
+</Callout>
+
+<Callout type="idea" title="Idea">
+  Use for tips, shortcuts, or optional improvements.
+</Callout>
+
+## In your MDX
+
+```mdx
+<Callout type="info" title="Heads up">
+  Your content here.
+</Callout>
+```
+
+The `warn` type is normalized to `warning` internally, so both spellings behave
+the same.
+
+## Styling
+
+Callouts are styled with CSS Modules on top of Mantine surfaces, so they stay
+readable in light and dark mode without Tailwind.

@@ -1,0 +1,46 @@
+---
+title: Theming
+description: Customize Mantine theme and color scheme in Fumandocs
+---
+
+The Mantine adapter exposes theme customization through **`RootProvider`** in
+`fumandocs-ui/provider/next`.
+
+## Primary color and radius
+
+```tsx
+<RootProvider theme={{ primaryColor: "violet", defaultRadius: "md" }}>
+  {children}
+</RootProvider>
+```
+
+The marketing homepage adds violet accents with custom CSS on top of the neutral
+docs theme. Any
+[Mantine theme override](https://mantine.dev/theming/theme-object/) is valid.
+
+Note that Mantine derives the link color (`--mantine-color-anchor`) from
+`primaryColor`, so changing it recolors links, active nav items, and primary
+buttons together.
+
+## Color scheme
+
+`RootProvider` sets `defaultColorScheme="auto"` on `MantineProvider`, and the
+docs layout includes a **light / dark** toggle when enabled (default).
+
+Ensure `ColorSchemeScript` is in the document `<head>` so the first paint
+matches the user preference:
+
+```tsx
+<ColorSchemeScript defaultColorScheme="auto" />
+```
+
+## Fumadocs layout CSS
+
+Import **`fumandocs-ui/style.css`** after Mantine core styles. That sheet
+defines layout tokens (sidebar width, MDX spacing, callout bars) that complement
+Mantine components — you do not need Tailwind for docs chrome.
+
+<Callout type="success" title="Tip">
+  Match your product brand by setting `primaryColor` once on `RootProvider`; MDX
+  callouts and links pick up Mantine semantic colors automatically.
+</Callout>

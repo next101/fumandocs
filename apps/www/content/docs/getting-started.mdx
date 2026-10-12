@@ -1,0 +1,69 @@
+---
+title: Getting started
+description: Scaffold a new Fumadocs site with Mantine UI using create-fumandocs
+---
+
+The fastest way to start is the **create-fumandocs** CLI. It generates a Next.js
+app with Fumadocs MDX, local search, and Mantine wired as the UI layer.
+
+## Create a project
+
+```bash
+npx create-fumandocs my-docs
+cd my-docs
+npm install   # if you skipped --install
+npm run dev
+```
+
+Open [http://localhost:3000/docs](http://localhost:3000/docs).
+
+<Callout type="idea" title="Package manager">
+  The CLI detects npm, pnpm, yarn, or bun. Pass `--install` to install
+  dependencies automatically, and `--no-git` if you do not want a Git
+  repository.
+</Callout>
+
+## What gets generated
+
+| Path                      | Purpose                                   |
+| ------------------------- | ----------------------------------------- |
+| `app/layout.tsx`          | Mantine color scheme and `RootProvider`   |
+| `app/global.css`          | Mantine + `fumandocs-ui` styles           |
+| `app/page.tsx`            | Starter landing page                      |
+| `app/docs/`               | Docs layout and MDX page route            |
+| `app/api/search/route.ts` | Search endpoint backed by `fumadocs-core` |
+| `app/llms.mdx/`           | Markdown output for the copy/view actions |
+| `content/docs/`           | Your MDX content                          |
+| `lib/source.ts`           | Fumadocs content source                   |
+| `components/mdx.tsx`      | Default MDX component map                 |
+| `next.config.mjs`         | Fumadocs MDX plugin and Shiki themes      |
+
+## Imports
+
+Generated apps depend on **`fumandocs-ui`** directly:
+
+```json
+{
+  "dependencies": {
+    "fumandocs-ui": "^0.1.0"
+  }
+}
+```
+
+Use `fumandocs-ui/layouts/docs`, `fumandocs-ui/mdx`, and
+`fumandocs-ui/provider/next`. When you follow
+[fumadocs.dev](https://fumadocs.dev), replace **`fumadocs-ui`** with
+**`fumandocs-ui`** in import paths.
+
+<Cards>
+  <Card
+    title="Manual installation"
+    href="/docs/installation"
+    description="Add fumandocs-ui to an existing Fumadocs app"
+  />
+  <Card
+    title="Project structure"
+    href="/docs/guides/project-structure"
+    description="Folders and conventions"
+  />
+</Cards>

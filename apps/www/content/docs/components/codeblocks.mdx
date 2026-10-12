@@ -1,0 +1,253 @@
+---
+title: Codeblocks
+description: Fenced code with copy button and optional tabbed blocks
+---
+
+Fenced code in MDX is wrapped in a Mantine **Paper** with an optional **copy**
+control.
+
+## Basic block
+
+```ts
+import { loader } from "fumadocs-core/source";
+
+export const source = loader({
+  baseUrl: "/docs",
+  source: docs.toFumadocsSource(),
+});
+```
+
+Click the copy icon in the top-right of the block above to copy the snippet.
+
+## Multiple languages
+
+```bash
+npx create-fumandocs my-docs
+cd my-docs && npm run dev
+```
+
+```json
+{
+  "fumandocs-ui": "latest"
+}
+```
+
+## Tabbed code (MDX components)
+
+For multi-file examples, compose the exported primitives directly in MDX. Each
+tab panel holds a normal fenced code block.
+
+### Multi-file example
+
+<CodeBlockTabs defaultValue="app">
+  <CodeBlockTabsList>
+    <CodeBlockTabsTrigger value="app">app/page.tsx</CodeBlockTabsTrigger>
+    <CodeBlockTabsTrigger value="layout">app/layout.tsx</CodeBlockTabsTrigger>
+    <CodeBlockTabsTrigger value="css">globals.css</CodeBlockTabsTrigger>
+  </CodeBlockTabsList>
+
+  <CodeBlockTab value="app">
+
+```tsx title="app/page.tsx"
+import { Button } from "@mantine/core";
+
+export default function Home() {
+  return (
+    <main>
+      <Button>Click me</Button>
+    </main>
+  );
+}
+```
+
+  </CodeBlockTab>
+
+  <CodeBlockTab value="layout">
+
+```tsx title="app/layout.tsx"
+export default function RootLayout({ children }) {
+  return (
+    <html lang="en">
+      <body>{children}</body>
+    </html>
+  );
+}
+```
+
+  </CodeBlockTab>
+
+  <CodeBlockTab value="css">
+
+```css title="globals.css"
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+}
+```
+
+  </CodeBlockTab>
+</CodeBlockTabs>
+
+Source:
+
+````mdx
+<CodeBlockTabs defaultValue="app">
+  <CodeBlockTabsList>
+    <CodeBlockTabsTrigger value="app">app/page.tsx</CodeBlockTabsTrigger>
+    <CodeBlockTabsTrigger value="layout">app/layout.tsx</CodeBlockTabsTrigger>
+    <CodeBlockTabsTrigger value="css">globals.css</CodeBlockTabsTrigger>
+  </CodeBlockTabsList>
+
+  <CodeBlockTab value="app">
+
+```tsx title="app/page.tsx"
+import { Button } from "@mantine/core";
+
+export default function Home() {
+  return (
+    <main>
+      <Button>Click me</Button>
+    </main>
+  );
+}
+```
+
+  </CodeBlockTab>
+
+  <CodeBlockTab value="layout">
+
+```tsx title="app/layout.tsx"
+export default function RootLayout({ children }) {
+  return (
+    <html lang="en">
+      <body>{children}</body>
+    </html>
+  );
+}
+```
+
+  </CodeBlockTab>
+
+  <CodeBlockTab value="css">
+
+```css title="globals.css"
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+}
+```
+
+  </CodeBlockTab>
+</CodeBlockTabs>
+````
+
+### Package manager tabs
+
+A common use case is switching between install commands. Add `groupId` so the
+same choice stays selected across every tab group on the page.
+
+<CodeBlockTabs groupId="package-manager" defaultValue="npm">
+  <CodeBlockTabsList>
+    <CodeBlockTabsTrigger value="npm">npm</CodeBlockTabsTrigger>
+    <CodeBlockTabsTrigger value="pnpm">pnpm</CodeBlockTabsTrigger>
+    <CodeBlockTabsTrigger value="yarn">yarn</CodeBlockTabsTrigger>
+    <CodeBlockTabsTrigger value="bun">bun</CodeBlockTabsTrigger>
+  </CodeBlockTabsList>
+
+  <CodeBlockTab value="npm">
+
+```bash
+npm install fumandocs-ui
+```
+
+  </CodeBlockTab>
+
+  <CodeBlockTab value="pnpm">
+
+```bash
+pnpm add fumandocs-ui
+```
+
+  </CodeBlockTab>
+
+  <CodeBlockTab value="yarn">
+
+```bash
+yarn add fumandocs-ui
+```
+
+  </CodeBlockTab>
+
+  <CodeBlockTab value="bun">
+
+```bash
+bun add fumandocs-ui
+```
+
+  </CodeBlockTab>
+</CodeBlockTabs>
+
+Source:
+
+````mdx
+<CodeBlockTabs groupId="package-manager" defaultValue="npm">
+  <CodeBlockTabsList>
+    <CodeBlockTabsTrigger value="npm">npm</CodeBlockTabsTrigger>
+    <CodeBlockTabsTrigger value="pnpm">pnpm</CodeBlockTabsTrigger>
+    <CodeBlockTabsTrigger value="yarn">yarn</CodeBlockTabsTrigger>
+    <CodeBlockTabsTrigger value="bun">bun</CodeBlockTabsTrigger>
+  </CodeBlockTabsList>
+
+  <CodeBlockTab value="npm">
+
+```bash
+npm install fumandocs-ui
+```
+
+  </CodeBlockTab>
+
+  <CodeBlockTab value="pnpm">
+
+```bash
+pnpm add fumandocs-ui
+```
+
+  </CodeBlockTab>
+
+  <CodeBlockTab value="yarn">
+
+```bash
+yarn add fumandocs-ui
+```
+
+  </CodeBlockTab>
+
+  <CodeBlockTab value="bun">
+
+```bash
+bun add fumandocs-ui
+```
+
+  </CodeBlockTab>
+</CodeBlockTabs>
+````
+
+The primitives are:
+
+- `CodeBlockTabs` — wrapper, accepts `defaultValue` and `groupId`
+- `CodeBlockTabsList` — tab list container
+- `CodeBlockTabsTrigger` — individual tab button, accepts `value`
+- `CodeBlockTab` — panel content, accepts `value`
+
+Tabbed blocks use Mantine **Tabs** with layout styles from the adapter's CSS
+Modules.

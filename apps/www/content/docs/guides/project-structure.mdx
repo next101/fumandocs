@@ -1,0 +1,55 @@
+---
+title: Project structure
+description: How a Fumandocs Next.js app is organized
+---
+
+A typical **create-fumandocs** project looks like this:
+
+```text
+my-docs/
+├── app/
+│   ├── layout.tsx              # Mantine + RootProvider
+│   ├── global.css              # @import Mantine + fumandocs-ui styles
+│   ├── page.tsx                # Marketing / landing (optional)
+│   ├── docs/
+│   │   ├── layout.tsx          # DocsLayout + page tree
+│   │   └── [[...slug]]/page.tsx
+│   └── api/search/route.ts     # Local search API
+├── components/
+│   └── mdx.tsx                 # MDX component map
+├── content/docs/               # MDX files + meta.json
+├── lib/source.ts               # loader + defineDocs
+├── next.config.mjs             # fumadocs-mdx/next
+└── pnpm-workspace.yaml         # pnpm 11 build-script approvals
+```
+
+## Content source
+
+`lib/source.ts` uses the Fumadocs MDX macro:
+
+```ts
+import { loader } from "fumadocs-core/source";
+import { defineDocs } from "fumadocs-mdx/macro";
+
+const docs = defineDocs({
+  dir: "content/docs",
+  docs: { postprocess: { includeProcessedMarkdown: true } },
+});
+
+export const source = loader({
+  baseUrl: "/docs",
+  source: docs.toFumadocsSource(),
+});
+```
+
+## Page tree
+
+Add **`meta.json`** files under `content/docs` to order pages and set section
+titles. See the root `meta.json` in this site’s `apps/www/content/docs` for an
+example with `---Section---` separators.
+
+## Where Mantine lives
+
+All docs chrome (sidebar, search dialog, MDX primitives) comes from
+**`fumandocs-ui`**. Your app only configures the provider theme and optional nav
+links — not hundreds of UI components.

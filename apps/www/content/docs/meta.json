@@ -1,0 +1,18 @@
+{
+  "title": "Documentation",
+  "pages": [
+    "index",
+    "getting-started",
+    "installation",
+    "export-compatibility",
+    "---Guides---",
+    "guides/project-structure",
+    "guides/theming",
+    "guides/search",
+    "---Components---",
+    "components/callouts",
+    "components/cards",
+    "components/codeblocks",
+    "components/typography"
+  ]
+}

@@ -1,0 +1,212 @@
+/**
+ * MIT License
+ *
+ * Copyright (c) 2026 Xiao Hanyu (https://xiaohanyu.me)
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *
+ */
+
+/* Shared landing page building blocks, adapted from mantine.dev */
+
+.section {
+  padding-block: var(--hp-block-spacing);
+}
+
+.sectionAlt {
+  padding-block: var(--hp-block-spacing);
+  background-color: var(--mantine-color-gray-0);
+}
+
+:where([data-mantine-color-scheme="dark"]) .sectionAlt {
+  background-color: var(--mantine-color-dark-8);
+}
+
+.title {
+  font-weight: 450;
+  line-height: 1.1;
+  margin: 0;
+  padding: 0;
+  color: var(--mantine-color-bright);
+  text-wrap: balance;
+
+  &[data-order="1"] {
+    font-size: 64px;
+
+    @media (max-width: 62em) {
+      font-size: 36px;
+    }
+  }
+
+  &[data-order="2"] {
+    font-size: 48px;
+
+    @media (max-width: 62em) {
+      font-size: 34px;
+    }
+  }
+}
+
+.description {
+  max-width: 670px;
+  font-size: var(--mantine-font-size-xl);
+  color: var(--mantine-color-gray-7);
+  margin-top: var(--mantine-spacing-lg);
+  text-wrap: balance;
+
+  @media (max-width: 62em) {
+    font-size: var(--mantine-font-size-md);
+  }
+}
+
+:where([data-mantine-color-scheme="dark"]) .description {
+  color: var(--mantine-color-dark-1);
+}
+
+.learnMore {
+  width: fit-content;
+  display: block;
+  color: var(--mantine-color-blue-7);
+  font-size: var(--mantine-font-size-lg);
+  margin-top: var(--mantine-spacing-lg);
+}
+
+:where([data-mantine-color-scheme="dark"]) .learnMore {
+  color: var(--mantine-color-blue-5);
+}
+
+.learnMoreInner {
+  display: flex;
+  align-items: center;
+  gap: var(--mantine-spacing-xs);
+}
+
+.features {
+  margin-top: 50px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.feature {
+  display: flex;
+  gap: var(--mantine-spacing-lg);
+}
+
+.featureIcon {
+  background: var(--hp-primary-bg);
+  box-shadow: var(--hp-primary-shadow);
+  border-bottom: var(--hp-primary-border);
+  color: var(--mantine-color-blue-0);
+}
+
+.featureTitle {
+  font-size: var(--mantine-font-size-lg);
+  font-weight: 600;
+  color: var(--mantine-color-bright);
+}
+
+.featureDescription {
+  margin-top: 5px;
+  color: var(--mantine-color-gray-7);
+}
+
+:where([data-mantine-color-scheme="dark"]) .featureDescription {
+  color: var(--mantine-color-dark-1);
+}
+
+/* Floating indicator tabs */
+
+.tabsControls {
+  display: flex;
+  gap: 3px;
+  position: relative;
+
+  @media (max-width: 48em) {
+    flex-wrap: wrap;
+  }
+}
+
+.tabsControl {
+  font-size: var(--mantine-font-size-lg);
+  padding: var(--mantine-spacing-xs) var(--mantine-spacing-lg);
+  color: var(--mantine-color-gray-7);
+  transition:
+    color 100ms ease,
+    background-color 100ms ease;
+  font-weight: 600;
+  border-radius: var(--mantine-radius-md);
+
+  &[data-active] {
+    color: var(--mantine-color-blue-0);
+  }
+
+  &:hover {
+    background-color: var(--mantine-color-gray-0);
+
+    &:not([data-active]) {
+      color: var(--mantine-color-black);
+    }
+  }
+}
+
+:where([data-mantine-color-scheme="dark"]) .tabsControl {
+  color: var(--mantine-color-dark-1);
+}
+
+:where([data-mantine-color-scheme="dark"]) .tabsControl:hover {
+  background-color: var(--mantine-color-dark-6);
+}
+
+:where([data-mantine-color-scheme="dark"])
+  .tabsControl:hover:not([data-active]) {
+  color: var(--mantine-color-white);
+}
+
+.tabsControlLabel {
+  position: relative;
+  z-index: 2;
+}
+
+.tabsContent {
+  padding-top: var(--mantine-spacing-xl);
+}
+
+.tabsIndicator {
+  cursor: pointer;
+  background-image: var(--hp-primary-bg);
+  box-shadow: var(--hp-primary-shadow);
+  border-bottom: var(--hp-primary-border);
+  border-radius: var(--mantine-radius-md);
+  z-index: 1;
+}
+
+/* Demo columns */
+
+/* Brand wordmark, shared by header and footer */
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: var(--mantine-color-bright);
+  font-size: var(--mantine-font-size-lg);
+  font-weight: 700;
+}

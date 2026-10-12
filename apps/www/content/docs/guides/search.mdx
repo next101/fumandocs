@@ -1,0 +1,29 @@
+---
+title: Search
+description:
+  Local documentation search with Fumadocs and the Mantine search dialog
+---
+
+Fumandocs templates include **local search** powered by the same Fumadocs
+pipeline as upstream: an API route indexes your docs, and the UI package opens a
+Mantine-based search dialog (keyboard shortcut supported from the docs layout).
+
+## API route
+
+The scaffold adds `app/api/search/route.ts` wired to your `source` instance. No
+Orama Cloud signup is required for the default template.
+
+## Enable or disable
+
+In `DocsLayout`, search is on by default. Pass
+`searchToggle={{ enabled: false }}` if you want to hide it temporarily.
+
+## Customize
+
+Advanced options live on `RootProvider` via the `search` prop (see
+`SearchProvider` in `fumandocs-ui`). Most sites can use the template defaults.
+
+<Callout type="info">
+  Press the search control in the sidebar (or the icon in the mobile header), or
+  use the keyboard shortcut shown in the UI to try search on this site.
+</Callout>

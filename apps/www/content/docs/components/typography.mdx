@@ -1,0 +1,41 @@
+---
+title: Typography
+description: Headings, links, tables, and images in MDX
+---
+
+The default MDX map wires standard elements to Fumandocs + Mantine-friendly
+markup.
+
+## Headings
+
+Headings `h1`–`h6` use the **Heading** component with anchor links for in-page
+navigation and the table of contents.
+
+### Third-level example
+
+This section demonstrates `h3` styling and TOC integration. Scroll the
+right-hand TOC on wide viewports to see anchors.
+
+## Links and emphasis
+
+Internal links use [Fumadocs core Link](/docs/getting-started). External links
+work as usual: [Mantine documentation](https://mantine.dev).
+
+You can use **bold**, _italic_, and `inline code` like normal Markdown.
+
+## Tables
+
+| Feature | Mantine adapter             |
+| ------- | --------------------------- |
+| Layout  | DocsLayout drawer + sidebar |
+| Search  | Built-in dialog             |
+| MDX     | Default component map       |
+
+Tables are wrapped in a scroll container for horizontal overflow on small
+screens.
+
+## Images
+
+Images use the framework image helper with a max width suited for docs content.
+Add images under `public/` and reference them in MDX with standard
+`![alt](/path.png)` syntax.
