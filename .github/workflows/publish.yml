@@ -1,0 +1,67 @@
+name: publish
+
+on:
+  push:
+    tags:
+      - v*
+  # Manual retry for a failed run, or to publish an existing tag.
+  workflow_dispatch:
+
+jobs:
+  test:
+    uses: ./.github/workflows/test.yml
+
+  npm:
+    needs: test
+    runs-on: ubuntu-latest
+    permissions:
+      # OIDC token for npm trusted publishing (no long-lived NPM_TOKEN).
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v5
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build packages
+        run: pnpm build
+
+      # Requires a trusted publisher configured on npmjs.com for each package
+      # (GitHub Actions, this repo, workflow file publish.yml). Provenance
+      # statements are generated automatically with OIDC publishing.
+      - name: Publish packages
+        run: pnpm publish -r --no-git-checks --access public
+
+  github-release:
+    needs: npm
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      discussions: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Extract changelog for release
+        if: github.ref_type == 'tag'
+        run: bash ./scripts/extract-changelog.sh "${GITHUB_REF_NAME#v}" release_notes.md
+
+      # discussion_category_name requires Discussions enabled on the repo;
+      # remove that line otherwise.
+      - name: Create a github release
+        uses: softprops/action-gh-release@v2
+        if: github.ref_type == 'tag'
+        with:
+          body_path: release_notes.md
+          generate_release_notes: true
+          discussion_category_name: Announcements

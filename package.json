@@ -1,0 +1,39 @@
+{
+  "name": "fumandocs-monorepo",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "pnpm -r run build",
+    "clean": "pnpm -r run clean",
+    "create-fumandocs": "pnpm --filter create-fumandocs",
+    "dev": "pnpm --filter fumandocs-ui dev",
+    "dev:site": "pnpm --filter fumandocs-ui build && pnpm --filter fumandocs-www dev",
+    "lint": "biome check",
+    "lint:fix": "biome check --write --unsafe",
+    "license:add": "node scripts/addlicense.mjs",
+    "license:check": "node scripts/addlicense.mjs -c",
+    "exports:diff": "node scripts/compare-fumadocs-ui-exports.mjs",
+    "exports:check": "node scripts/compare-fumadocs-ui-exports.mjs --check",
+    "format:prose": "prettier --check \"**/*.{md,mdx}\"",
+    "format:prose:fix": "prettier --write \"**/*.{md,mdx}\"",
+    "types:check": "pnpm -r run types:check",
+    "release": "commit-and-tag-version -c .versionrc.cjs",
+    "build:site": "node scripts/compare-fumadocs-ui-exports.mjs --write-docs && pnpm --filter fumandocs-ui build && pnpm --filter fumandocs-www build",
+    "commitlint": "commitlint --edit",
+    "prepare": "lefthook install"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.5.9",
+    "@commitlint/cli": "^21.2.1",
+    "@commitlint/config-conventional": "^21.2.0",
+    "addlicense-ts": "^2.0.0",
+    "commit-and-tag-version": "^12.7.3",
+    "lefthook": "^1.11.12",
+    "prettier": "^3.9.10",
+    "typescript": "^6.0.3"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
