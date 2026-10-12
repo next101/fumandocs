@@ -1,0 +1,5 @@
+# pnpm 11 fails installs when a dependency's build scripts are ignored.
+# fumadocs-mdx depends on esbuild, whose postinstall only validates the
+# platform binary — safe to allow. Ignored by npm/yarn/bun.
+allowBuilds:
+  esbuild: true
