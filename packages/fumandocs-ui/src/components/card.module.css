@@ -1,0 +1,82 @@
+/**
+ * MIT License
+ *
+ * Copyright (c) 2026 Xiao Hanyu (https://xiaohanyu.me)
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *
+ */
+
+.root {
+  display: flex;
+  min-height: 60px;
+  justify-content: center;
+  border-color: var(--mantine-color-gray-3);
+  background: var(--mantine-color-gray-0);
+  color: var(--mantine-color-text);
+  text-decoration: none;
+  transition: background-color 120ms ease;
+}
+/* Card internals are rendered inside the docs prose container;
+neutralize prose margins. */
+.root p {
+  margin: 0;
+}
+/* Extra specificity: the prose module loads after this one, so a plain
+   `.root p` tie with the prose `p` rule would lose on source order. */
+[data-prose] .root p {
+  margin: 0;
+}
+.root:hover {
+  background: var(--mantine-color-gray-1);
+}
+/* Inside prose the `.prose a` anchor color would otherwise beat `.root`
+   on specificity and tint the whole card. */
+[data-prose] .root {
+  color: var(--mantine-color-text);
+}
+.icon {
+  border: 1px solid var(--mantine-color-gray-3);
+  background: var(--mantine-color-gray-1);
+  color: var(--mantine-color-dimmed);
+  box-shadow: var(--mantine-shadow-xs);
+}
+.content {
+  margin-top: 4px;
+  color: var(--mantine-color-text);
+  font-size: 0.875rem;
+}
+.content > :first-child,
+.content > :last-child {
+  margin-block: 0;
+}
+
+:where([data-mantine-color-scheme="dark"]) .root {
+  border-color: var(--mantine-color-dark-5);
+  background: var(--mantine-color-dark-6);
+}
+
+:where([data-mantine-color-scheme="dark"]) .root:hover {
+  background: var(--mantine-color-dark-5);
+}
+
+:where([data-mantine-color-scheme="dark"]) .icon {
+  border: 1px solid var(--mantine-color-dark-5);
+  background: var(--mantine-color-dark-6);
+}

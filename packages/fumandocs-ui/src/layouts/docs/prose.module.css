@@ -1,0 +1,124 @@
+/**
+ * MIT License
+ *
+ * Copyright (c) 2026 Xiao Hanyu (https://xiaohanyu.me)
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *
+ */
+
+.prose {
+  min-width: 0;
+  color: var(--mantine-color-text);
+  font-size: 0.9375rem;
+  line-height: 1.75;
+}
+.prose > :first-child {
+  margin-top: 0;
+}
+.prose > :last-child {
+  margin-bottom: 0;
+}
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4,
+.prose h5,
+.prose h6 {
+  color: var(--mantine-color-text);
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: -0.02em;
+}
+.prose h1 {
+  margin: 2rem 0 0.75rem;
+  font-size: 1.875rem;
+}
+.prose h2 {
+  margin: 2.75rem 0 0.75rem;
+  padding: 0;
+  border: 0;
+  font-size: 1.5rem;
+}
+.prose h3 {
+  margin: 1.75rem 0 0.625rem;
+  font-size: 1.25rem;
+}
+.prose h4 {
+  margin: 1.5rem 0 0.5rem;
+  font-size: 1.05rem;
+}
+.prose p,
+.prose ul,
+.prose ol,
+.prose blockquote {
+  margin-block: 1rem;
+}
+.prose ul,
+.prose ol {
+  padding-left: 1.5rem;
+}
+.prose li {
+  margin-block: 0.25rem;
+}
+.prose a {
+  color: var(--mantine-color-anchor);
+  font-weight: 500;
+  text-decoration: none;
+}
+.prose a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.prose code:not(pre code) {
+  border: 1px solid var(--mantine-color-gray-3);
+  border-radius: 5px;
+  background: var(--mantine-color-gray-1);
+  padding: 0.1em 0.32em;
+  font-size: 0.875em;
+}
+.prose blockquote {
+  margin-inline: 0;
+  padding-left: 16px;
+  border-left: 2px solid var(--mantine-color-gray-3);
+  color: var(--mantine-color-dimmed);
+}
+.prose hr {
+  margin-block: 2.5rem;
+  border: 0;
+  border-top: 1px solid var(--mantine-color-gray-3);
+}
+.prose img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--mantine-radius-md);
+}
+
+:where([data-mantine-color-scheme="dark"]) .prose code:not(pre code) {
+  border: 1px solid var(--mantine-color-dark-5);
+  background: var(--mantine-color-dark-6);
+}
+
+:where([data-mantine-color-scheme="dark"]) .prose blockquote {
+  border-left: 2px solid var(--mantine-color-dark-5);
+}
+
+:where([data-mantine-color-scheme="dark"]) .prose hr {
+  border-top: 1px solid var(--mantine-color-dark-5);
+}

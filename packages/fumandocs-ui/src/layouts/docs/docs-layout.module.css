@@ -1,0 +1,435 @@
+/**
+ * MIT License
+ *
+ * Copyright (c) 2026 Xiao Hanyu (https://xiaohanyu.me)
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *
+ */
+
+/* Document-level scroll behavior, applied only while the docs layout is on
+   the page: anchor jumps clear the sticky mobile header (56px + breathing
+   room) on small viewports. */
+:global(html):has(.layout) {
+  scroll-padding-top: 24px;
+  scrollbar-gutter: stable;
+}
+@media (max-width: 74.99em) {
+  :global(html):has(.layout) {
+    scroll-padding-top: 104px;
+  }
+}
+
+.layout {
+  /* Layout tokens, scoped to the docs layout and inherited by page/TOC
+     descendants (custom properties cross display:contents boundaries). */
+  --docs-sidebar-width: 268px;
+  --docs-content-width: 900px;
+  --docs-toc-width: 268px;
+  --docs-mobile-header-height: 56px;
+
+  display: grid;
+  min-height: 100dvh;
+  /* Mirrors upstream fumadocs-ui: fixed sidebar/TOC columns plus flexible
+     edge columns that split surplus space, so the whole docs row is centered
+     on wide viewports. The sidebar spans its own column and the left edge
+     column, so its background/border reach the browser edge while its content
+     keeps a fixed width adjacent to the article. */
+  grid-template-columns:
+    minmax(0, 1fr)
+    var(--docs-sidebar-width)
+    minmax(0, calc(var(--docs-content-width) + 7.25rem))
+    var(--docs-toc-width)
+    minmax(0, 1fr);
+}
+.layout:has([data-no-toc]) {
+  grid-template-columns:
+    minmax(0, 1fr)
+    var(--docs-sidebar-width)
+    minmax(0, calc(var(--docs-content-width) + 7.25rem))
+    0
+    minmax(0, 1fr);
+}
+.layoutNoSidebar {
+  grid-template-columns:
+    minmax(0, 1fr)
+    minmax(0, calc(var(--docs-content-width) + 7.25rem))
+    var(--docs-toc-width)
+    minmax(0, 1fr);
+}
+/* Flatten wrappers so the article and TOC become direct grid items. */
+.shellMain {
+  display: contents;
+}
+.sidebar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  grid-column: 1 / 3;
+  flex-direction: column;
+  align-items: flex-end;
+  height: 100dvh;
+  min-width: 0;
+  border-right: 1px solid var(--mantine-color-gray-3);
+  background: var(--mantine-color-body);
+  font-size: 0.875rem;
+}
+/* Sidebar content keeps a fixed width and stays adjacent to the article;
+only the background extends to the browser edge. */
+.sidebar > * {
+  width: var(--docs-sidebar-width);
+  flex-shrink: 0;
+}
+.sidebar > .sidebarScroll {
+  min-height: 0;
+  flex: 1;
+}
+.sidebarHeader {
+  display: flex;
+  height: 64px;
+  flex: 0 0 64px;
+  align-items: center;
+  justify-content: space-between;
+  padding-inline: 20px 14px;
+}
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  overflow: hidden;
+  color: var(--mantine-color-text);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  text-decoration: none;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.sidebarCollapse {
+  color: var(--mantine-color-dimmed);
+  font-size: 15px;
+}
+.searchButton {
+  width: calc(var(--docs-sidebar-width) - 20px);
+  height: 34px;
+  margin-inline: 10px;
+  margin-bottom: 8px;
+  padding-inline: 10px 7px;
+  border-color: var(--mantine-color-gray-3);
+  background: color-mix(in srgb, var(--mantine-color-gray-1) 50%, transparent);
+  color: var(--mantine-color-dimmed);
+  font-weight: 400;
+  box-shadow: none;
+}
+.searchButton:hover {
+  background: var(--mantine-color-gray-1);
+}
+.searchButton :global(.mantine-Button-label) {
+  flex: 1;
+  justify-content: flex-start;
+}
+.searchButton kbd {
+  min-width: 20px;
+  height: 20px;
+  padding-inline: 4px;
+  border: 0;
+  background: var(--mantine-color-gray-1);
+  font-size: 10px;
+  line-height: 20px;
+  box-shadow: none;
+}
+.sidebarContent {
+  padding: 6px 12px 24px;
+}
+.sidebarSeparator {
+  margin: 22px 9px 7px;
+  color: var(--mantine-color-text);
+  line-height: 1.4;
+}
+.sidebarSeparator:first-child {
+  margin-top: 4px;
+}
+.navLink {
+  min-height: 32px;
+  margin-block: 1px;
+  padding: 6px 12px;
+  border-radius: var(--mantine-radius-md);
+  color: var(--mantine-color-gray-7);
+  font-size: 0.875rem;
+  line-height: 1.35;
+}
+.navLink:hover {
+  background: var(--mantine-color-gray-0);
+  color: var(--mantine-color-bright);
+}
+.navLink[data-active="true"] {
+  background: var(--mantine-primary-color-0);
+  color: var(--mantine-primary-color-8);
+  font-weight: 500;
+}
+.navLink :global(.mantine-NavLink-section) {
+  color: var(--mantine-color-dimmed);
+}
+.sidebarFooter {
+  flex: 0 0 auto;
+  padding: 8px 16px 16px;
+}
+/* Enclosed bar like upstream fumadocs-ui: footer links on the left,
+   theme toggle pinned to the right with a divider. */
+.sidebarFooterBar {
+  display: flex;
+  min-height: 32px;
+  align-items: center;
+  padding: 2px;
+  padding-right: 0;
+  border: 1px solid var(--mantine-color-gray-3);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--mantine-color-gray-1) 50%, transparent);
+  color: var(--mantine-color-dimmed);
+}
+.themeToggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  margin-left: auto;
+  padding: 2px 6px;
+  border: 0;
+  border-left: 1px solid var(--mantine-color-gray-3);
+  background: transparent;
+  color: var(--mantine-color-dimmed);
+  cursor: pointer;
+}
+.themeToggle:hover {
+  color: var(--mantine-color-text);
+}
+.themeToggleIcon {
+  display: inline-flex;
+  padding: 3px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+}
+.themeToggleIcon[data-active="true"] {
+  border-color: var(--mantine-color-gray-3);
+  background: var(--mantine-color-gray-0);
+  color: var(--mantine-color-text);
+  box-shadow: var(--mantine-shadow-xs);
+}
+.mobileHeader {
+  display: none;
+  grid-column: 1 / -1;
+}
+.mobileDrawerHeader {
+  min-height: 56px;
+  border-bottom: 1px solid var(--mantine-color-gray-3);
+}
+.mobileDrawerBody {
+  display: flex;
+  height: calc(100dvh - 56px);
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 0 0;
+}
+.mobileNavigation {
+  min-height: 0;
+  flex: 1;
+}
+.mobileNavigation .sidebarContent {
+  padding-inline: 12px;
+}
+.mobileDrawerBody > .searchButton {
+  width: calc(100% - 24px);
+  margin-inline: 12px;
+}
+.mobileDrawerBody > .sidebarFooter {
+  margin-top: auto;
+}
+
+/* Below 75em the TOC rail is hidden, so its grid column collapses. */
+@media (max-width: 74.99em) {
+  .layout {
+    --docs-toc-width: 0;
+  }
+}
+
+/* Desktop sidebar collapse (ported from upstream fumadocs-ui): the sidebar
+   column shrinks to 0, the sidebar slides off-canvas as a floating card, a
+   16px strip at the browser edge re-opens it on hover, and a small floating
+   panel restores it on click. */
+@media (min-width: 48em) {
+  /* Only animate columns during the actual collapse/expand; an always-on
+     transition makes Playwright-style viewport resizes capture mid-animation
+     frames. */
+  .layout[data-column-changed="true"] {
+    transition: grid-template-columns 250ms ease;
+  }
+  .layout[data-sidebar-collapsed="true"] {
+    grid-template-columns:
+      minmax(0, 1fr)
+      0
+      minmax(0, calc(var(--docs-content-width) + 7.25rem))
+      var(--docs-toc-width)
+      minmax(0, 1fr);
+  }
+  .layout[data-sidebar-collapsed="true"]:has([data-no-toc]) {
+    grid-template-columns:
+      minmax(0, 1fr)
+      0
+      minmax(0, calc(var(--docs-content-width) + 7.25rem))
+      0
+      minmax(0, 1fr);
+  }
+  .sidebar {
+    transition:
+      transform 250ms ease,
+      border-radius 250ms ease;
+  }
+  .sidebar[data-collapsed="true"] {
+    top: 8px;
+    width: var(--docs-sidebar-width);
+    height: calc(100dvh - 16px);
+    border: 1px solid var(--mantine-color-gray-3);
+    border-radius: 12px;
+    transform: translateX(calc(-1 * var(--docs-sidebar-width)));
+  }
+  .sidebar[data-collapsed="true"][data-hovered="true"] {
+    transform: translateX(8px);
+    box-shadow: var(--mantine-shadow-lg);
+  }
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  .sidebarHoverStrip {
+    position: fixed;
+    z-index: 30;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 16px;
+  }
+  .sidebarPanel {
+    position: fixed;
+    z-index: 30;
+    top: 16px;
+    inset-inline-start: 16px;
+    display: flex;
+    padding: 2px;
+    border: 1px solid var(--mantine-color-gray-3);
+    border-radius: 12px;
+    background: var(--mantine-color-gray-1);
+    color: var(--mantine-color-dimmed);
+    box-shadow: var(--mantine-shadow-lg);
+    animation: fadeIn 150ms ease;
+  }
+}
+
+@media (max-width: 47.99em) {
+  .layout,
+  .layoutNoSidebar {
+    display: block;
+  }
+  .sidebar {
+    display: none;
+  }
+  .mobileHeader {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    display: block;
+    height: var(--docs-mobile-header-height);
+    border-bottom: 1px solid var(--mantine-color-gray-3);
+    background: color-mix(in srgb, var(--mantine-color-body) 80%, transparent);
+    backdrop-filter: blur(10px);
+  }
+}
+
+:where([data-mantine-color-scheme="dark"]) .sidebar {
+  border-right: 1px solid var(--mantine-color-dark-5);
+}
+
+@media (min-width: 48em) {
+  :where([data-mantine-color-scheme="dark"]) .sidebar[data-collapsed="true"] {
+    border: 1px solid var(--mantine-color-dark-5);
+  }
+
+  :where([data-mantine-color-scheme="dark"]) .sidebarPanel {
+    border: 1px solid var(--mantine-color-dark-5);
+    background: var(--mantine-color-dark-6);
+  }
+}
+
+:where([data-mantine-color-scheme="dark"]) .searchButton {
+  border-color: var(--mantine-color-dark-5);
+  background: color-mix(in srgb, var(--mantine-color-dark-6) 50%, transparent);
+}
+
+:where([data-mantine-color-scheme="dark"]) .searchButton:hover {
+  background: var(--mantine-color-dark-5);
+}
+
+:where([data-mantine-color-scheme="dark"]) .searchButton kbd {
+  background: var(--mantine-color-dark-6);
+}
+
+:where([data-mantine-color-scheme="dark"]) .navLink {
+  color: var(--mantine-color-dark-0);
+}
+
+:where([data-mantine-color-scheme="dark"]) .navLink:hover {
+  background: var(--mantine-color-dark-6);
+}
+
+:where([data-mantine-color-scheme="dark"]) .navLink[data-active="true"] {
+  background: color-mix(
+    in srgb,
+    var(--mantine-primary-color-6) 17%,
+    transparent
+  );
+  color: var(--mantine-primary-color-2);
+}
+
+:where([data-mantine-color-scheme="dark"]) .sidebarFooterBar {
+  border: 1px solid var(--mantine-color-dark-5);
+  background: color-mix(in srgb, var(--mantine-color-dark-6) 50%, transparent);
+}
+
+:where([data-mantine-color-scheme="dark"]) .themeToggle {
+  border-left: 1px solid var(--mantine-color-dark-5);
+}
+
+:where([data-mantine-color-scheme="dark"])
+  .themeToggleIcon[data-active="true"] {
+  border-color: var(--mantine-color-dark-5);
+  background: var(--mantine-color-dark-6);
+}
+
+:where([data-mantine-color-scheme="dark"]) .mobileDrawerHeader {
+  border-bottom: 1px solid var(--mantine-color-dark-5);
+}
+
+@media (max-width: 47.99em) {
+  :where([data-mantine-color-scheme="dark"]) .mobileHeader {
+    border-bottom: 1px solid var(--mantine-color-dark-5);
+  }
+}

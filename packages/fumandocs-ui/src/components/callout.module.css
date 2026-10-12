@@ -1,0 +1,103 @@
+/**
+ * MIT License
+ *
+ * Copyright (c) 2026 Xiao Hanyu (https://xiaohanyu.me)
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *
+ */
+
+.root {
+  --callout-color: var(--mantine-color-blue-6);
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-block: 16px;
+  padding: 12px 12px 12px 14px;
+  background: var(--mantine-color-gray-0);
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+.root[data-type="warning"] {
+  --callout-color: var(--mantine-color-yellow-7);
+}
+.root[data-type="error"] {
+  --callout-color: var(--mantine-color-red-6);
+}
+.root[data-type="success"] {
+  --callout-color: var(--mantine-color-green-6);
+}
+.root[data-type="idea"] {
+  --callout-color: var(--mantine-color-orange-6);
+}
+.bar {
+  position: absolute;
+  top: 12px;
+  bottom: 12px;
+  left: 4px;
+  width: 2px;
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--callout-color) 50%, transparent);
+}
+.header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.icon {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--callout-color);
+  color: var(--mantine-color-white);
+}
+.icon > svg {
+  width: 12px;
+  height: 12px;
+}
+.content {
+  min-width: 0;
+  flex: 1;
+}
+/* Extra specificity so the margin reset wins over the prose `p` rule. */
+.root .title {
+  margin: 0;
+}
+.description {
+  color: var(--mantine-color-dimmed);
+  font-size: 0.875rem;
+}
+/* Extra specificity so the margin reset wins over the prose `p` rule. */
+.root .description > * {
+  margin-block: 0;
+}
+/* Align the description with the title, past the icon. */
+.header + .description {
+  margin-top: 8px;
+  margin-left: 28px;
+}
+
+:where([data-mantine-color-scheme="dark"]) .root {
+  background: var(--mantine-color-dark-6);
+}

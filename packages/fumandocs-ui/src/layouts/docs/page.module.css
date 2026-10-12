@@ -1,0 +1,147 @@
+/**
+ * MIT License
+ *
+ * Copyright (c) 2026 Xiao Hanyu (https://xiaohanyu.me)
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *
+ */
+
+.page {
+  display: flex;
+  min-width: 0;
+  width: 100%;
+  min-height: 100dvh;
+  max-width: var(--docs-content-width, 900px);
+  margin-inline: auto;
+  grid-column: 3;
+  flex-direction: column;
+  gap: 18px;
+  padding: 58px 32px 24px;
+}
+/* Below 75em the article shares row 1 with the 100dvh sidebar; the sticky
+   mobile TOC bar overlays its first 40px (padding-top keeps content clear). */
+@media (max-width: 74.99em) {
+  .page {
+    grid-row: 1;
+  }
+}
+[data-no-sidebar] .page {
+  grid-column: 2;
+}
+.page[data-full="true"] {
+  max-width: 1168px;
+}
+/* Flatten wrappers so the article and TOC become direct grid items. */
+.docsGrid,
+.docsGridNoToc {
+  display: contents;
+}
+.docsTitle {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.025em;
+}
+.docsDescription {
+  margin: 0;
+  color: var(--mantine-color-dimmed);
+  font-size: 1.125rem;
+  line-height: 1.65;
+}
+.pageActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--mantine-color-gray-3);
+}
+/* Match upstream fumadocs-ui page-action buttons (30px tall, 12px font)
+   with the secondary variant's gray background instead of pure white. */
+.pageAction {
+  height: 30px;
+  padding: 6px 8px;
+  border-color: var(--mantine-color-gray-3);
+  border-radius: 6px;
+  background-color: var(--mantine-color-gray-1);
+  font-size: 12px;
+}
+.pageAction:hover {
+  background-color: var(--mantine-color-gray-1);
+}
+.pageFooter {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr));
+  gap: 16px;
+  margin-top: auto;
+}
+.footerLink {
+  border-color: var(--mantine-color-gray-3);
+  background: var(--mantine-color-gray-0);
+  color: var(--mantine-color-text);
+  text-decoration: none;
+  transition: background-color 120ms ease;
+}
+.footerLink:hover {
+  background: var(--mantine-color-gray-1);
+}
+.standalonePage {
+  max-width: var(--docs-content-width, 900px);
+  margin: auto;
+  padding: 64px 24px;
+}
+
+@media (max-width: 47.99em) {
+  .page {
+    gap: 18px;
+    padding: 28px 16px 24px;
+  }
+  .docsTitle {
+    font-size: 1.65rem;
+  }
+  .docsDescription {
+    font-size: 1rem;
+  }
+  .pageFooter {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+:where([data-mantine-color-scheme="dark"]) .pageActions {
+  border-bottom: 1px solid var(--mantine-color-dark-5);
+}
+
+:where([data-mantine-color-scheme="dark"]) .pageAction {
+  border-color: var(--mantine-color-dark-5);
+  background-color: var(--mantine-color-dark-6);
+}
+
+:where([data-mantine-color-scheme="dark"]) .pageAction:hover {
+  background-color: var(--mantine-color-dark-5);
+}
+
+:where([data-mantine-color-scheme="dark"]) .footerLink {
+  border-color: var(--mantine-color-dark-5);
+  background: var(--mantine-color-dark-6);
+}
+
+:where([data-mantine-color-scheme="dark"]) .footerLink:hover {
+  background: var(--mantine-color-dark-5);
+}

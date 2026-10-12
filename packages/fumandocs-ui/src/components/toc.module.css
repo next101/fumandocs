@@ -1,0 +1,210 @@
+/**
+ * MIT License
+ *
+ * Copyright (c) 2026 Xiao Hanyu (https://xiaohanyu.me)
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *
+ */
+
+.root {
+  position: sticky;
+  top: 0;
+  grid-column: 4;
+  align-self: start;
+  width: var(--docs-toc-width, 268px);
+  max-height: 100dvh;
+  overflow: auto;
+  padding: 48px 16px 24px 0;
+}
+[data-no-sidebar] .root {
+  grid-column: 3;
+}
+.title {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 12px;
+  color: var(--mantine-color-dimmed);
+}
+.link {
+  position: relative;
+  display: block;
+  padding-block: 6px;
+  color: var(--mantine-color-dimmed);
+  font-size: 0.875rem;
+  line-height: 1.45;
+  text-decoration: none;
+  transition: color 120ms ease;
+  overflow-wrap: anywhere;
+}
+.linkFirst {
+  padding-top: 0;
+}
+.linkLast {
+  padding-bottom: 0;
+}
+.link:hover {
+  color: var(--mantine-color-text);
+}
+.link[data-active="true"] {
+  color: var(--mantine-primary-color-8);
+}
+/* Ragged TOC rail: per-item SVG segments with elbows between depth levels,
+   plus an active thumb track (clipped primary path + traveling dot),
+   ported from upstream fumadocs-ui. */
+.rail {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+.railSvg {
+  position: absolute;
+  z-index: -1;
+  top: -6px;
+  bottom: 0;
+  inset-inline-start: 0;
+  height: calc(100% + 6px);
+}
+.railSvgClipped {
+  bottom: 6px;
+  height: 100%;
+}
+.railStroke {
+  stroke: color-mix(in srgb, var(--mantine-color-text) 10%, transparent);
+}
+.thumb {
+  position: absolute;
+  top: 0;
+  inset-inline-start: 0;
+}
+.thumbSvg {
+  position: absolute;
+  transition: clip-path 250ms ease;
+}
+.thumbStroke {
+  stroke: var(--mantine-primary-color-6);
+}
+.thumbDot {
+  position: absolute;
+  left: 0;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--mantine-primary-color-6);
+  offset-distance: var(--offset-distance, 0);
+  opacity: var(--opacity, 0);
+  transition:
+    opacity 250ms ease,
+    offset-distance 250ms ease;
+}
+.mobileToc {
+  display: none;
+  /* Skip the sidebar columns so grid auto-placement puts the bar (and the
+     article after it) in row 1 instead of below the 100dvh sidebar. */
+  grid-column: 3 / -1;
+}
+[data-no-sidebar] .mobileToc {
+  grid-column: 2 / -1;
+}
+
+@media (max-width: 74.99em) {
+  .root {
+    display: none;
+  }
+  .mobileToc {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    display: block;
+    /* Share row 1 with the article: the bar overlays its top 40px. */
+    grid-row: 1;
+    height: 40px;
+    border-bottom: 1px solid var(--mantine-color-gray-3);
+    background: color-mix(in srgb, var(--mantine-color-body) 80%, transparent);
+    backdrop-filter: blur(10px);
+  }
+  .mobileToc summary {
+    display: flex;
+    height: 40px;
+    cursor: pointer;
+    align-items: center;
+    padding-inline: 20px;
+    color: var(--mantine-color-dimmed);
+    font-size: 0.8125rem;
+    list-style: none;
+  }
+  .mobileToc summary::before {
+    width: 14px;
+    height: 14px;
+    margin-right: 10px;
+    border: 2px solid var(--mantine-color-dimmed);
+    border-radius: 50%;
+    content: "";
+  }
+  .mobileToc summary::after {
+    width: 7px;
+    height: 7px;
+    margin-left: auto;
+    border-right: 2px solid var(--mantine-color-dimmed);
+    border-bottom: 2px solid var(--mantine-color-dimmed);
+    content: "";
+    transform: rotate(45deg) translateY(-2px);
+    transition: transform 120ms ease;
+  }
+  .mobileToc[open] summary::after {
+    transform: rotate(225deg) translateY(-2px);
+  }
+  .mobileToc nav {
+    max-height: 50vh;
+    overflow: auto;
+    padding: 8px;
+    border-bottom: 1px solid var(--mantine-color-gray-3);
+    background: var(--mantine-color-body);
+    box-shadow: var(--mantine-shadow-md);
+  }
+  .mobileToc nav a {
+    display: block;
+    padding: 7px 12px;
+    color: var(--mantine-color-dimmed);
+    font-size: 0.875rem;
+    text-decoration: none;
+  }
+}
+
+/* Below 48em the bar docks under the sticky mobile header. */
+@media (max-width: 47.99em) {
+  .mobileToc {
+    top: var(--docs-mobile-header-height, 56px);
+  }
+}
+
+:where([data-mantine-color-scheme="dark"]) .link[data-active="true"] {
+  color: var(--mantine-primary-color-2);
+}
+
+@media (max-width: 74.99em) {
+  :where([data-mantine-color-scheme="dark"]) .mobileToc {
+    border-bottom: 1px solid var(--mantine-color-dark-5);
+  }
+
+  :where([data-mantine-color-scheme="dark"]) .mobileToc nav {
+    border-bottom: 1px solid var(--mantine-color-dark-5);
+  }
+}
