@@ -1,0 +1,36 @@
+# Keep the build context small — everything listed here is either rebuilt
+# inside the image or not needed to build/run apps/www.
+
+# Installed inside the image (deps stage).
+node_modules
+**/node_modules
+
+# Built inside the image (runner stage).
+.next
+**/.next
+dist
+**/dist
+.source
+**/.source
+*.tsbuildinfo
+**/*.tsbuildinfo
+coverage
+exports-diff.json
+
+# Config is provided at runtime by Dokploy's Environment tab, and VCS metadata
+# is not needed (and .git would make `lefthook install` run during install).
+.env
+.env.*
+!.env.example
+.git
+.gitattributes
+.github
+
+# Repo-only material. NOTE: do not ignore a bare `docs` — it would also match
+# apps/www/content/docs, which is the site's own content.
+fd-shots
+logo-drafts
+.commandcode
+.vscode
+.idea
+.DS_Store

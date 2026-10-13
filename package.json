@@ -21,7 +21,7 @@
     "release": "commit-and-tag-version -c .versionrc.cjs",
     "build:site": "node scripts/compare-fumadocs-ui-exports.mjs --write-docs && pnpm --filter fumandocs-ui build && pnpm --filter fumandocs-www build",
     "commitlint": "commitlint --edit",
-    "prepare": "lefthook install"
+    "prepare": "node scripts/setup-git-hooks.mjs"
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.9",

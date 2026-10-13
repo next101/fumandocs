@@ -1,0 +1,41 @@
+# Dokploy (self-hosted) deployment for the Fumandocs docs site — apps/www.
+#
+# Dokploy: New Project -> Docker Compose -> this repo + branch, compose path
+# `compose.yml`. Environment tab -> see .env.example. Domains tab -> service
+# `app`, port 3000 (Dokploy injects the Traefik labels and TLS).
+#
+# No database and no volumes: apps/www is statically rendered content plus one
+# on-demand route (/api/search), so there is no persistent state to keep.
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        # Baked into the prerendered pages at build time (see Dockerfile).
+        SITE_URL: ${SITE_URL:-http://localhost:3000}
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      NODE_ENV: production
+      HOSTNAME: 0.0.0.0
+      PORT: 3000
+      SITE_URL: ${SITE_URL:-http://localhost:3000}
+      NEXT_TELEMETRY_DISABLED: 1
+    # No `ports:` on purpose — Dokploy proxies to the container port. For a
+    # local check, uncomment:
+    # ports:
+    #   - '3000:3000'
+    healthcheck:
+      # node is guaranteed present; the slim image has no curl/wget.
+      test:
+        - CMD
+        - node
+        - -e
+        - "fetch('http://127.0.0.1:3000/').then((r) => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
