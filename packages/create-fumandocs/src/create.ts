@@ -166,7 +166,9 @@ async function applyProjectName(
   projectName: string
 ): Promise<string[]> {
   const replacedFiles: string[] = []
-  const value = JSON.stringify(projectName)
+  const value = /^[A-Za-z0-9._-]+$/.test(projectName)
+    ? `'${projectName}'`
+    : JSON.stringify(projectName)
   const entries = await fs.readdir(outputDir, {
     withFileTypes: true,
     recursive: true,
