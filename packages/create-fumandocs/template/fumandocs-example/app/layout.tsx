@@ -1,12 +1,13 @@
 import { ColorSchemeScript } from '@mantine/core'
 import { RootProvider } from 'fumandocs-ui/provider/next'
 import type { Metadata, Viewport } from 'next'
+import { brandName } from '@/components/logo'
 import './global.css'
 
 export const metadata: Metadata = {
   title: {
-    default: 'Documentation',
-    template: '%s | Documentation',
+    default: brandName,
+    template: `%s | ${brandName}`,
   },
   description: 'Documentation built with Fumadocs and Mantine',
 }

@@ -47,8 +47,17 @@ type PackageJson = {
 
 const TEMPLATE_DIR = 'fumandocs-example'
 
-/** Placeholder in the scaffolded docs layout, replaced with the project name. */
+/** Placeholder in template text files, replaced with the project name. */
 const PROJECT_NAME_TOKEN = "'__PROJECT_NAME__'"
+
+const TEXT_FILE_EXTENSIONS = new Set([
+  '.ts',
+  '.tsx',
+  '.md',
+  '.json',
+  '.mjs',
+  '.css',
+])
 
 export async function create(createOptions: CreateOptions): Promise<void> {
   const {
@@ -78,17 +87,12 @@ export async function create(createOptions: CreateOptions): Promise<void> {
   const readme = await fs.readFile(readmePath, 'utf8')
   await fs.writeFile(readmePath, `# ${projectName}\n\n${readme}`)
 
-  const docsLayoutPath = path.join(outputDir, 'app', 'docs', 'layout.tsx')
-  const docsLayout = await fs.readFile(docsLayoutPath, 'utf8')
-  if (!docsLayout.includes(PROJECT_NAME_TOKEN)) {
+  const replacedFiles = await applyProjectName(outputDir, projectName)
+  if (!replacedFiles.includes(path.join('app', 'docs', 'layout.tsx'))) {
     throw new Error(
       `Template app/docs/layout.tsx is missing the ${PROJECT_NAME_TOKEN} placeholder`
     )
   }
-  await fs.writeFile(
-    docsLayoutPath,
-    docsLayout.replace(PROJECT_NAME_TOKEN, () => JSON.stringify(projectName))
-  )
 
   if (installDeps) {
     try {
@@ -151,4 +155,34 @@ async function initPackageJson(
       packageJson.devDependencies as Record<string, string>
     ),
   }
+}
+
+/**
+ * Replace the project name placeholder in every template text file.
+ * Returns the scaffolded files (relative paths) that contained it.
+ */
+async function applyProjectName(
+  outputDir: string,
+  projectName: string
+): Promise<string[]> {
+  const replacedFiles: string[] = []
+  const value = JSON.stringify(projectName)
+  const entries = await fs.readdir(outputDir, {
+    withFileTypes: true,
+    recursive: true,
+  })
+
+  for (const entry of entries) {
+    if (!entry.isFile()) continue
+    if (!TEXT_FILE_EXTENSIONS.has(path.extname(entry.name))) continue
+
+    const filePath = path.join(entry.parentPath, entry.name)
+    const content = await fs.readFile(filePath, 'utf8')
+    if (!content.includes(PROJECT_NAME_TOKEN)) continue
+
+    await fs.writeFile(filePath, content.replaceAll(PROJECT_NAME_TOKEN, value))
+    replacedFiles.push(path.relative(outputDir, filePath))
+  }
+
+  return replacedFiles
 }
