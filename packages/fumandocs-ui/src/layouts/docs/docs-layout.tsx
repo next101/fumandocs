@@ -514,16 +514,17 @@ function ColorSchemeButton() {
         onClick={toggleColorScheme}
         aria-label="Toggle Theme"
       >
-        <span
-          className={classes.themeToggleIcon}
-          data-active={scheme === 'light'}
-        >
+        {/*
+          Both icons stay mounted with static data-scheme markers; CSS picks
+          the active one from the data-mantine-color-scheme attribute on
+          <html>, which ColorSchemeScript writes before hydration. Marking
+          the active icon from useComputedColorScheme would hydrate with
+          mismatched attributes whenever a scheme is stored in localStorage.
+        */}
+        <span className={classes.themeToggleIcon} data-scheme="light">
           <SunIcon size={16} />
         </span>
-        <span
-          className={classes.themeToggleIcon}
-          data-active={scheme === 'dark'}
-        >
+        <span className={classes.themeToggleIcon} data-scheme="dark">
           <MoonIcon size={16} />
         </span>
       </button>
