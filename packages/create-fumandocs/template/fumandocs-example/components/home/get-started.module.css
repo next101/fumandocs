@@ -11,11 +11,15 @@
   gap: var(--mantine-spacing-md);
   padding: var(--mantine-spacing-md) var(--mantine-spacing-lg);
   border-radius: var(--mantine-radius-md);
-  /* always dark, like a real terminal */
-  background-color: var(--mantine-color-dark-8);
-  color: var(--mantine-color-dark-0);
+  background-color: var(--mantine-color-gray-1);
+  color: var(--mantine-color-gray-9);
   font-family: var(--mantine-font-family-monospace);
   font-size: var(--mantine-font-size-sm);
+}
+
+:where([data-mantine-color-scheme="dark"]) .commandInner {
+  background-color: var(--mantine-color-dark-8);
+  color: var(--mantine-color-dark-0);
 }
 
 .commandCode {

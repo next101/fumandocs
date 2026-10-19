@@ -6,13 +6,10 @@ export default function Layout({ children }: LayoutProps<'/'>) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <ColorSchemeScript defaultColorScheme="dark" />
+        <ColorSchemeScript defaultColorScheme="auto" />
       </head>
       <body>
-        <RootProvider
-          theme={{ primaryColor: 'gray', defaultRadius: 'xs' }}
-          mantine={{ defaultColorScheme: 'dark' }}
-        >
+        <RootProvider theme={{ primaryColor: 'dark', defaultRadius: 'xs' }}>
           {children}
         </RootProvider>
       </body>

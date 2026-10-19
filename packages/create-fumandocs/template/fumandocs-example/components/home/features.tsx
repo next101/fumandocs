@@ -45,9 +45,9 @@ const features: Feature[] = [
   },
   {
     icon: <MoonStarsIcon size={24} />,
-    title: 'Dark mode first',
+    title: 'Dark-first theming',
     description:
-      'Dark scheme out of the box, with a light theme and a one-click toggle handled by Mantine color scheme.',
+      "Mantine's dark palette is the primary color, with light and dark schemes and a one-click toggle built in.",
   },
   {
     icon: <PaintBrushIcon size={24} />,

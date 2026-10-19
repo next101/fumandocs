@@ -19,8 +19,8 @@ No Tailwind CSS or PostCSS. Styles are pulled in via CSS `@import` in
 @import "fumandocs-ui/style.css";
 ```
 
-Customize Mantine via `RootProvider` in `app/layout.tsx` — the scaffold defaults
-to the dark color scheme.
+Customize Mantine via `RootProvider` in `app/layout.tsx` — the scaffold uses
+Mantine's `dark` palette as the primary color.
 
 ## Landing page
 
