@@ -15,6 +15,7 @@
     "license:check": "node scripts/addlicense.mjs -c",
     "exports:diff": "node scripts/compare-fumadocs-ui-exports.mjs",
     "exports:check": "node scripts/compare-fumadocs-ui-exports.mjs --check",
+    "template:versions:check": "node scripts/check-template-versions.mjs",
     "format:prose": "prettier --check \"**/*.{md,mdx}\"",
     "format:prose:fix": "prettier --write \"**/*.{md,mdx}\"",
     "types:check": "pnpm -r run types:check",

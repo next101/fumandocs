@@ -40,6 +40,9 @@ jobs:
       - name: Run export parity check
         run: pnpm exports:check
 
+      - name: Check template dependency versions
+        run: pnpm template:versions:check
+
       - name: Run type checks
         run: pnpm types:check
 
