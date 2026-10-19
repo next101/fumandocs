@@ -1,0 +1,30 @@
+.features {
+  margin-top: 50px;
+}
+
+.featureCard {
+  height: 100%;
+  padding: var(--mantine-spacing-xl);
+}
+
+.featureIcon {
+  background: var(--hp-primary-bg);
+  box-shadow: var(--hp-primary-shadow);
+  border-bottom: var(--hp-primary-border);
+  color: var(--mantine-color-blue-0);
+}
+
+.featureTitle {
+  font-size: var(--mantine-font-size-lg);
+  font-weight: 600;
+  color: var(--mantine-color-bright);
+}
+
+.featureDescription {
+  margin-top: 5px;
+  color: var(--mantine-color-gray-7);
+}
+
+:where([data-mantine-color-scheme="dark"]) .featureDescription {
+  color: var(--mantine-color-dark-1);
+}

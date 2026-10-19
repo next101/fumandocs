@@ -1,0 +1,76 @@
+/* Landing header, adapted from mantine.dev DocsHeader */
+
+.header {
+  height: 56px;
+  border-bottom: 1px solid var(--mantine-color-gray-3);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background-color: color-mix(
+    in srgb,
+    var(--mantine-color-body) 85%,
+    transparent
+  );
+  backdrop-filter: blur(5px);
+}
+
+:where([data-mantine-color-scheme="dark"]) .header {
+  border-bottom-color: var(--mantine-color-dark-5);
+}
+
+.headerMain {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px;
+}
+
+.headerSection {
+  display: flex;
+  align-items: center;
+}
+
+.mainLinks {
+  display: flex;
+  gap: 7px;
+  margin-inline-start: 40px;
+
+  @media (max-width: 62em) {
+    display: none;
+  }
+}
+
+.mainLink {
+  color: var(--mantine-color-text);
+  text-decoration: none;
+  display: block;
+  line-height: 1;
+  padding: 7px 10px;
+  font-size: var(--mantine-font-size-sm);
+  border-radius: var(--mantine-radius-md);
+  font-weight: 600;
+
+  &:hover {
+    background-color: var(--mantine-color-gray-0);
+    color: var(--mantine-color-bright);
+  }
+}
+
+:where([data-mantine-color-scheme="dark"]) .mainLink:hover {
+  background-color: var(--mantine-color-dark-6);
+}
+
+.headerControls {
+  display: flex;
+  align-items: center;
+  gap: var(--mantine-spacing-sm);
+}
+
+.burger {
+  display: none;
+  margin-inline-end: var(--mantine-spacing-sm);
+
+  @media (max-width: 62em) {
+    display: block;
+  }
+}

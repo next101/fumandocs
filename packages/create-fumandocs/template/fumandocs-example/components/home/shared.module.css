@@ -1,0 +1,67 @@
+/* Shared landing page building blocks, adapted from mantine.dev */
+
+.section {
+  padding-block: var(--hp-block-spacing);
+}
+
+.sectionAlt {
+  padding-block: var(--hp-block-spacing);
+  background-color: var(--mantine-color-gray-0);
+}
+
+:where([data-mantine-color-scheme="dark"]) .sectionAlt {
+  background-color: var(--mantine-color-dark-8);
+}
+
+.title {
+  font-weight: 450;
+  line-height: 1.1;
+  margin: 0;
+  padding: 0;
+  color: var(--mantine-color-bright);
+  text-wrap: balance;
+
+  &[data-order="1"] {
+    font-size: 64px;
+
+    @media (max-width: 62em) {
+      font-size: 36px;
+    }
+  }
+
+  &[data-order="2"] {
+    font-size: 48px;
+
+    @media (max-width: 62em) {
+      font-size: 34px;
+    }
+  }
+}
+
+.description {
+  max-width: 670px;
+  font-size: var(--mantine-font-size-xl);
+  color: var(--mantine-color-gray-7);
+  margin-top: var(--mantine-spacing-lg);
+  text-wrap: balance;
+
+  @media (max-width: 62em) {
+    font-size: var(--mantine-font-size-md);
+  }
+}
+
+:where([data-mantine-color-scheme="dark"]) .description {
+  color: var(--mantine-color-dark-1);
+}
+
+/* Brand wordmark, shared by header and footer */
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: var(--mantine-color-bright);
+  font-size: var(--mantine-font-size-lg);
+  font-weight: 700;
+}

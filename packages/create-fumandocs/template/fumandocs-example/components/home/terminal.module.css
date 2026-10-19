@@ -1,0 +1,65 @@
+/* Fake terminal pane in the hero docs preview — always dark, like a real terminal */
+
+.terminal {
+  margin: 0;
+  padding: 14px 16px;
+  min-height: 254px;
+  border-radius: var(--mantine-radius-md);
+  background-color: var(--mantine-color-dark-8);
+  color: var(--mantine-color-dark-0);
+  font-family: var(--mantine-font-family-monospace);
+  font-size: 13px;
+  line-height: 1.7;
+  overflow: hidden;
+}
+
+.line {
+  display: block;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.prompt {
+  color: var(--mantine-color-dark-2);
+  user-select: none;
+}
+
+.cmd {
+  color: var(--mantine-color-dark-0);
+  font-weight: 600;
+}
+
+.ok {
+  color: var(--mantine-color-dark-1);
+}
+
+.okMark {
+  color: var(--mantine-color-green-5);
+  user-select: none;
+}
+
+.out {
+  color: var(--mantine-color-dark-1);
+}
+
+.link {
+  color: var(--mantine-color-blue-3);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.cursor {
+  display: inline-block;
+  width: 8px;
+  height: 15px;
+  margin-left: 2px;
+  vertical-align: -2px;
+  background-color: var(--mantine-color-dark-1);
+  animation: terminal-blink 1.1s steps(1) infinite;
+}
+
+@keyframes terminal-blink {
+  50% {
+    opacity: 0;
+  }
+}

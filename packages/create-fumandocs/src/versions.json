@@ -1,6 +1,7 @@
 {
   "@mantine/core": "9.7.2",
   "@mantine/hooks": "9.7.2",
+  "@phosphor-icons/react": "^2.1.10",
   "fumadocs-core": "^16.15.12",
   "fumadocs-mdx": "^15.4.2",
   "next": "16.3.3",

@@ -1,0 +1,297 @@
+/* Landing hero (jumbotron), adapted from mantine.dev HomePageJumbotron */
+
+.jumbotron {
+  padding-top: 100px;
+  padding-bottom: var(--hp-block-spacing);
+
+  @media (max-width: 62em) {
+    padding-top: 56px;
+  }
+}
+
+.actions {
+  display: flex;
+  gap: var(--mantine-spacing-lg);
+  margin-top: 40px;
+
+  @media (max-width: 36em) {
+    flex-direction: column;
+  }
+}
+
+/* Name origin equation: fu(madocs) + man(tine) + docs = fumandocs */
+
+.descriptionLink {
+  color: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: var(--mantine-color-gray-4);
+  text-underline-offset: 3px;
+  transition: text-decoration-color 100ms ease;
+
+  &:hover {
+    text-decoration-color: currentColor;
+  }
+}
+
+:where([data-mantine-color-scheme="dark"]) .descriptionLink {
+  text-decoration-color: var(--mantine-color-dark-3);
+}
+
+:where([data-mantine-color-scheme="dark"]) .descriptionLink:hover {
+  text-decoration-color: currentColor;
+}
+
+.equation {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0;
+  margin-top: var(--mantine-spacing-xl);
+  font-family: var(--mantine-font-family-monospace);
+  font-size: var(--mantine-font-size-lg);
+}
+
+.eqTerm {
+  padding: 2px 10px;
+  border-radius: var(--mantine-radius-md);
+  text-decoration: none;
+  transition: transform 100ms ease;
+
+  &:hover {
+    transform: translateY(-1px);
+  }
+}
+
+.eqFu {
+  color: var(--mantine-color-violet-7);
+  font-weight: 700;
+}
+
+.eqMan {
+  color: var(--mantine-color-blue-7);
+  font-weight: 700;
+}
+
+.eqDocs {
+  color: var(--mantine-color-gray-7);
+  font-weight: 700;
+}
+
+.eqRest {
+  color: var(--mantine-color-dimmed);
+}
+
+.eqFuBg {
+  background-color: var(--mantine-color-violet-0);
+}
+
+.eqManBg {
+  background-color: var(--mantine-color-blue-0);
+}
+
+.eqDocsBg {
+  background-color: var(--mantine-color-gray-1);
+}
+
+:where([data-mantine-color-scheme="dark"]) .eqFu {
+  color: var(--mantine-color-violet-3);
+}
+
+:where([data-mantine-color-scheme="dark"]) .eqMan {
+  color: var(--mantine-color-blue-3);
+}
+
+:where([data-mantine-color-scheme="dark"]) .eqDocs {
+  color: var(--mantine-color-dark-1);
+}
+
+:where([data-mantine-color-scheme="dark"]) .eqFuBg {
+  background-color: var(--mantine-color-violet-9);
+}
+
+:where([data-mantine-color-scheme="dark"]) .eqManBg {
+  background-color: var(--mantine-color-blue-9);
+}
+
+:where([data-mantine-color-scheme="dark"]) .eqDocsBg {
+  background-color: var(--mantine-color-dark-5);
+}
+
+.eqOp {
+  color: var(--mantine-color-dimmed);
+  font-weight: 400;
+}
+
+.eqResult {
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.action {
+  height: 60px;
+  width: 220px;
+  border-radius: var(--mantine-radius-md);
+  font-size: var(--mantine-font-size-lg);
+  padding-inline: var(--mantine-spacing-lg);
+  font-weight: 600;
+  border: 0;
+  border-bottom: 3px solid transparent;
+
+  transition:
+    box-shadow 100ms ease,
+    transform 100ms ease,
+    background-color 100ms ease;
+
+  &:hover {
+    box-shadow: var(--mantine-shadow-md);
+    transform: translateY(-1px) scale(1.01);
+  }
+
+  &[data-get-started] {
+    background: var(--hp-primary-bg);
+    box-shadow: var(--hp-primary-shadow);
+    border-bottom: var(--hp-primary-border);
+    color: var(--mantine-color-white);
+  }
+
+  &[data-github] {
+    background-color: var(--mantine-color-dark-7);
+    color: var(--mantine-color-white);
+
+    &:hover {
+      background-color: var(--mantine-color-black);
+    }
+  }
+
+  @media (max-width: 36em) {
+    width: 100%;
+  }
+}
+
+:where([data-mantine-color-scheme="dark"]) .action[data-github] {
+  border-bottom-color: var(--mantine-color-dark-5);
+  background-color: var(--mantine-color-gray-1);
+  color: var(--mantine-color-black);
+}
+
+/* Browser window chrome of the docs preview */
+
+.windowChrome {
+  position: relative;
+  background-color: var(--mantine-color-gray-1);
+}
+
+:where([data-mantine-color-scheme="dark"]) .windowChrome {
+  background-color: var(--mantine-color-dark-6);
+}
+
+/* Safari-style load progress: fills once on mount, then fades out */
+
+.loadBar {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 2px;
+  width: 0;
+  background: linear-gradient(
+    90deg,
+    var(--mantine-color-blue-5),
+    var(--mantine-color-teal-5)
+  );
+  opacity: 0;
+  animation: window-load-bar 2.8s ease-out 0.3s 1 forwards;
+}
+
+@keyframes window-load-bar {
+  0% {
+    width: 0;
+    opacity: 1;
+  }
+
+  60% {
+    width: 78%;
+    opacity: 1;
+  }
+
+  90% {
+    width: 100%;
+    opacity: 1;
+  }
+
+  100% {
+    width: 100%;
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loadBar {
+    display: none;
+  }
+}
+
+.dot {
+  display: inline-block;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.dotClose {
+  background-color: #ff5f57;
+}
+
+.dotMinimize {
+  background-color: #febc2e;
+}
+
+.dotMaximize {
+  background-color: #28c840;
+}
+
+.windowUrl {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-inline: auto;
+  padding: 4px 12px;
+  background-color: var(--mantine-color-body);
+  border-radius: var(--mantine-radius-xl);
+  color: var(--mantine-color-dimmed);
+  max-width: 320px;
+  text-decoration: none;
+  transition: box-shadow 100ms ease;
+
+  &:hover {
+    box-shadow: 0 0 0 1px var(--mantine-color-gray-4);
+  }
+}
+
+:where([data-mantine-color-scheme="dark"]) .windowUrl:hover {
+  box-shadow: 0 0 0 1px var(--mantine-color-dark-4);
+}
+
+.windowAction {
+  color: var(--mantine-color-dimmed);
+  flex-shrink: 0;
+  animation: window-refresh-spin 2.8s ease-out 0.3s 1;
+}
+
+@keyframes window-refresh-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .windowAction {
+    animation: none;
+  }
+}

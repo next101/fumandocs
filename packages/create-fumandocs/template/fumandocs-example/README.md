@@ -19,4 +19,13 @@ No Tailwind CSS or PostCSS. Styles are pulled in via CSS `@import` in
 @import "fumandocs-ui/style.css";
 ```
 
-Customize Mantine via `RootProvider` in `app/layout.tsx`.
+Customize Mantine via `RootProvider` in `app/layout.tsx` — the scaffold defaults
+to the dark color scheme.
+
+## Landing page
+
+The home page (`app/page.tsx`) is a Mantine-styled landing composed from
+components in `components/home/`: a hero with an animated terminal preview,
+feature cards, a get-started command with copy button, and a scroll-reveal
+footer. Restyle them freely, or remove the landing and point users straight at
+`/docs`.
