@@ -48,3 +48,17 @@ jobs:
 
       - name: Build docs site
         run: pnpm --filter fumandocs-www build
+
+      - name: Scaffold a docs app from the template
+        run: node packages/create-fumandocs/dist/bin.js smoke-app --no-git
+
+      - name: Verify project name replacement
+        run: grep -q '"smoke-app"' smoke-app/components/logo.tsx
+
+      - name: Install scaffolded app dependencies
+        working-directory: smoke-app
+        run: pnpm install
+
+      - name: Build scaffolded app
+        working-directory: smoke-app
+        run: pnpm build
