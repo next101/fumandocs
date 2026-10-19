@@ -74,3 +74,26 @@
     display: block;
   }
 }
+
+/*
+ * Color scheme toggle icons. Both icons are always rendered (so server and
+ * client HTML match); the data-mantine-color-scheme attribute on <html>,
+ * written by ColorSchemeScript before hydration, decides which one shows.
+ * The default (no attribute, e.g. SSR) is the moon icon.
+ */
+
+.sunIcon {
+  display: none;
+}
+
+.moonIcon {
+  display: block;
+}
+
+:where([data-mantine-color-scheme="dark"]) .sunIcon {
+  display: block;
+}
+
+:where([data-mantine-color-scheme="dark"]) .moonIcon {
+  display: none;
+}

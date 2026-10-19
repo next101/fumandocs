@@ -33,7 +33,6 @@ import {
   Drawer,
   Stack,
   Tooltip,
-  useComputedColorScheme,
   useMantineColorScheme,
 } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
@@ -50,9 +49,6 @@ const mainLinks = [
 
 export function SiteHeader() {
   const { toggleColorScheme } = useMantineColorScheme()
-  const colorScheme = useComputedColorScheme('light', {
-    getInitialValueInEffect: true,
-  })
   const [drawerOpened, drawerHandlers] = useDisclosure(false)
 
   return (
@@ -111,11 +107,16 @@ export function SiteHeader() {
                 radius="md"
                 aria-label="Toggle color scheme"
               >
-                {colorScheme === 'dark' ? (
-                  <SunIcon size={18} />
-                ) : (
-                  <MoonIcon size={18} />
-                )}
+                {/*
+                  Both icons stay mounted and CSS picks the visible one based
+                  on the data-mantine-color-scheme attribute (set by
+                  ColorSchemeScript before hydration). Rendering one icon from
+                  useComputedColorScheme would mismatch: the provider reads
+                  localStorage on the first client render while the server
+                  always renders the default scheme.
+                */}
+                <SunIcon size={18} className={classes.sunIcon} />
+                <MoonIcon size={18} className={classes.moonIcon} />
               </ActionIcon>
             </Tooltip>
           </div>
