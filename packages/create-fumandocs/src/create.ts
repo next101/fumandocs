@@ -69,7 +69,10 @@ export async function create(createOptions: CreateOptions): Promise<void> {
 
   const packageJsonPath = path.join(outputDir, 'package.json')
   const packageJson = await initPackageJson(projectName, packageJsonPath)
-  await fs.writeFile(packageJsonPath, JSON.stringify(packageJson, null, 2))
+  await fs.writeFile(
+    packageJsonPath,
+    `${JSON.stringify(packageJson, null, 2)}\n`
+  )
 
   const readmePath = path.join(outputDir, 'README.md')
   const readme = await fs.readFile(readmePath, 'utf8')
