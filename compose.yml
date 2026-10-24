@@ -15,6 +15,11 @@ services:
       args:
         # Baked into the prerendered pages at build time (see Dockerfile).
         SITE_URL: ${SITE_URL:-http://localhost:3000}
+        # Also baked in at build time — NEXT_PUBLIC_* is inlined by `next build`.
+        # Leave NEXT_PUBLIC_PLAUSIBLE_ENABLED unset to keep analytics off.
+        NEXT_PUBLIC_PLAUSIBLE_ENABLED: ${NEXT_PUBLIC_PLAUSIBLE_ENABLED:-false}
+        NEXT_PUBLIC_PLAUSIBLE_DOMAIN: ${NEXT_PUBLIC_PLAUSIBLE_DOMAIN:-}
+        NEXT_PUBLIC_PLAUSIBLE_ENDPOINT: ${NEXT_PUBLIC_PLAUSIBLE_ENDPOINT:-}
     restart: unless-stopped
     env_file:
       - .env

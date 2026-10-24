@@ -26,6 +26,7 @@
 import { ColorSchemeScript } from '@mantine/core'
 import { RootProvider } from 'fumandocs-ui/provider/next'
 import type { Metadata } from 'next'
+import { PlausibleTracker } from '@/components/analytics/plausible-tracker'
 import { siteUrl } from '@/lib/site'
 import './global.css'
 
@@ -85,6 +86,7 @@ export default function Layout({ children }: LayoutProps<'/'>) {
         <ColorSchemeScript defaultColorScheme="auto" />
       </head>
       <body>
+        <PlausibleTracker />
         <RootProvider theme={{ primaryColor: 'gray', defaultRadius: 'xs' }}>
           {children}
         </RootProvider>

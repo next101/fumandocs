@@ -17,6 +17,7 @@
     "@mantine/hooks": "9.7.2",
     "@mantine/schedule": "9.7.2",
     "@phosphor-icons/react": "^2.1.10",
+    "@plausible-analytics/tracker": "^0.4.6",
     "dayjs": "^1.11.23",
     "embla-carousel-react": "^8.6.0",
     "fumadocs-core": "^16.15.12",

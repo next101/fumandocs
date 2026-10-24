@@ -89,7 +89,7 @@ Dokploy proxies to container port 3000.
    the lockfile changes.
 3. `runner` — copies the whole installed workspace tree from `deps` (root
    `node_modules` **and** the per-project ones), copies the source,
-   `ARG SITE_URL` → `ENV`,
+   `ARG SITE_URL` / `ARG NEXT_PUBLIC_PLAUSIBLE_*` → `ENV`,
    `pnpm_config_verify_deps_before_run=false pnpm --filter fumandocs-www build`,
    then a non-root user (uid/gid 1001) owns `/app`.
 
@@ -101,15 +101,20 @@ assets survive the trace. Not worth the risk for the first deploy — see §10.
 
 ## 6. Environment variables
 
-| Variable                  | Phase                   | Value                                                                             |
-| ------------------------- | ----------------------- | --------------------------------------------------------------------------------- |
-| `SITE_URL`                | **build arg** + runtime | Public origin, e.g. `https://docs.example.com`. Rebuild the image when it changes |
-| `NODE_ENV`                | runtime                 | `production` (set in the image and compose)                                       |
-| `HOSTNAME` / `PORT`       | runtime                 | `0.0.0.0` / `3000` (set in the image and compose)                                 |
-| `NEXT_TELEMETRY_DISABLED` | runtime                 | `1`                                                                               |
+| Variable                         | Phase                   | Value                                                                             |
+| -------------------------------- | ----------------------- | --------------------------------------------------------------------------------- |
+| `SITE_URL`                       | **build arg** + runtime | Public origin, e.g. `https://docs.example.com`. Rebuild the image when it changes |
+| `NEXT_PUBLIC_PLAUSIBLE_ENABLED`  | **build arg**           | `true` to enable Plausible analytics; anything else (or unset) loads nothing      |
+| `NEXT_PUBLIC_PLAUSIBLE_DOMAIN`   | **build arg**           | Site domain registered in Plausible, e.g. `docs.example.com`                      |
+| `NEXT_PUBLIC_PLAUSIBLE_ENDPOINT` | **build arg**           | Plausible event endpoint, e.g. `https://plausible.io/api/event`                   |
+| `NODE_ENV`                       | runtime                 | `production` (set in the image and compose)                                       |
+| `HOSTNAME` / `PORT`              | runtime                 | `0.0.0.0` / `3000` (set in the image and compose)                                 |
+| `NEXT_TELEMETRY_DISABLED`        | runtime                 | `1`                                                                               |
 
-That is the complete list — there are no secrets, no database URLs and no
-third-party keys.
+The `NEXT_PUBLIC_*` values are inlined into the client bundle by `next build`,
+so they are build args too — editing them in Dokploy requires a rebuild, not
+just a restart. They are public by definition; none of the variables above is a
+secret.
 
 ## 7. Local verification
 

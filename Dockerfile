@@ -64,6 +64,17 @@ COPY . .
 ARG SITE_URL=http://localhost:3000
 ENV SITE_URL=$SITE_URL
 
+# Plausible Analytics (optional). `NEXT_PUBLIC_*` is inlined into the client
+# bundle by `next build`, so these are build args as well. Tracking stays off
+# unless NEXT_PUBLIC_PLAUSIBLE_ENABLED is exactly "true" and both the domain and
+# the endpoint are non-empty.
+ARG NEXT_PUBLIC_PLAUSIBLE_ENABLED
+ENV NEXT_PUBLIC_PLAUSIBLE_ENABLED=$NEXT_PUBLIC_PLAUSIBLE_ENABLED
+ARG NEXT_PUBLIC_PLAUSIBLE_DOMAIN
+ENV NEXT_PUBLIC_PLAUSIBLE_DOMAIN=$NEXT_PUBLIC_PLAUSIBLE_DOMAIN
+ARG NEXT_PUBLIC_PLAUSIBLE_ENDPOINT
+ENV NEXT_PUBLIC_PLAUSIBLE_ENDPOINT=$NEXT_PUBLIC_PLAUSIBLE_ENDPOINT
+
 # Builds packages/fumandocs-ui first (the www `build` script does that), then
 # the Next.js site. `.source/` (fumadocs-mdx codegen) is regenerated here — it
 # is not committed, exactly as on CI.
