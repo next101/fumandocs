@@ -25,7 +25,7 @@ export function GetStartedSection() {
     <section className={sharedClasses.section}>
       <Container size={1440}>
         <Title order={2} className={sharedClasses.title} ta="center">
-          Start building your docs
+          Start building your site
         </Title>
         <Text
           className={sharedClasses.description}
@@ -34,8 +34,8 @@ export function GetStartedSection() {
           maw={860}
           mb={40}
         >
-          One command scaffolds a Next.js app with MDX content, search, and this
-          docs layout pre-wired.
+          One command scaffolds a Next.js app with MDX content and a
+          Mantine-powered layout pre-wired.
         </Text>
 
         <div className={classes.command}>

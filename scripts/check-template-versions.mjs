@@ -12,7 +12,7 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const pkgDir = path.join(root, 'packages', 'create-fumandocs')
 const templatePkg = JSON.parse(
   fs.readFileSync(
-    path.join(pkgDir, 'template', 'fumandocs-example', 'package.json'),
+    path.join(pkgDir, 'template', 'fumandocs-example', 'base', 'package.json'),
     'utf8'
   )
 )

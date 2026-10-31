@@ -16,12 +16,16 @@ import {
   LockIcon,
 } from '@phosphor-icons/react/ssr'
 import Link from 'next/link'
+import { primaryLink } from '@/lib/modules'
 import classes from './hero.module.css'
 import { LinkButton } from './shared'
 import sharedClasses from './shared.module.css'
 import { Terminal } from './terminal'
 
 async function DocsPreview() {
+  const contentDir =
+    primaryLink.href === '/blog' ? 'content/blog' : 'content/docs'
+
   return (
     <Paper
       withBorder
@@ -41,13 +45,13 @@ async function DocsPreview() {
         <span className={`${classes.dot} ${classes.dotMinimize}`} />
         <span className={`${classes.dot} ${classes.dotMaximize}`} />
         <Link
-          href="/docs"
+          href={primaryLink.href}
           className={classes.windowUrl}
-          title="Open the documentation"
+          title={`Open the ${primaryLink.label.toLowerCase()}`}
         >
           <LockIcon size={11} weight="fill" />
           <Text size="xs" c="dimmed" truncate lh={1}>
-            localhost:3000/docs
+            localhost:3000{primaryLink.href}
           </Text>
         </Link>
         <ArrowClockwiseIcon size={14} className={classes.windowAction} />
@@ -56,11 +60,11 @@ async function DocsPreview() {
       <Divider />
       <Stack p={{ base: 'md', sm: 'xl' }} gap="md">
         <Title order={2} size="h3">
-          Your documentation
+          Your {primaryLink.label.toLowerCase()}
         </Title>
         <Text c="dimmed" size="sm">
-          Write your content in MDX under <code>content/docs</code> — Fumandocs
-          handles the page tree, search, and layout for you.
+          Write your content in MDX under <code>{contentDir}</code> — Fumandocs
+          handles the layout for you.
         </Text>
         <Terminal />
       </Stack>
@@ -75,7 +79,7 @@ export function HeroSection() {
         <SimpleGrid cols={{ base: 1, lg: 2 }} spacing={50}>
           <div>
             <Title order={1} className={sharedClasses.title}>
-              Your docs, powered by Mantine
+              Your {primaryLink.label.toLowerCase()}, powered by Mantine
             </Title>
 
             <Text className={sharedClasses.description}>
@@ -97,9 +101,9 @@ export function HeroSection() {
               >
                 Mantine
               </a>{' '}
-              component library — write beautiful, interactive documentation
-              with the React components you already know, without a single line
-              of Tailwind.
+              component library — write beautiful, interactive content with the
+              React components you already know, without a single line of
+              Tailwind.
             </Text>
 
             <p className={classes.equation}>
@@ -138,7 +142,7 @@ export function HeroSection() {
 
             <div className={classes.actions}>
               <LinkButton
-                href="/docs"
+                href={primaryLink.href}
                 className={classes.action}
                 data-get-started
                 justify="space-between"

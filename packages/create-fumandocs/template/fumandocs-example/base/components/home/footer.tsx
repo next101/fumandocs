@@ -6,6 +6,7 @@ import { GithubLogoIcon, PackageIcon } from '@phosphor-icons/react/ssr'
 import Link from 'next/link'
 import { useRef } from 'react'
 import { LogoWithTitle } from '@/components/logo'
+import { navLinks } from '@/lib/modules'
 import classes from './footer.module.css'
 import sharedClasses from './shared.module.css'
 
@@ -17,11 +18,8 @@ interface FooterLink {
 
 const groups: { title: string; links: FooterLink[] }[] = [
   {
-    title: 'Docs',
-    links: [
-      { label: 'Getting started', href: '/docs' },
-      { label: 'Components', href: '/docs/components' },
-    ],
+    title: 'Content',
+    links: navLinks,
   },
   {
     title: 'Ecosystem',

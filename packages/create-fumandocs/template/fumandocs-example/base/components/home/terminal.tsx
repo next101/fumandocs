@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { primaryLink } from '@/lib/modules'
 import classes from './terminal.module.css'
 
 type Frame =
@@ -20,7 +21,7 @@ const script: Step[] = [
     lines: [
       { kind: 'ok', text: 'Created a Next.js app' },
       { kind: 'ok', text: 'Installed fumandocs-ui' },
-      { kind: 'ok', text: 'Added MDX content and docs layout' },
+      { kind: 'ok', text: 'Added MDX content and layout' },
       { kind: 'blank' },
     ],
   },
@@ -72,8 +73,8 @@ function Line({ frame }: { frame: Frame }) {
       return (
         <span className={`${classes.line} ${classes.out}`}>
           {'- Local:   '}
-          <Link href="/docs" className={classes.link}>
-            http://localhost:3000/docs
+          <Link href={primaryLink.href} className={classes.link}>
+            http://localhost:3000{primaryLink.href}
           </Link>
         </span>
       )

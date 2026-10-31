@@ -237,12 +237,24 @@ function templateFiles(
   dependencies: Record<string, string> = {}
 ): Record<string, string> {
   return {
-    'template/fumandocs-example/package.json': JSON.stringify({
+    'template/fumandocs-example/base/package.json': JSON.stringify({
       name: 'fumandocs-example',
       dependencies,
     }),
-    'template/fumandocs-example/README.md': '# example\n',
-    'template/fumandocs-example/app/docs/layout.tsx': layout,
+    'template/fumandocs-example/base/README.md': '# example\n',
+    'template/fumandocs-example/base/components/logo.tsx': layout,
+    'template/fumandocs-example/base/app/page.tsx':
+      'export default function HomePage() {\n  return null\n}\n',
+    'template/fumandocs-example/modules/docs/app/docs/layout.tsx': layout,
+    'template/fumandocs-example/modules/blog/README.md': '# blog module\n',
+    'template/fumandocs-example/overrides/blog-only-page.tsx':
+      'export default function HomePage() {\n  return null\n}\n',
+    'template/fumandocs-example/overrides/sitemap-docs.ts':
+      'export default function sitemap() {\n  return []\n}\n',
+    'template/fumandocs-example/overrides/sitemap-blog.ts':
+      'export default function sitemap() {\n  return []\n}\n',
+    'template/fumandocs-example/overrides/sitemap-both.ts':
+      'export default function sitemap() {\n  return []\n}\n',
   }
 }
 
@@ -291,5 +303,64 @@ describe('create with a custom template', () => {
     )
 
     expect(layout).toContain('"my app"')
+  })
+})
+
+describe('create module selection', () => {
+  it('rejects an empty module list', async () => {
+    await expect(createProjectWith({ modules: [] })).rejects.toThrow(
+      /At least one module is required/
+    )
+  })
+
+  it('scaffolds docs only by default', async () => {
+    const dir = await createProjectWith()
+    const sitemap = await fs.readFile(
+      path.join(dir, 'app', 'sitemap.ts'),
+      'utf8'
+    )
+    const packageJson = await readJson(path.join(dir, 'package.json'))
+
+    expect(sitemap).toContain("from '@/lib/source'")
+    expect(sitemap).not.toContain("from '@/lib/blog'")
+    expect(packageJson.dependencies.zod).toBeUndefined()
+  })
+
+  it('combines sitemaps and adds zod for docs plus blog', async () => {
+    const dir = await createProjectWith({ modules: ['docs', 'blog'] })
+    const sitemap = await fs.readFile(
+      path.join(dir, 'app', 'sitemap.ts'),
+      'utf8'
+    )
+    const packageJson = await readJson(path.join(dir, 'package.json'))
+
+    expect(sitemap).toContain("from '@/lib/source'")
+    expect(sitemap).toContain("from '@/lib/blog'")
+    expect(packageJson.dependencies.zod).toBe('^4.6.5')
+  })
+
+  it('uses the blog sitemap and home page for blog only', async () => {
+    const dir = await createProjectWith({ modules: ['blog'] })
+    const sitemap = await fs.readFile(
+      path.join(dir, 'app', 'sitemap.ts'),
+      'utf8'
+    )
+    const page = await fs.readFile(path.join(dir, 'app', 'page.tsx'), 'utf8')
+    const packageJson = await readJson(path.join(dir, 'package.json'))
+
+    expect(sitemap).toContain("from '@/lib/blog'")
+    expect(sitemap).not.toContain("from '@/lib/source'")
+    expect(page).toContain('BlogShell')
+    expect(packageJson.dependencies.zod).toBe('^4.6.5')
+  })
+
+  it('keeps an existing zod pin for blog', async () => {
+    await writeTemplate(templateFiles(TOKEN_LAYOUT, { zod: '^4.0.0' }))
+    const dir = await outputDir()
+
+    await create({ outputDir: dir, modules: ['blog'] })
+
+    const packageJson = await readJson(path.join(dir, 'package.json'))
+    expect(packageJson.dependencies.zod).toBe('^4.0.0')
   })
 })

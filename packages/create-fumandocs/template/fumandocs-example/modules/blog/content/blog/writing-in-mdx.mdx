@@ -1,0 +1,43 @@
+---
+title: Writing in MDX
+description: Markdown for prose, React components when you need them.
+date: 2026-10-24
+tags: ["mdx", "tutorial"]
+---
+
+MDX is Markdown with JSX. That means ordinary prose stays simple, and you can
+drop in a component wherever Markdown runs out of expressiveness.
+
+## Components are already available
+
+The Fumandocs MDX components are registered globally, so there is nothing to
+import:
+
+<Callout title="Tip" type="tip">
+  Callouts, cards, code blocks, and headings all come from `fumandocs-ui/mdx`.
+</Callout>
+
+## Code blocks
+
+Fenced code blocks are highlighted with Shiki using the GitHub light and dark
+themes:
+
+```ts
+export function greeting(name: string): string {
+  return `Hello, ${name}!`;
+}
+```
+
+## Lists and tables
+
+- Posts are sorted by `date`, newest first.
+- Drafts stay out of production builds.
+- Tags are displayed in the list and on the post page.
+
+| Field         | Required | Notes                     |
+| ------------- | -------- | ------------------------- |
+| `title`       | yes      | Shown in the list         |
+| `description` | yes      | Used for metadata         |
+| `date`        | yes      | Sorted newest first       |
+| `tags`        | no       | Defaults to an empty list |
+| `draft`       | no       | Hidden in production      |

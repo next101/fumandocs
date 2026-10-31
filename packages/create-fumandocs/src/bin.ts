@@ -34,6 +34,7 @@ import {
   confirm,
   intro,
   isCancel,
+  multiselect,
   outro,
   spinner,
   text,
@@ -43,9 +44,11 @@ import pc from 'picocolors'
 import { getPackageManager, managers } from './auto-install'
 import { isCI } from './constants'
 import { create } from './index'
+import { defaultModules, type ModuleId, parseModules } from './modules'
 
 const command = program
   .argument('[name]', 'project directory name')
+  .option('--modules <list>', 'modules to include, comma separated (docs,blog)')
   .option('--install', 'install dependencies after scaffolding')
   .option('--no-git', 'skip git init')
   .addOption(
@@ -101,6 +104,41 @@ async function main(): Promise<void> {
 
   if (!isCI) await checkDir(projectName)
 
+  let modules: ModuleId[]
+  if (config.modules !== undefined) {
+    try {
+      modules = parseModules(config.modules)
+    } catch (err) {
+      cancel((err as Error).message)
+      process.exit(1)
+    }
+  } else if (isCI) {
+    modules = defaultModules
+  } else {
+    const answer = await multiselect<ModuleId>({
+      message: 'Which modules do you want to create?',
+      options: [
+        { value: 'docs', label: 'Docs', hint: 'Documentation site at /docs' },
+        {
+          value: 'blog',
+          label: 'Blog',
+          hint: 'Blog with a post list at /blog',
+        },
+      ],
+      initialValues: defaultModules,
+      required: false,
+    })
+    if (isCancel(answer)) {
+      cancel('Cancelled.')
+      process.exit(0)
+    }
+    modules = answer
+    if (modules.length === 0) {
+      cancel('Select at least one module: docs or blog.')
+      process.exit(0)
+    }
+  }
+
   let installDeps = config.install ?? false
   if (config.install === undefined && !isCI) {
     const answer = await confirm({
@@ -122,6 +160,7 @@ async function main(): Promise<void> {
   try {
     await create({
       outputDir,
+      modules,
       packageManager: config.pm,
       installDeps,
       initializeGit,

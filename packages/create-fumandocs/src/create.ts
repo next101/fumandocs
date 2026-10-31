@@ -29,9 +29,11 @@ import { copy, tryGitInit } from '@/utils'
 import type { PackageManager } from './auto-install'
 import { autoInstall } from './auto-install'
 import { depVersions, sourceDir } from './constants'
+import { defaultModules, type ModuleId } from './modules'
 
 export interface CreateOptions {
   outputDir: string
+  modules?: ModuleId[]
   packageManager?: PackageManager
   installDeps?: boolean
   initializeGit?: boolean
@@ -45,8 +47,6 @@ type PackageJson = {
   devDependencies?: Record<string, string>
 } & Record<string, unknown>
 
-const TEMPLATE_DIR = 'fumandocs-example'
-
 /** Placeholder in template text files, replaced with the project name. */
 const PROJECT_NAME_TOKEN = "'__PROJECT_NAME__'"
 
@@ -54,30 +54,78 @@ const TEXT_FILE_EXTENSIONS = new Set([
   '.ts',
   '.tsx',
   '.md',
+  '.mdx',
   '.json',
   '.mjs',
   '.css',
 ])
 
+/** Files that may contain `@modules` comment blocks. */
+const MODULE_MARKER_EXTENSIONS = new Set(['.ts', '.tsx', '.css', '.md', '.mdx'])
+
+const MODULE_START_MARKER =
+  /^\s*(?:\/\/|\/\*|\{\/\*|<!--)\s*@modules\s+([\w, -]+?)\s*(?:\*\/|\*\/\}|-->)?\s*$/
+
+const MODULE_END_MARKER =
+  /^\s*(?:\/\/|\/\*|\{\/\*|<!--)\s*@modules-end\s*(?:\*\/|\*\/\}|-->)?\s*$/
+
 export async function create(createOptions: CreateOptions): Promise<void> {
   const {
     outputDir,
+    modules: requestedModules = defaultModules,
     packageManager = 'npm',
     initializeGit = false,
     installDeps = false,
     log = console.log,
   } = createOptions
 
+  const modules = [...new Set(requestedModules)]
+  if (modules.length === 0) {
+    throw new Error('At least one module is required: docs or blog')
+  }
+
   const projectName = path.basename(outputDir)
 
-  await copy(path.join(sourceDir, 'template', TEMPLATE_DIR), outputDir, {
+  // Resolved per call rather than at import time, so tests can point sourceDir
+  // at a fixture template.
+  const templateRoot = path.join(sourceDir, 'template', 'fumandocs-example')
+  const baseDir = path.join(templateRoot, 'base')
+  const modulesDir = path.join(templateRoot, 'modules')
+  const overridesDir = path.join(templateRoot, 'overrides')
+
+  await copy(baseDir, outputDir, {
     rename(file) {
       return file.replace('example.gitignore', '.gitignore')
     },
   })
 
+  for (const moduleId of modules) {
+    await copy(path.join(modulesDir, moduleId), outputDir)
+  }
+
+  // A blog-only site uses the post list as its home page.
+  if (modules.length === 1 && modules[0] === 'blog') {
+    await fs.copyFile(
+      path.join(overridesDir, 'blog-only-page.tsx'),
+      path.join(outputDir, 'app', 'page.tsx')
+    )
+  }
+
+  const sitemapOverride =
+    modules.length > 1 ? 'sitemap-both.ts' : `sitemap-${modules[0]}.ts`
+  await fs.copyFile(
+    path.join(overridesDir, sitemapOverride),
+    path.join(outputDir, 'app', 'sitemap.ts')
+  )
+
+  await applyModuleFilters(outputDir, modules)
+
   const packageJsonPath = path.join(outputDir, 'package.json')
-  const packageJson = await initPackageJson(projectName, packageJsonPath)
+  const packageJson = await initPackageJson(
+    projectName,
+    packageJsonPath,
+    modules
+  )
   await fs.writeFile(
     packageJsonPath,
     `${JSON.stringify(packageJson, null, 2)}\n`
@@ -88,9 +136,9 @@ export async function create(createOptions: CreateOptions): Promise<void> {
   await fs.writeFile(readmePath, `# ${projectName}\n\n${readme}`)
 
   const replacedFiles = await applyProjectName(outputDir, projectName)
-  if (!replacedFiles.includes(path.join('app', 'docs', 'layout.tsx'))) {
+  if (!replacedFiles.includes(path.join('components', 'logo.tsx'))) {
     throw new Error(
-      `Template app/docs/layout.tsx is missing the ${PROJECT_NAME_TOKEN} placeholder`
+      `Template components/logo.tsx is missing the ${PROJECT_NAME_TOKEN} placeholder`
     )
   }
 
@@ -110,7 +158,8 @@ export async function create(createOptions: CreateOptions): Promise<void> {
 
 async function initPackageJson(
   projectName: string,
-  packageJsonPath: string
+  packageJsonPath: string,
+  modules: ModuleId[]
 ): Promise<PackageJson> {
   const packageJson: PackageJson = JSON.parse(
     await fs.readFile(packageJsonPath, 'utf-8')
@@ -139,6 +188,13 @@ async function initPackageJson(
     return next
   }
 
+  const dependencies = replaceDeps(
+    packageJson.dependencies as Record<string, string>
+  )
+  if (modules.includes('blog') && !('zod' in dependencies)) {
+    dependencies.zod = depVersions.zod
+  }
+
   return {
     ...packageJson,
     name: projectName,
@@ -148,12 +204,60 @@ async function initPackageJson(
       start: 'next start',
       'types:check': 'next typegen && tsc --noEmit',
     },
-    dependencies: replaceDeps(
-      packageJson.dependencies as Record<string, string>
-    ),
+    dependencies,
     devDependencies: replaceDeps(
       packageJson.devDependencies as Record<string, string>
     ),
+  }
+}
+
+/**
+ * Strip `@modules <ids>` … `@modules-end` blocks whose modules are disabled.
+ * The markers are comments so the template files stay valid TypeScript, JSX,
+ * CSS and Markdown.
+ */
+function filterModuleBlocks(source: string, enabled: Set<string>): string {
+  const output: string[] = []
+  const stack: boolean[] = []
+
+  for (const line of source.split(/\r?\n/)) {
+    const start = line.match(MODULE_START_MARKER)
+    if (start) {
+      const ids = start[1].split(/[,\s]+/).filter(Boolean)
+      stack.push(ids.some((id) => enabled.has(id)))
+      continue
+    }
+
+    if (MODULE_END_MARKER.test(line)) {
+      stack.pop()
+      continue
+    }
+
+    if (stack.every(Boolean)) output.push(line)
+  }
+
+  return output.join('\n').replace(/\n{3,}/g, '\n\n')
+}
+
+async function applyModuleFilters(
+  outputDir: string,
+  modules: ModuleId[]
+): Promise<void> {
+  const enabled = new Set<string>(modules)
+  const entries = await fs.readdir(outputDir, {
+    withFileTypes: true,
+    recursive: true,
+  })
+
+  for (const entry of entries) {
+    if (!entry.isFile()) continue
+    if (!MODULE_MARKER_EXTENSIONS.has(path.extname(entry.name))) continue
+
+    const filePath = path.join(entry.parentPath, entry.name)
+    const content = await fs.readFile(filePath, 'utf8')
+    if (!content.includes('@modules')) continue
+
+    await fs.writeFile(filePath, filterModuleBlocks(content, enabled))
   }
 }
 

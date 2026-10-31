@@ -1,0 +1,30 @@
+.back {
+  display: inline-block;
+  margin-bottom: var(--mantine-spacing-lg);
+  font-size: var(--mantine-font-size-sm);
+  color: var(--mantine-color-dimmed);
+  text-decoration: none;
+}
+
+.back:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.header {
+  margin-bottom: var(--mantine-spacing-xl);
+  padding-bottom: var(--mantine-spacing-xl);
+  border-bottom: 1px solid var(--mantine-color-default-border);
+}
+
+.title {
+  font-size: clamp(1.75rem, 1.2rem + 2vw, 2.5rem);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.description {
+  margin-block: var(--mantine-spacing-sm) var(--mantine-spacing-md);
+  line-height: 1.6;
+}
