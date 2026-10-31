@@ -26,7 +26,11 @@
 import { defineConfig } from 'tsdown'
 
 export default defineConfig({
-  entry: ['./src/**/*.{ts,tsx}', '!./src/**/*.d.ts'],
+  entry: [
+    './src/**/*.{ts,tsx}',
+    '!./src/**/*.d.ts',
+    '!./src/**/*.test.{ts,tsx}',
+  ],
   format: 'esm',
   target: 'es2022',
   platform: 'browser',
