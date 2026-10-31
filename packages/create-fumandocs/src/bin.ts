@@ -24,6 +24,9 @@
  *
  */
 
+/* v8 ignore file -- process entry point: parses argv, prompts, and exits.
+ * Covered end to end by the scaffold smoke test. */
+
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import {

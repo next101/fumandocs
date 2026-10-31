@@ -32,13 +32,28 @@ import uiPackage from '../../fumandocs-ui/package.json'
 import { autoInstall } from './auto-install'
 import { type CreateOptions, create } from './create'
 
+const constants = vi.hoisted(() => ({ sourceDir: '' }))
+
 vi.mock('./auto-install', () => ({ autoInstall: vi.fn() }))
 vi.mock('@/utils', async (importOriginal) => {
   const actual = await importOriginal<typeof import('@/utils')>()
   return { ...actual, tryGitInit: vi.fn() }
 })
+vi.mock('./constants', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('./constants')>()
+  return {
+    ...actual,
+    get sourceDir() {
+      return constants.sourceDir
+    },
+  }
+})
 
 const tempDirs: string[] = []
+
+beforeEach(() => {
+  constants.sourceDir = path.resolve('packages/create-fumandocs')
+})
 
 async function createProject(name = 'my-app') {
   const parent = await fs.mkdtemp(path.join(os.tmpdir(), 'fumandocs-create-'))
@@ -197,5 +212,84 @@ describe('create optional steps', () => {
     await createProjectWith({ initializeGit: true, log })
 
     expect(log).not.toHaveBeenCalledWith('Initialized Git repository')
+  })
+})
+
+const TOKEN_LAYOUT =
+  "export default function Layout() { return '__PROJECT_NAME__' }"
+
+async function writeTemplate(files: Record<string, string>): Promise<string> {
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), 'fumandocs-template-'))
+  tempDirs.push(root)
+
+  for (const [name, content] of Object.entries(files)) {
+    const file = path.join(root, name)
+    await fs.mkdir(path.dirname(file), { recursive: true })
+    await fs.writeFile(file, content)
+  }
+
+  constants.sourceDir = root
+  return root
+}
+
+function templateFiles(
+  layout: string,
+  dependencies: Record<string, string> = {}
+): Record<string, string> {
+  return {
+    'template/fumandocs-example/package.json': JSON.stringify({
+      name: 'fumandocs-example',
+      dependencies,
+    }),
+    'template/fumandocs-example/README.md': '# example\n',
+    'template/fumandocs-example/app/docs/layout.tsx': layout,
+  }
+}
+
+async function outputDir(name = 'app') {
+  const parent = await fs.mkdtemp(path.join(os.tmpdir(), 'fumandocs-out-'))
+  tempDirs.push(parent)
+  return path.join(parent, name)
+}
+
+describe('create with a custom template', () => {
+  it('rejects a template without the project name placeholder', async () => {
+    await writeTemplate(templateFiles('export default function Layout() {}'))
+
+    await expect(create({ outputDir: await outputDir() })).rejects.toThrow(
+      /missing the .* placeholder/
+    )
+  })
+
+  it('resolves a workspace dependency through its pinned name', async () => {
+    await writeTemplate(
+      templateFiles(TOKEN_LAYOUT, { 'my-ui': 'workspace:fumandocs-ui@*' })
+    )
+
+    const dir = await outputDir()
+    await create({ outputDir: dir })
+
+    const packageJson = await readJson(path.join(dir, 'package.json'))
+    expect(packageJson.dependencies['my-ui']).toBe(`^${uiPackage.version}`)
+  })
+
+  it('rejects a workspace dependency with no pinned version', async () => {
+    await writeTemplate(
+      templateFiles(TOKEN_LAYOUT, { 'unknown-pkg': 'workspace:*' })
+    )
+
+    await expect(create({ outputDir: await outputDir() })).rejects.toThrow(
+      /no pinned version/
+    )
+  })
+
+  it('quotes project names that are not plain identifiers', async () => {
+    const dir = await createProject('my app')
+    const layout = await fs.readFile(
+      path.join(dir, 'app', 'docs', 'layout.tsx'),
+      'utf8'
+    )
+
+    expect(layout).toContain('"my app"')
   })
 })

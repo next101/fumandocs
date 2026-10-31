@@ -25,7 +25,7 @@
 
 import '@testing-library/jest-dom/vitest'
 import { MantineProvider } from '@mantine/core'
-import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { FrameworkProvider } from 'fumadocs-core/framework'
 import type { ReactElement } from 'react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
@@ -213,6 +213,34 @@ describe('MarkdownCopyButton', () => {
     )
 
     expect(screen.getByText('Copy page')).toBeInTheDocument()
+  })
+
+  it('resets the copied label after a moment', async () => {
+    const writeText = vi.fn().mockResolvedValue(undefined)
+    Object.defineProperty(navigator, 'clipboard', {
+      value: { writeText },
+      configurable: true,
+    })
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue({ text: async () => '# doc' })
+    )
+
+    vi.useFakeTimers()
+    try {
+      renderPage(<MarkdownCopyButton markdownUrl="/docs.md" />)
+      fireEvent.click(
+        screen.getByText('Copy Markdown').closest('button') as HTMLButtonElement
+      )
+
+      await act(async () => {})
+      expect(screen.getByText('Copied')).toBeInTheDocument()
+
+      act(() => vi.advanceTimersByTime(1600))
+      expect(screen.getByText('Copy Markdown')).toBeInTheDocument()
+    } finally {
+      vi.useRealTimers()
+    }
   })
 })
 

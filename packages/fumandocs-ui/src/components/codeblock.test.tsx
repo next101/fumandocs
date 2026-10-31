@@ -25,7 +25,7 @@
 
 import '@testing-library/jest-dom/vitest'
 import { MantineProvider, Tabs } from '@mantine/core'
-import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import type { ReactElement } from 'react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import {
@@ -96,6 +96,33 @@ describe('CodeBlock', () => {
     await waitFor(() =>
       expect(writeText).toHaveBeenCalledWith('const answer = 42')
     )
+  })
+
+  it('falls back to the viewport text without a pre', async () => {
+    renderCodeBlock(<CodeBlock>plain code</CodeBlock>)
+
+    fireEvent.click(screen.getByRole('button', { name: 'Copy code' }))
+
+    await waitFor(() => expect(writeText).toHaveBeenCalledWith('plain code'))
+  })
+
+  it('resets the copied state after a moment', async () => {
+    vi.useFakeTimers()
+    try {
+      renderCodeBlock(
+        <CodeBlock>
+          <Pre>const answer = 42</Pre>
+        </CodeBlock>
+      )
+
+      fireEvent.click(screen.getByRole('button', { name: 'Copy code' }))
+      await act(async () => {})
+      act(() => vi.advanceTimersByTime(1600))
+
+      expect(writeText).toHaveBeenCalled()
+    } finally {
+      vi.useRealTimers()
+    }
   })
 
   it('merges viewportProps className into the viewport', () => {

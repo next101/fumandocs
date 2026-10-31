@@ -169,7 +169,10 @@ describe('tryGitInit', () => {
   })
 
   it('returns false when a git command fails', async () => {
-    mockGit((args) => (args[0] === 'init' ? new Error('boom') : 0))
+    mockGit((args) => {
+      if (args[0] === 'rev-parse') return 1
+      return args[0] === 'init' ? new Error('boom') : 0
+    })
     const cwd = await tempDir()
 
     expect(await tryGitInit(cwd)).toBe(false)

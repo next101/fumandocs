@@ -174,22 +174,25 @@ and anything that depends on real layout.
 `pnpm test:cov` uses the V8 provider (`@vitest/coverage-v8`, pinned to the same
 version as `vitest` — it is not bundled) and writes `text`, `json`, and `html`
 reports to the gitignored `coverage/` directory. Thresholds live in
-`vitest.config.ts`:
+`vitest.config.ts` and are **100% on lines, statements, branches, and
+functions**. Do not lower them to make a change pass.
 
-- Suite floor: 80% on lines, statements, branches, and functions. The current
-  baseline is ~82% statements, ~87% branches, ~90% functions, ~83% lines.
-- `components/toc-geometry.ts` and `layouts/docs/page-tree.ts`: 100% on all four
-  metrics. They are pure by design, so there is no excuse for a gap.
+Two deliberate exemptions:
 
-Raise the floor as gaps close; do not lower it to make a change pass. Excluded
-from the denominator: test files, `*.d.ts`, `*.module.css`, barrels
+- `create-fumandocs/src/bin.ts` carries `/* v8 ignore file */`. It is a process
+  entry point — parses `process.argv`, prompts through `@clack/prompts`, and
+  calls `process.exit` — and the scaffold smoke test below covers it end to end.
+- A few statements carry `/* v8 ignore next */` with the reason inline: the SSR
+  guard in `page.tsx`, the always-attached ref guard in `toc.tsx`, the
+  unreachable footer guard in `docs-layout.tsx`, and the defensive copy fallback
+  in `codeblock.tsx`.
+
+Excluded from the denominator: test files, `*.d.ts`, `*.module.css`, barrels
 (`index.ts`/`index.tsx`), and the type-only `layouts/shared.ts`.
 
-The one large uncovered file is `create-fumandocs/src/bin.ts` (0%): it is the
-CLI entry point, parses `process.argv`, prompts through `@clack/prompts`, and
-calls `process.exit`. The scaffold smoke test below exercises it end to end, so
-unit tests would mostly assert on mocks. Everything else is at ~75% or above,
-with `toc.tsx` (~75%) and `docs-layout.tsx` (~85%) the next candidates.
+Vitest only honours statement-level hints (`v8 ignore file`, `v8 ignore next`);
+a hint inside an expression does not drop an operand branch, so unreachable `??`
+fallbacks need a statement-level guard instead.
 
 ## Common workflows
 

@@ -339,6 +339,7 @@ export function ViewOptionsPopover({
 }) {
   const pathname = usePathname()
   const items = useMemo(() => {
+    /* v8 ignore next -- SSR-only guard; browsers and tests always have window. */
     const pageUrl =
       typeof window === 'undefined'
         ? pathname

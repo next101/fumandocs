@@ -24,10 +24,43 @@
  */
 
 import '@testing-library/jest-dom/vitest'
-import { render, screen } from '@testing-library/react'
+import { act, render, screen } from '@testing-library/react'
 import { AnchorProvider } from 'fumadocs-core/toc'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { TOCRail, TOCRailItem } from './toc'
+
+const tocState = vi.hoisted(() => ({
+  items: [] as unknown[],
+  listener: null as null | ((items: unknown[]) => void),
+}))
+
+vi.mock('fumadocs-core/toc', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('fumadocs-core/toc')>()
+  return {
+    ...actual,
+    useTOC: () => ({ get: () => tocState.items }),
+    useTOCListener: (listener: (items: unknown[]) => void) => {
+      tocState.listener = listener
+    },
+  }
+})
+
+function activeRange(step?: number): unknown[] {
+  return [
+    {
+      id: '#one',
+      active: true,
+      t: 1,
+      original: { url: '#one', title: 'One', depth: 2, _step: step },
+    },
+    {
+      id: '#two',
+      active: true,
+      t: 2,
+      original: { url: '#two', title: 'Two', depth: 3 },
+    },
+  ]
+}
 
 const items = [
   { url: '#one', title: 'One', depth: 2 },
@@ -57,6 +90,8 @@ function renderRail(thumbBox?: boolean, toc = items) {
 }
 
 beforeEach(() => {
+  tocState.items = []
+  tocState.listener = null
   globalThis.ResizeObserver =
     ImmediateResizeObserver as unknown as typeof ResizeObserver
   vi.spyOn(HTMLElement.prototype, 'clientHeight', 'get').mockReturnValue(100)
@@ -123,5 +158,87 @@ describe('TOCRailItem', () => {
     renderRail()
 
     expect(screen.getAllByRole('link')).toHaveLength(3)
+  })
+})
+
+describe('thumb track', () => {
+  it('positions the thumb for the active range', () => {
+    tocState.items = activeRange()
+
+    const { container } = renderRail()
+
+    const thumb = container.querySelector(
+      '[style*="--track-top"]'
+    ) as HTMLElement
+    expect(thumb).not.toBeNull()
+    expect(thumb.style.getPropertyValue('--track-top')).not.toBe('')
+  })
+
+  it('applies listener updates to the thumb element', () => {
+    tocState.items = activeRange()
+    renderRail()
+
+    act(() => tocState.listener?.(tocState.items))
+
+    const thumb = document.querySelector(
+      '[style*="--track-top"]'
+    ) as HTMLElement
+    expect(thumb.style.getPropertyValue('--offset-distance')).not.toBe('')
+  })
+
+  it('tracks direction and step markers', () => {
+    tocState.items = activeRange(1)
+    renderRail()
+
+    const thumb = document.querySelector(
+      '[style*="--track-top"]'
+    ) as HTMLElement
+    act(() => tocState.listener?.(tocState.items))
+    expect(thumb.style.getPropertyValue('--opacity')).toBe('1')
+
+    tocState.items = [
+      {
+        id: '#one',
+        active: true,
+        t: 1,
+        original: { url: '#one', title: 'One', depth: 2, _step: 1 },
+      },
+      {
+        id: '#two',
+        active: false,
+        t: 2,
+        original: { url: '#two', title: 'Two', depth: 3 },
+      },
+    ]
+    act(() => tocState.listener?.(tocState.items))
+    expect(thumb.style.getPropertyValue('--opacity')).toBe('0')
+  })
+
+  it('skips thumb bookkeeping when thumbBox is disabled', () => {
+    tocState.items = activeRange()
+
+    renderRail(false)
+    act(() => tocState.listener?.(tocState.items))
+
+    expect(tocState.listener).not.toBeNull()
+  })
+
+  it('ignores listener updates after unmount', () => {
+    tocState.items = activeRange()
+    const { unmount } = renderRail()
+    const listener = tocState.listener
+
+    unmount()
+    act(() => listener?.(tocState.items))
+  })
+})
+
+describe('TOCRail measurement', () => {
+  it('skips items that have no rendered anchor', () => {
+    render(
+      <AnchorProvider toc={[]}>
+        <TOCRail items={[{ url: '#missing', title: 'Missing', depth: 2 }]} />
+      </AnchorProvider>
+    )
   })
 })

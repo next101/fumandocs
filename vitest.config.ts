@@ -23,11 +23,11 @@ export default defineConfig({
         'packages/fumandocs-ui/src/layouts/shared.ts',
       ],
       thresholds: {
-        // Floor for the suite as a whole; raise as the gaps below get covered.
-        lines: 80,
-        statements: 80,
-        branches: 80,
-        functions: 80,
+        // The CLI entry is ignored; everything else must be complete.
+        lines: 100,
+        statements: 100,
+        branches: 100,
+        functions: 100,
         // Pure helpers extracted for testing: keep them complete.
         'packages/fumandocs-ui/src/components/toc-geometry.ts': {
           lines: 100,

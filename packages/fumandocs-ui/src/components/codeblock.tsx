@@ -61,10 +61,12 @@ export function CodeBlock({
   const [copied, setCopied] = useState(false)
 
   const copy = async () => {
+    const viewport = ref.current
     const content =
-      ref.current?.querySelector('pre')?.textContent ??
-      ref.current?.textContent ??
-      ''
+      viewport?.querySelector('pre')?.textContent ?? viewport?.textContent
+    /* v8 ignore next -- defensive: the button only renders with a mounted viewport. */
+    if (content === undefined) return
+
     await navigator.clipboard.writeText(content)
     setCopied(true)
     window.setTimeout(() => setCopied(false), 1500)

@@ -25,7 +25,7 @@
 
 import '@testing-library/jest-dom/vitest'
 import { MantineProvider } from '@mantine/core'
-import { fireEvent, render, screen } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import type { ReactNode } from 'react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { SearchProvider, useSearch } from './search'
@@ -35,6 +35,15 @@ function SearchProbe() {
   return (
     <button type="button" onClick={search.open}>
       {String(search.enabled)}
+    </button>
+  )
+}
+
+function OpenProbe() {
+  const { open } = useSearch()
+  return (
+    <button type="button" onClick={open}>
+      open search
     </button>
   )
 }
@@ -268,5 +277,48 @@ describe('useSearch', () => {
     const button = screen.getByRole('button')
     expect(button).toHaveTextContent('false')
     fireEvent.click(button)
+  })
+
+  it('opens the dialog through the context', async () => {
+    renderSearch(
+      <SearchProvider>
+        <OpenProbe />
+      </SearchProvider>
+    )
+
+    fireEvent.click(screen.getByRole('button', { name: 'open search' }))
+
+    expect(await screen.findByText('Search documentation')).toBeInTheDocument()
+  })
+})
+
+describe('SearchDialog lifecycle', () => {
+  it('closes on escape', async () => {
+    renderSearch(
+      <SearchProvider>
+        <span>content</span>
+      </SearchProvider>
+    )
+    await openDialog()
+    const dialog = await screen.findByRole('dialog')
+
+    fireEvent.keyDown(dialog, { key: 'Escape', code: 'Escape', keyCode: 27 })
+
+    await waitFor(() =>
+      expect(screen.queryByText('Search documentation')).toBeNull()
+    )
+  })
+
+  it('focuses the input once the dialog has entered', async () => {
+    renderSearch(
+      <SearchProvider>
+        <span>content</span>
+      </SearchProvider>
+    )
+    await openDialog()
+
+    await waitFor(() =>
+      expect(screen.getByPlaceholderText('Search documentation…')).toHaveFocus()
+    )
   })
 })

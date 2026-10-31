@@ -131,6 +131,7 @@ export function TOCRail({
 
   useEffect(() => {
     const container = containerRef.current
+    /* v8 ignore next -- the ref is always attached by the time effects run. */
     if (!container) return
 
     const observer = new ResizeObserver(onPrint)

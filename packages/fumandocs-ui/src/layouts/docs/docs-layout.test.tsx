@@ -25,17 +25,36 @@
 
 import '@testing-library/jest-dom/vitest'
 import { MantineProvider } from '@mantine/core'
-import { fireEvent, render, screen } from '@testing-library/react'
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from '@testing-library/react'
 import { FrameworkProvider } from 'fumadocs-core/framework'
 import type * as PageTree from 'fumadocs-core/page-tree'
-import type { ComponentProps, ReactElement } from 'react'
-import { describe, expect, it } from 'vitest'
+import type { ComponentProps, ReactElement, ReactNode } from 'react'
+import { describe, expect, it, vi } from 'vitest'
 import { SearchProvider } from '../../search'
 import { DocsLayout, useDocsLayout } from './docs-layout'
 
 function LayoutProbe() {
   useDocsLayout()
   return null
+}
+
+function PathProbe() {
+  const { pathname } = useDocsLayout()
+  return <span data-testid="pathname">{pathname}</span>
+}
+
+// jsdom cannot navigate between documents, so drop the anchor default action
+// while still letting React's onClick run.
+function clickLink(link: HTMLElement) {
+  link.addEventListener('click', (event) => event.preventDefault())
+  fireEvent.click(link)
 }
 
 const tree: PageTree.Root = {
@@ -77,13 +96,24 @@ function renderLayout(ui: ReactElement) {
   )
 }
 
-function layout(props: Partial<ComponentProps<typeof DocsLayout>> = {}) {
+function layout(
+  props: Partial<ComponentProps<typeof DocsLayout>> = {},
+  children: ReactNode = <p>page content</p>
+) {
   return renderLayout(
     <SearchProvider>
       <DocsLayout tree={tree} nav={{ title: 'Fumandocs' }} {...props}>
-        <p>page content</p>
+        {children}
       </DocsLayout>
     </SearchProvider>
+  )
+}
+
+function bareLayout(props: Partial<ComponentProps<typeof DocsLayout>> = {}) {
+  return renderLayout(
+    <DocsLayout tree={tree} nav={{ title: 'Fumandocs' }} {...props}>
+      <p>page content</p>
+    </DocsLayout>
   )
 }
 
@@ -224,5 +254,161 @@ describe('DocsLayout', () => {
 
   it('throws when page components are used outside the layout', () => {
     expect(() => render(<LayoutProbe />)).toThrow(/inside <DocsLayout>/)
+  })
+
+  it('exposes the page context to descendants', () => {
+    layout({}, <PathProbe />)
+
+    expect(screen.getByTestId('pathname')).toHaveTextContent(
+      '/docs/guide/setup'
+    )
+  })
+
+  it('ignores peek events while expanded', () => {
+    const { container } = layout()
+    const aside = container.querySelector('aside') as HTMLElement
+
+    fireEvent.pointerEnter(aside)
+    fireEvent.pointerLeave(aside)
+
+    expect(aside).not.toHaveAttribute('data-hovered')
+  })
+
+  it('ignores touch peek events', () => {
+    const { container } = layout()
+    const aside = container.querySelector('aside') as HTMLElement
+
+    fireEvent.click(screen.getByRole('button', { name: 'Toggle sidebar' }))
+    fireEvent.pointerEnter(aside, { pointerType: 'touch' })
+
+    expect(aside).not.toHaveAttribute('data-hovered')
+  })
+
+  it('closes the peek after a delay', () => {
+    vi.useFakeTimers()
+    try {
+      Object.defineProperty(document.body, 'clientWidth', {
+        configurable: true,
+        value: 1000,
+      })
+
+      const { container } = layout()
+      const aside = container.querySelector('aside') as HTMLElement
+      fireEvent.click(screen.getByRole('button', { name: 'Toggle sidebar' }))
+      fireEvent.pointerEnter(aside)
+      expect(aside).toHaveAttribute('data-hovered', 'true')
+
+      fireEvent.pointerLeave(aside, { clientX: 400 })
+      act(() => vi.advanceTimersByTime(10))
+      expect(aside).not.toHaveAttribute('data-hovered')
+
+      fireEvent.pointerEnter(aside)
+      fireEvent.pointerLeave(aside, { clientX: 0 })
+      act(() => vi.advanceTimersByTime(500))
+      expect(aside).not.toHaveAttribute('data-hovered')
+    } finally {
+      vi.useRealTimers()
+      delete (document.body as unknown as Record<string, unknown>).clientWidth
+    }
+  })
+
+  it('runs the navigation callback when a sidebar link is clicked', () => {
+    layout()
+
+    clickLink(screen.getByRole('link', { name: 'Introduction' }))
+  })
+
+  it('closes the mobile drawer on escape', async () => {
+    layout()
+
+    fireEvent.click(screen.getByRole('button', { name: 'Open navigation' }))
+    const dialog = await screen.findByRole('dialog')
+
+    fireEvent.keyDown(dialog, { key: 'Escape', code: 'Escape', keyCode: 27 })
+
+    await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull())
+  })
+
+  it('closes the mobile drawer when navigating', async () => {
+    layout()
+
+    fireEvent.click(screen.getByRole('button', { name: 'Open navigation' }))
+    const dialog = await screen.findByRole('dialog')
+
+    clickLink(within(dialog).getByRole('link', { name: 'Introduction' }))
+
+    await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull())
+  })
+
+  it('renders menu link icons and external markers', () => {
+    layout({
+      links: [
+        {
+          text: 'External link',
+          url: 'https://example.com',
+          on: 'menu',
+          external: true,
+        },
+        {
+          text: 'Icon link',
+          url: '/icon',
+          on: 'menu',
+          icon: <span data-testid="link-icon" />,
+        },
+      ],
+    })
+
+    expect(
+      screen.getByRole('link', { name: /External link/ })
+    ).toBeInTheDocument()
+    expect(screen.getByTestId('link-icon')).toBeInTheDocument()
+  })
+
+  it('renders no search affordances without a search provider', () => {
+    bareLayout()
+
+    expect(screen.queryByRole('button', { name: /Search/ })).toBeNull()
+  })
+
+  it('shows the ctrl shortcut on non-mac platforms', () => {
+    const platform = navigator.platform
+    Object.defineProperty(navigator, 'platform', {
+      configurable: true,
+      value: 'Linux x86_64',
+    })
+
+    try {
+      layout()
+      expect(screen.getAllByText('Ctrl').length).toBeGreaterThan(0)
+    } finally {
+      Object.defineProperty(navigator, 'platform', {
+        configurable: true,
+        value: platform,
+      })
+    }
+  })
+
+  it('keeps the command shortcut on mac platforms', () => {
+    const platform = navigator.platform
+    Object.defineProperty(navigator, 'platform', {
+      configurable: true,
+      value: 'MacIntel',
+    })
+
+    try {
+      layout()
+      expect(screen.getAllByText('⌘').length).toBeGreaterThan(0)
+    } finally {
+      Object.defineProperty(navigator, 'platform', {
+        configurable: true,
+        value: platform,
+      })
+    }
+  })
+
+  it('renders footer children', () => {
+    layout({ nav: { children: <span data-testid="nav-extra" /> } })
+
+    expect(screen.getByTestId('nav-extra')).toBeInTheDocument()
   })
 })

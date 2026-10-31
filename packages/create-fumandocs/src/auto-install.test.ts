@@ -47,9 +47,14 @@ describe('getPackageManager', () => {
   })
 
   it('falls back to npm without a user agent', () => {
-    vi.stubEnv('npm_config_user_agent', '')
+    const previous = process.env.npm_config_user_agent
+    delete process.env.npm_config_user_agent
 
-    expect(getPackageManager()).toBe('npm')
+    try {
+      expect(getPackageManager()).toBe('npm')
+    } finally {
+      if (previous !== undefined) process.env.npm_config_user_agent = previous
+    }
   })
 })
 

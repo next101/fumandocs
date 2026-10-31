@@ -474,6 +474,8 @@ function SidebarFooter({
 }) {
   const hasLinks = Boolean(githubUrl) || Boolean(children)
   const showThemeSwitch = themeSwitch.enabled !== false
+  /* v8 ignore next -- DocsLayout always passes JSX children, so this guard is
+   * unreachable from the layout. */
   if (!hasLinks && !showThemeSwitch) return null
   return (
     <div className={classes.sidebarFooter}>
