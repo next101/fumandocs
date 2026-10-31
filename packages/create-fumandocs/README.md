@@ -23,16 +23,21 @@ Arguments:
   name           project directory name
 
 Options:
-  --modules <list>  modules to include, comma separated: docs,blog (default: docs)
-  --install         install dependencies after scaffolding
-  --no-git          skip git init
-  --pm <name>       package manager for --install (npm, yarn, bun, pnpm)
+  --modules <list>      modules to include, comma separated: docs,blog (default: docs)
+  --title <text>        site title (defaults to the project name)
+  --description <text>  site description
+  --url <url>           public site URL (default: https://example.com)
+  --install             install dependencies after scaffolding
+  --pm <name>           package manager (npm, yarn, bun, pnpm)
 ```
 
-With no arguments the CLI asks for a project name and modules interactively. The
-docs module is selected by default and the blog module is off; selecting neither
-exits without writing anything. In CI (`CI=1`) it scaffolds `my-docs` with the
-docs module non-interactively without installing.
+With no arguments the CLI asks for a project name, modules, site title,
+description, URL, and package manager interactively. The docs module is selected
+by default and the blog module is off; selecting neither exits without writing
+anything. License files are left to you. The CLI does not initialise a Git
+repository; the final instructions print `git init`. In CI (`CI=1`) it scaffolds
+`my-docs` with the docs module and default site metadata non-interactively,
+without installing dependencies.
 
 ## Modules
 
@@ -48,6 +53,8 @@ A Next.js App Router project with:
 - `fumandocs-ui` (Mantine) for the docs layout, MDX components, and search
 - `fumadocs-core` + `fumadocs-mdx` for content, routing, and page trees
 - Content in `content/docs/` and/or `content/blog/` (MDX), site config in `app/`
+- `.env.example` with `NEXT_PUBLIC_SITE_URL`, used by `robots.ts` and
+  `sitemap.ts`
 
 ## Requirements
 

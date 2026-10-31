@@ -24,6 +24,10 @@
  */
 
 export type { CreateOptions } from './create'
-export { create } from './create'
+export {
+  create,
+  DEFAULT_SITE_DESCRIPTION,
+  DEFAULT_SITE_URL,
+} from './create'
 export type { ModuleId } from './modules'
 export { defaultModules, moduleIds, parseModules } from './modules'

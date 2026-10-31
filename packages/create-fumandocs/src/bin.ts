@@ -36,25 +36,30 @@ import {
   isCancel,
   multiselect,
   outro,
+  select,
   spinner,
   text,
 } from '@clack/prompts'
 import { Option, program } from '@commander-js/extra-typings'
 import pc from 'picocolors'
-import { getPackageManager, managers } from './auto-install'
+import {
+  getPackageManager,
+  managers,
+  type PackageManager,
+} from './auto-install'
 import { isCI } from './constants'
-import { create } from './index'
+import { create, DEFAULT_SITE_DESCRIPTION, DEFAULT_SITE_URL } from './index'
 import { defaultModules, type ModuleId, parseModules } from './modules'
 
 const command = program
   .argument('[name]', 'project directory name')
   .option('--modules <list>', 'modules to include, comma separated (docs,blog)')
+  .option('--title <text>', 'site title (defaults to the project name)')
+  .option('--description <text>', 'site description')
+  .option('--url <url>', 'public site URL')
   .option('--install', 'install dependencies after scaffolding')
-  .option('--no-git', 'skip git init')
   .addOption(
-    new Option('--pm <name>', 'package manager for --install')
-      .choices([...managers])
-      .default(getPackageManager())
+    new Option('--pm <name>', 'package manager to use').choices([...managers])
   )
 
 async function checkDir(name: string): Promise<void> {
@@ -66,6 +71,39 @@ async function checkDir(name: string): Promise<void> {
   } catch {
     // ok
   }
+}
+
+async function askText(
+  message: string,
+  defaultValue: string,
+  validate?: (value: string) => string | undefined
+): Promise<string> {
+  const answer = await text({
+    message,
+    defaultValue,
+    placeholder: defaultValue,
+    validate: validate ? (value) => validate(value ?? '') : undefined,
+  })
+  if (isCancel(answer)) {
+    cancel('Cancelled.')
+    process.exit(0)
+  }
+  return answer.trim()
+}
+
+function flagValue(value: string | undefined): string | undefined {
+  const trimmed = value?.trim()
+  return trimmed ? trimmed : undefined
+}
+
+function validateSiteUrl(value: string): string | undefined {
+  try {
+    const { protocol } = new URL(value)
+    if (protocol === 'http:' || protocol === 'https:') return undefined
+  } catch {
+    // Not a URL at all.
+  }
+  return 'Enter an http(s) URL'
 }
 
 async function main(): Promise<void> {
@@ -139,10 +177,53 @@ async function main(): Promise<void> {
     }
   }
 
+  const siteTitle =
+    flagValue(config.title) ??
+    (isCI ? projectName : await askText('Site title', projectName))
+
+  const siteDescription =
+    flagValue(config.description) ??
+    (isCI
+      ? DEFAULT_SITE_DESCRIPTION
+      : await askText('Site description', DEFAULT_SITE_DESCRIPTION))
+
+  const urlFlag = flagValue(config.url)
+  if (urlFlag !== undefined) {
+    const error = validateSiteUrl(urlFlag)
+    if (error) {
+      cancel(`Invalid site URL "${urlFlag}": ${error}`)
+      process.exit(1)
+    }
+  }
+
+  const siteUrl =
+    urlFlag ??
+    (isCI
+      ? DEFAULT_SITE_URL
+      : await askText('Site URL', DEFAULT_SITE_URL, validateSiteUrl))
+
+  let packageManager = config.pm
+  if (packageManager === undefined) {
+    if (isCI) {
+      packageManager = getPackageManager()
+    } else {
+      const answer = await select<PackageManager>({
+        message: 'Package manager',
+        options: managers.map((pm) => ({ value: pm, label: pm })),
+        initialValue: getPackageManager(),
+      })
+      if (isCancel(answer)) {
+        cancel('Cancelled.')
+        process.exit(0)
+      }
+      packageManager = answer
+    }
+  }
+
   let installDeps = config.install ?? false
   if (config.install === undefined && !isCI) {
     const answer = await confirm({
-      message: `Install dependencies with ${config.pm}?`,
+      message: `Install dependencies with ${packageManager}?`,
       initialValue: true,
     })
     if (isCancel(answer)) {
@@ -152,8 +233,6 @@ async function main(): Promise<void> {
     installDeps = answer
   }
 
-  const initializeGit = config.git !== false && !isCI
-
   const info = spinner()
   info.start('Generating project…')
 
@@ -161,9 +240,11 @@ async function main(): Promise<void> {
     await create({
       outputDir,
       modules,
-      packageManager: config.pm,
+      siteTitle,
+      siteDescription,
+      siteUrl,
+      packageManager,
       installDeps,
-      initializeGit,
       log: (msg) => info.message(msg),
     })
     info.stop('Project created')
@@ -174,7 +255,7 @@ async function main(): Promise<void> {
   }
 
   outro(
-    `Next:\n  cd ${projectName}\n  ${installDeps ? '' : `${config.pm} install\n  `}${config.pm} run dev`
+    `Next:\n  cd ${projectName}\n  git init\n  ${installDeps ? '' : `${packageManager} install\n  `}${packageManager} run dev`
   )
 }
 

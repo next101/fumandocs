@@ -26,11 +26,8 @@
 import fs from 'node:fs/promises'
 import os from 'node:os'
 import path from 'node:path'
-import { x } from 'tinyexec'
-import { afterEach, describe, expect, it, vi } from 'vitest'
-import { copy, tryGitInit } from './utils'
-
-vi.mock('tinyexec', () => ({ x: vi.fn() }))
+import { afterEach, describe, expect, it } from 'vitest'
+import { copy } from './utils'
 
 const tempDirs: string[] = []
 
@@ -54,19 +51,7 @@ async function exists(file: string) {
     .catch(() => false)
 }
 
-function mockGit(handler: (args: string[]) => number | Error) {
-  vi.mocked(x).mockImplementation((async (
-    _command: string,
-    args: string[] = []
-  ) => {
-    const result = handler(args)
-    if (result instanceof Error) throw result
-    return { exitCode: result, stdout: '', stderr: '' }
-  }) as never)
-}
-
 afterEach(async () => {
-  vi.mocked(x).mockReset()
   await Promise.all(
     tempDirs
       .splice(0)
@@ -126,55 +111,5 @@ describe('copy', () => {
 
     expect(await exists(path.join(to, 'keep.txt'))).toBe(true)
     expect(await exists(path.join(to, 'skip', 'inside.txt'))).toBe(false)
-  })
-})
-
-describe('tryGitInit', () => {
-  it('returns false when git is unavailable', async () => {
-    mockGit((args) => (args[0] === '--version' ? 1 : 0))
-    const cwd = await tempDir()
-
-    expect(await tryGitInit(cwd)).toBe(false)
-  })
-
-  it('returns false inside an existing repository', async () => {
-    mockGit((args) => (args[0] === 'rev-parse' ? 0 : 0))
-    const cwd = await tempDir()
-
-    expect(await tryGitInit(cwd)).toBe(false)
-  })
-
-  it('creates an initial commit', async () => {
-    mockGit((args) => (args[0] === 'rev-parse' ? 1 : 0))
-    const cwd = await tempDir()
-
-    expect(await tryGitInit(cwd)).toBe(true)
-    expect(x).toHaveBeenCalledWith(
-      'git',
-      ['commit', '-m', 'Initial commit from create-fumandocs'],
-      expect.objectContaining({ throwOnError: true })
-    )
-  })
-
-  it('switches to main when no default branch is configured', async () => {
-    mockGit((args) => (args[0] === 'rev-parse' || args[0] === 'config' ? 1 : 0))
-    const cwd = await tempDir()
-
-    expect(await tryGitInit(cwd)).toBe(true)
-    expect(x).toHaveBeenCalledWith(
-      'git',
-      ['checkout', '-b', 'main'],
-      expect.objectContaining({ throwOnError: true })
-    )
-  })
-
-  it('returns false when a git command fails', async () => {
-    mockGit((args) => {
-      if (args[0] === 'rev-parse') return 1
-      return args[0] === 'init' ? new Error('boom') : 0
-    })
-    const cwd = await tempDir()
-
-    expect(await tryGitInit(cwd)).toBe(false)
   })
 })

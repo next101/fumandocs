@@ -27,7 +27,6 @@ import fs from 'node:fs/promises'
 import os from 'node:os'
 import path from 'node:path'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { tryGitInit } from '@/utils'
 import uiPackage from '../../fumandocs-ui/package.json'
 import { autoInstall } from './auto-install'
 import { type CreateOptions, create } from './create'
@@ -35,10 +34,6 @@ import { type CreateOptions, create } from './create'
 const constants = vi.hoisted(() => ({ sourceDir: '' }))
 
 vi.mock('./auto-install', () => ({ autoInstall: vi.fn() }))
-vi.mock('@/utils', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('@/utils')>()
-  return { ...actual, tryGitInit: vi.fn() }
-})
 vi.mock('./constants', async (importOriginal) => {
   const actual = await importOriginal<typeof import('./constants')>()
   return {
@@ -130,21 +125,22 @@ describe('create', () => {
     ).rejects.toThrow()
   })
 
-  it('replaces the project name token in template files', async () => {
+  it('replaces the site title and description tokens', async () => {
     const outputDir = await createProject('my-app')
 
-    const layout = await fs.readFile(
-      path.join(outputDir, 'app', 'docs', 'layout.tsx'),
-      'utf8'
-    )
     const logo = await fs.readFile(
       path.join(outputDir, 'components', 'logo.tsx'),
       'utf8'
     )
+    const layout = await fs.readFile(
+      path.join(outputDir, 'app', 'layout.tsx'),
+      'utf8'
+    )
 
-    expect(layout).toContain("'my-app'")
-    expect(layout).not.toContain('__PROJECT_NAME__')
-    expect(logo).not.toContain('__PROJECT_NAME__')
+    expect(logo).toContain('"my-app"')
+    expect(logo).not.toContain('__SITE_TITLE__')
+    expect(layout).toContain('"Built with Fumadocs and Mantine"')
+    expect(layout).not.toContain('__SITE_DESCRIPTION__')
   })
 
   it('prefixes the README with the project name', async () => {
@@ -154,10 +150,9 @@ describe('create', () => {
     expect(readme.startsWith('# my-app\n')).toBe(true)
   })
 
-  it('does not install dependencies or initialise git by default', async () => {
+  it('does not install dependencies by default', async () => {
     const outputDir = await createProject()
 
-    await expect(fs.access(path.join(outputDir, '.git'))).rejects.toThrow()
     await expect(
       fs.access(path.join(outputDir, 'node_modules'))
     ).rejects.toThrow()
@@ -194,29 +189,10 @@ describe('create optional steps', () => {
       expect.stringContaining('Failed to install dependencies')
     )
   })
-
-  it('initialises git when requested', async () => {
-    vi.mocked(tryGitInit).mockResolvedValue(true)
-    const log = vi.fn()
-
-    await createProjectWith({ initializeGit: true, log })
-
-    expect(tryGitInit).toHaveBeenCalled()
-    expect(log).toHaveBeenCalledWith('Initialized Git repository')
-  })
-
-  it('stays quiet when git initialisation is skipped', async () => {
-    vi.mocked(tryGitInit).mockResolvedValue(false)
-    const log = vi.fn()
-
-    await createProjectWith({ initializeGit: true, log })
-
-    expect(log).not.toHaveBeenCalledWith('Initialized Git repository')
-  })
 })
 
 const TOKEN_LAYOUT =
-  "export default function Layout() { return '__PROJECT_NAME__' }"
+  "export default function Layout() { return '__SITE_TITLE__' }"
 
 async function writeTemplate(files: Record<string, string>): Promise<string> {
   const root = await fs.mkdtemp(path.join(os.tmpdir(), 'fumandocs-template-'))
@@ -265,7 +241,7 @@ async function outputDir(name = 'app') {
 }
 
 describe('create with a custom template', () => {
-  it('rejects a template without the project name placeholder', async () => {
+  it('rejects a template without the site title placeholder', async () => {
     await writeTemplate(templateFiles('export default function Layout() {}'))
 
     await expect(create({ outputDir: await outputDir() })).rejects.toThrow(
@@ -295,14 +271,14 @@ describe('create with a custom template', () => {
     )
   })
 
-  it('quotes project names that are not plain identifiers', async () => {
+  it('uses the project name as the default site title', async () => {
     const dir = await createProject('my app')
-    const layout = await fs.readFile(
-      path.join(dir, 'app', 'docs', 'layout.tsx'),
+    const logo = await fs.readFile(
+      path.join(dir, 'components', 'logo.tsx'),
       'utf8'
     )
 
-    expect(layout).toContain('"my app"')
+    expect(logo).toContain('"my app"')
   })
 })
 
@@ -362,5 +338,39 @@ describe('create module selection', () => {
 
     const packageJson = await readJson(path.join(dir, 'package.json'))
     expect(packageJson.dependencies.zod).toBe('^4.0.0')
+  })
+})
+
+describe('create site metadata', () => {
+  it('writes the site title and description into the template', async () => {
+    const dir = await createProjectWith({
+      siteTitle: 'Acme Docs',
+      siteDescription: 'Everything Acme',
+    })
+    const logo = await fs.readFile(
+      path.join(dir, 'components', 'logo.tsx'),
+      'utf8'
+    )
+    const layout = await fs.readFile(
+      path.join(dir, 'app', 'layout.tsx'),
+      'utf8'
+    )
+
+    expect(logo).toContain('"Acme Docs"')
+    expect(layout).toContain('"Everything Acme"')
+  })
+
+  it('writes .env.example with the site URL', async () => {
+    const dir = await createProjectWith({ siteUrl: 'https://docs.acme.dev' })
+    const env = await fs.readFile(path.join(dir, '.env.example'), 'utf8')
+
+    expect(env).toBe('NEXT_PUBLIC_SITE_URL=https://docs.acme.dev\n')
+  })
+
+  it('defaults the URL when none is provided', async () => {
+    const dir = await createProjectWith()
+    const env = await fs.readFile(path.join(dir, '.env.example'), 'utf8')
+
+    expect(env).toBe('NEXT_PUBLIC_SITE_URL=https://example.com\n')
   })
 })

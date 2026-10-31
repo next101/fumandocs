@@ -45,8 +45,8 @@ Prerequisites: Node >= 22 and pnpm 11.13.0 (CI pins that version).
 | `pnpm build:site`              | Regenerate export docs, build UI, build www                                   |
 | `pnpm release`                 | commit-and-tag-version across root + both packages                            |
 
-Run the scaffolder from source with
-`pnpm --filter create-fumandocs dev <name> --no-git`.
+Run the scaffolder from source with `pnpm --filter create-fumandocs dev <name>`;
+it prompts for modules, site metadata, and package manager.
 
 ## Architecture notes
 
@@ -91,22 +91,27 @@ source, rebuild before expecting the site to change.
 
 `create()` in `packages/create-fumandocs/src/create.ts`:
 
-1. Copies `template/fumandocs-example` to the target, renaming
+1. Copies `template/fumandocs-example/base` to the target, renaming
    `example.gitignore` → `.gitignore` (git would never commit a template
-   `.gitignore`).
+   `.gitignore`), then copies each selected `modules/<id>` and the matching
+   sitemap from `overrides/` (the blog-only home page is another override).
 2. Rewrites `package.json`: sets `name`, replaces the scripts, and resolves
    every `workspace:` dependency to a pinned version from `src/versions.json`
    (`fumandocs-ui` is pinned from its own package version by `constants.ts`). An
    unresolvable `workspace:` dep throws.
-3. Replaces the `'__PROJECT_NAME__'` token (quotes included, which keeps it
-   valid TS) in `.ts .tsx .md .json .mjs .css` files it copies.
-4. Optionally installs dependencies and runs `git init` + initial commit.
+3. Strips `@modules` blocks for modules that were not selected.
+4. Writes `.env.example` with `NEXT_PUBLIC_SITE_URL`.
+5. Replaces the `'__SITE_TITLE__'` and `'__SITE_DESCRIPTION__'` tokens (quotes
+   included, which keeps them valid TS) in `.ts .tsx .md .mdx .json .mjs .css`
+   files it copies.
+6. Optionally installs dependencies. It never initialises a Git repository; the
+   CLI's outro prints `git init` for the user to run.
 
 Hard invariants:
 
-- `template/fumandocs-example/app/docs/layout.tsx` **must** still contain the
-  `'__PROJECT_NAME__'` token; `create()` throws if the replacement pass did not
-  touch it.
+- `template/fumandocs-example/base/components/logo.tsx` **must** still contain
+  the `'__SITE_TITLE__'` token; `create()` throws if the replacement pass did
+  not touch it.
 - Adding a `workspace:` dependency to the template requires a matching entry in
   `src/versions.json`, or both `pnpm template:versions:check` and real
   scaffolding break.
@@ -146,8 +151,9 @@ package's `src/`, carry the MIT header like any other source file, and are
 excluded from the `fumandocs-ui` tsdown entry so they never reach `dist`.
 
 - `create.test.ts` scaffolds into a temp directory and asserts the package
-  rewrite: name, script swap, `workspace:` pinning, `.gitignore` rename, and
-  `__PROJECT_NAME__` replacement.
+  rewrite: name, script swap, `workspace:` pinning, `.gitignore` rename, site
+  title/description replacement, and `.env.example`. Module selection and
+  `parseModules` have their own suites.
 - Component tests cover branch logic in `callout`, `card`, `codeblock`,
   `heading`, `mdx`, and `DocsPage` pagination.
 - `toc-geometry.test.ts` and `page-tree.test.ts` cover logic extracted from
@@ -160,7 +166,7 @@ version check, `tsc --noEmit`, `pnpm test:cov`, package builds, and the
 docs-site build. The last behavioural check is the scaffold smoke test:
 
 ```
-build dist/bin.js → scaffold smoke-app --no-git
+build dist/bin.js → scaffold smoke-app
 → grep -q "'smoke-app'" smoke-app/components/logo.tsx
 → pnpm install && pnpm build in the generated app
 ```
@@ -200,7 +206,7 @@ fallbacks need a statement-level guard instead.
 
 ```bash
 pnpm build
-node packages/create-fumandocs/dist/bin.js my-test-app --no-git
+node packages/create-fumandocs/dist/bin.js my-test-app
 cd my-test-app && pnpm install && pnpm build
 ```
 

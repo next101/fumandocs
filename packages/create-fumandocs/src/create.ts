@@ -25,7 +25,7 @@
 
 import fs from 'node:fs/promises'
 import path from 'node:path'
-import { copy, tryGitInit } from '@/utils'
+import { copy } from '@/utils'
 import type { PackageManager } from './auto-install'
 import { autoInstall } from './auto-install'
 import { depVersions, sourceDir } from './constants'
@@ -34,9 +34,11 @@ import { defaultModules, type ModuleId } from './modules'
 export interface CreateOptions {
   outputDir: string
   modules?: ModuleId[]
+  siteTitle?: string
+  siteDescription?: string
+  siteUrl?: string
   packageManager?: PackageManager
   installDeps?: boolean
-  initializeGit?: boolean
   log?: (message: string) => void
 }
 
@@ -47,8 +49,15 @@ type PackageJson = {
   devDependencies?: Record<string, string>
 } & Record<string, unknown>
 
-/** Placeholder in template text files, replaced with the project name. */
-const PROJECT_NAME_TOKEN = "'__PROJECT_NAME__'"
+/** Placeholder in template text files, replaced with the site title. */
+const SITE_TITLE_TOKEN = "'__SITE_TITLE__'"
+
+/** Placeholder in template text files, replaced with the site description. */
+const SITE_DESCRIPTION_TOKEN = "'__SITE_DESCRIPTION__'"
+
+export const DEFAULT_SITE_DESCRIPTION = 'Built with Fumadocs and Mantine'
+
+export const DEFAULT_SITE_URL = 'https://example.com'
 
 const TEXT_FILE_EXTENSIONS = new Set([
   '.ts',
@@ -74,7 +83,6 @@ export async function create(createOptions: CreateOptions): Promise<void> {
     outputDir,
     modules: requestedModules = defaultModules,
     packageManager = 'npm',
-    initializeGit = false,
     installDeps = false,
     log = console.log,
   } = createOptions
@@ -85,6 +93,10 @@ export async function create(createOptions: CreateOptions): Promise<void> {
   }
 
   const projectName = path.basename(outputDir)
+  const siteTitle = createOptions.siteTitle ?? projectName
+  const siteDescription =
+    createOptions.siteDescription ?? DEFAULT_SITE_DESCRIPTION
+  const siteUrl = createOptions.siteUrl ?? DEFAULT_SITE_URL
 
   // Resolved per call rather than at import time, so tests can point sourceDir
   // at a fixture template.
@@ -135,10 +147,18 @@ export async function create(createOptions: CreateOptions): Promise<void> {
   const readme = await fs.readFile(readmePath, 'utf8')
   await fs.writeFile(readmePath, `# ${projectName}\n\n${readme}`)
 
-  const replacedFiles = await applyProjectName(outputDir, projectName)
+  await fs.writeFile(
+    path.join(outputDir, '.env.example'),
+    `NEXT_PUBLIC_SITE_URL=${siteUrl}\n`
+  )
+
+  const replacedFiles = await applyTemplateValues(outputDir, {
+    siteTitle,
+    siteDescription,
+  })
   if (!replacedFiles.includes(path.join('components', 'logo.tsx'))) {
     throw new Error(
-      `Template components/logo.tsx is missing the ${PROJECT_NAME_TOKEN} placeholder`
+      `Template components/logo.tsx is missing the ${SITE_TITLE_TOKEN} placeholder`
     )
   }
 
@@ -149,10 +169,6 @@ export async function create(createOptions: CreateOptions): Promise<void> {
     } catch (err) {
       log(`Failed to install dependencies: ${err}`)
     }
-  }
-
-  if (initializeGit && (await tryGitInit(outputDir))) {
-    log('Initialized Git repository')
   }
 }
 
@@ -262,17 +278,18 @@ async function applyModuleFilters(
 }
 
 /**
- * Replace the project name placeholder in every template text file.
- * Returns the scaffolded files (relative paths) that contained it.
+ * Replace the site title and description placeholders in every template text
+ * file. Returns the scaffolded files (relative paths) that contained a token.
  */
-async function applyProjectName(
+async function applyTemplateValues(
   outputDir: string,
-  projectName: string
+  values: { siteTitle: string; siteDescription: string }
 ): Promise<string[]> {
+  const replacements = [
+    [SITE_TITLE_TOKEN, JSON.stringify(values.siteTitle)],
+    [SITE_DESCRIPTION_TOKEN, JSON.stringify(values.siteDescription)],
+  ] as const
   const replacedFiles: string[] = []
-  const value = /^[A-Za-z0-9._-]+$/.test(projectName)
-    ? `'${projectName}'`
-    : JSON.stringify(projectName)
   const entries = await fs.readdir(outputDir, {
     withFileTypes: true,
     recursive: true,
@@ -284,9 +301,13 @@ async function applyProjectName(
 
     const filePath = path.join(entry.parentPath, entry.name)
     const content = await fs.readFile(filePath, 'utf8')
-    if (!content.includes(PROJECT_NAME_TOKEN)) continue
+    let next = content
+    for (const [token, value] of replacements) {
+      next = next.replaceAll(token, value)
+    }
+    if (next === content) continue
 
-    await fs.writeFile(filePath, content.replaceAll(PROJECT_NAME_TOKEN, value))
+    await fs.writeFile(filePath, next)
     replacedFiles.push(path.relative(outputDir, filePath))
   }
 

@@ -1,8 +1,8 @@
 /**
- * Site brand name, replaced with the scaffolded project name by
- * create-fumandocs (`'__PROJECT_NAME__'` placeholder).
+ * Site brand name, replaced with the scaffolded site title by
+ * create-fumandocs (`'__SITE_TITLE__'` placeholder).
  */
-export const brandName = '__PROJECT_NAME__'
+export const brandName = '__SITE_TITLE__'
 
 /** The Fumandocs logo tile (dark gradient with a folded-book M), as inline SVG. */
 export function Logo({ size = 32 }: { size?: number }) {

@@ -25,7 +25,6 @@
 
 import fs from 'node:fs/promises'
 import path from 'node:path'
-import { x } from 'tinyexec'
 
 export async function copy(
   from: string,
@@ -56,43 +55,5 @@ export async function copy(
     to = rename(to)
     await fs.mkdir(path.dirname(to), { recursive: true })
     await fs.copyFile(from, to)
-  }
-}
-
-async function isInGitRepository(cwd: string) {
-  const { exitCode } = await x('git', ['rev-parse', '--is-inside-work-tree'], {
-    nodeOptions: { cwd },
-  })
-  return exitCode === 0
-}
-
-async function isDefaultBranchSet(cwd: string) {
-  const { exitCode } = await x('git', ['config', 'init.defaultBranch'], {
-    nodeOptions: { cwd },
-  })
-  return exitCode === 0
-}
-
-export async function tryGitInit(cwd: string): Promise<boolean> {
-  const { exitCode } = await x('git', ['--version'])
-  if (exitCode !== 0) return false
-  if (await isInGitRepository(cwd)) return false
-
-  try {
-    await x('git', ['init'], { throwOnError: true, nodeOptions: { cwd } })
-    if (!(await isDefaultBranchSet(cwd))) {
-      await x('git', ['checkout', '-b', 'main'], {
-        throwOnError: true,
-        nodeOptions: { cwd },
-      })
-    }
-    await x('git', ['add', '-A'], { throwOnError: true, nodeOptions: { cwd } })
-    await x('git', ['commit', '-m', 'Initial commit from create-fumandocs'], {
-      throwOnError: true,
-      nodeOptions: { cwd },
-    })
-    return true
-  } catch {
-    return false
   }
 }

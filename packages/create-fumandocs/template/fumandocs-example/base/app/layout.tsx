@@ -9,7 +9,7 @@ export const metadata: Metadata = {
     default: brandName,
     template: `%s | ${brandName}`,
   },
-  description: 'Built with Fumadocs and Mantine',
+  description: '__SITE_DESCRIPTION__',
 }
 
 export const viewport: Viewport = {
