@@ -63,6 +63,7 @@ import {
 import { useSearch } from '../../search'
 import type { BaseLayoutProps, MantineDocsSlots } from '../shared'
 import classes from './docs-layout.module.css'
+import { flattenPages, folderContains, isActive } from './page-tree'
 
 export interface DocsLayoutProps extends BaseLayoutProps {
   tree: PageTree.Root
@@ -530,38 +531,4 @@ function ColorSchemeButton() {
       </button>
     </Tooltip>
   )
-}
-
-function flattenPages(nodes: PageTree.Node[]): PageTree.Item[] {
-  const pages: PageTree.Item[] = []
-  for (const node of nodes) {
-    if (node.type === 'page') pages.push(node)
-    if (node.type === 'folder') {
-      if (node.index) pages.push(node.index)
-      pages.push(...flattenPages(node.children))
-    }
-  }
-  return pages
-}
-
-function folderContains(folder: PageTree.Folder, pathname: string): boolean {
-  return (
-    Boolean(folder.index && isNestedActive(folder.index.url, pathname)) ||
-    folder.children.some((node) =>
-      node.type === 'folder'
-        ? folderContains(node, pathname)
-        : node.type === 'page' && isNestedActive(node.url, pathname)
-    )
-  )
-}
-
-// Sidebar items are highlighted only on an exact URL match, mirroring
-// upstream fumadocs-ui (`isActive(url, pathname, false)`).
-function isActive(url: string, pathname: string) {
-  return pathname === url
-}
-
-// Nested matching is only used to decide whether a folder should open.
-function isNestedActive(url: string, pathname: string) {
-  return pathname === url || (url !== '/' && pathname.startsWith(`${url}/`))
 }

@@ -36,33 +36,36 @@ import {
   useState,
 } from 'react'
 import classes from './toc.module.css'
+import {
+  type ComputedRail,
+  computeItemLineLengths,
+  computeRailPath,
+  computeThumbOffsetDistance,
+  getItemOffset,
+  getLineOffset,
+  isThumbMovingUp,
+  type PathMeasure,
+  type RailSegment,
+  type ThumbTrackState,
+} from './toc-geometry'
 
 // Port of upstream fumadocs-ui's TOC rail ("ragged" left border): each item
 // draws its rail segment as an inline SVG with cubic elbows between depth
 // levels, and an absolutely positioned thumb track renders the active range
 // in the primary color plus a small dot traveling along the path.
 
-interface ComputedSVG {
-  width: number
-  height: number
+interface ComputedSVG extends ComputedRail {
   content: ReactNode
-  d: string
-  positions: [top: number, bottom: number, x: number][]
-  itemLineLengths: [top: number, bottom: number][]
+  itemLineLengths: RailSegment[]
 }
 
-const BASE = 8
-
-function getItemOffset(depth: number): number {
-  if (depth <= 2) return 12 + BASE
-  if (depth === 3) return 24 + BASE
-  return 36 + BASE
-}
-
-function getLineOffset(depth: number): number {
-  if (depth <= 2) return BASE
-  if (depth === 3) return 8 + BASE
-  return 16 + BASE
+function createPathMeasure(d: string): PathMeasure {
+  const path = document.createElementNS('http://www.w3.org/2000/svg', 'path')
+  path.setAttribute('d', d)
+  return {
+    getTotalLength: () => path.getTotalLength(),
+    getPointAtLength: (length) => path.getPointAtLength(length),
+  }
 }
 
 export interface TOCRailProps extends ComponentProps<'div'> {
@@ -87,76 +90,42 @@ export function TOCRail({
       setSvg(null)
       return
     }
-    let w = 0
-    let h = 0
-    let d = ''
-    const positions: [top: number, bottom: number, x: number][] = []
-    const output: ReactNode[] = []
-
-    for (let i = 0; i < items.length; i++) {
-      const item = items[i]
+    const measurements = items.flatMap((item) => {
       const element: HTMLElement | null = container.querySelector(
         `a[href="${item.url}"]`
       )
-      if (!element) continue
+      if (!element) return []
 
       const styles = getComputedStyle(element)
-      const x = getLineOffset(item.depth) + 0.5
-      const top = element.offsetTop + parseFloat(styles.paddingTop)
-      const bottom =
-        element.offsetTop +
-        element.clientHeight -
-        parseFloat(styles.paddingBottom)
+      return [
+        {
+          depth: item.depth,
+          top: element.offsetTop + parseFloat(styles.paddingTop),
+          bottom:
+            element.offsetTop +
+            element.clientHeight -
+            parseFloat(styles.paddingBottom),
+        },
+      ]
+    })
 
-      w = Math.max(x + 8, w)
-      h = Math.max(h, bottom)
-
-      if (i === 0) {
-        d += ` M${x} ${top} L${x} ${bottom}`
-      } else {
-        const [, upperBottom, upperX] = positions[i - 1]
-        d += ` C ${upperX} ${top - 4} ${x} ${upperBottom + 4} ${x} ${top} L${x} ${bottom}`
-      }
-
-      positions.push([top, bottom, x])
-    }
-
-    output.unshift(
-      <path
-        key="path"
-        d={d}
-        className={classes.thumbStroke}
-        strokeWidth="1"
-        fill="none"
-      />
-    )
-
-    const itemLineLengths: [top: number, bottom: number][] = []
-
-    if (thumbBox) {
-      const path = document.createElementNS(
-        'http://www.w3.org/2000/svg',
-        'path'
-      )
-      path.setAttribute('d', d)
-
-      const n = path.getTotalLength()
-      for (let i = 0; i < positions.length; i++) {
-        const [top, bottom] = positions[i]
-        let l =
-          i > 0 ? itemLineLengths[i - 1][1] + (top - positions[i - 1][1]) : top
-        while (l < n && path.getPointAtLength(l).y < top) l++
-        itemLineLengths.push([l, l + bottom - top])
-      }
-    }
+    const rail = computeRailPath(measurements)
+    const itemLineLengths = thumbBox
+      ? computeItemLineLengths(rail.positions, createPathMeasure(rail.d))
+      : []
 
     setSvg({
-      content: output,
-      width: w,
-      height: h,
-      d,
+      ...rail,
+      content: (
+        <path
+          key="path"
+          d={rail.d}
+          className={classes.thumbStroke}
+          strokeWidth="1"
+          fill="none"
+        />
+      ),
       itemLineLengths,
-      positions,
     })
   }, [items, thumbBox])
 
@@ -184,12 +153,6 @@ export function TOCRail({
   )
 }
 
-interface ThumbBoxInfo {
-  startIdx: number
-  endIdx: number
-  isUp: boolean
-}
-
 function ThumbTrack({
   computed,
   thumbBox,
@@ -198,7 +161,7 @@ function ThumbTrack({
   thumbBox: boolean
 }) {
   const ref = useRef<HTMLDivElement>(null)
-  const previousRef = useRef<ThumbBoxInfo>(null)
+  const previousRef = useRef<ThumbTrackState>(null)
   const tocInfo = Primitive.useTOC()
 
   function calculate(items: Primitive.TOCItemInfo[]) {
@@ -211,19 +174,10 @@ function ThumbTrack({
     out['--track-bottom'] = `${computed.positions[endIdx][1]}px`
 
     if (thumbBox) {
-      let isUp = false
-      if (previousRef.current) {
-        const prev = previousRef.current
-        isUp =
-          prev.startIdx > startIdx ||
-          prev.endIdx > endIdx ||
-          (prev.startIdx === startIdx && prev.endIdx === endIdx && prev.isUp)
-      }
-
+      const isUp = isThumbMovingUp(previousRef.current, startIdx, endIdx)
       previousRef.current = { startIdx, endIdx, isUp }
-      out['--offset-distance'] = isUp
-        ? `${computed.itemLineLengths[startIdx][0]}px`
-        : `${computed.itemLineLengths[endIdx][1]}px`
+      out['--offset-distance'] =
+        `${computeThumbOffsetDistance(computed.itemLineLengths, startIdx, endIdx, isUp)}px`
       out['--opacity'] =
         items[isUp ? startIdx : endIdx].original._step !== undefined ? '0' : '1'
     }

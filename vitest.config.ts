@@ -24,10 +24,23 @@ export default defineConfig({
       ],
       thresholds: {
         // Floor for the suite as a whole; raise as the gaps below get covered.
-        lines: 33,
-        statements: 33,
-        branches: 33,
-        functions: 29,
+        lines: 80,
+        statements: 80,
+        branches: 80,
+        functions: 80,
+        // Pure helpers extracted for testing: keep them complete.
+        'packages/fumandocs-ui/src/components/toc-geometry.ts': {
+          lines: 100,
+          statements: 100,
+          branches: 100,
+          functions: 100,
+        },
+        'packages/fumandocs-ui/src/layouts/docs/page-tree.ts': {
+          lines: 100,
+          statements: 100,
+          branches: 100,
+          functions: 100,
+        },
       },
     },
     projects: [

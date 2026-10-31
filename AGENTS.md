@@ -36,6 +36,8 @@ Prerequisites: Node >= 22 and pnpm 11.13.0 (CI pins that version).
 | `pnpm lint` / `lint:fix`       | Biome check / check `--write --unsafe`                                        |
 | `pnpm format:prose` / `:fix`   | Prettier over `**/*.{md,mdx}`                                                 |
 | `pnpm types:check`             | `pnpm -r run types:check` (each package's `tsc --noEmit`)                     |
+| `pnpm test` / `test:watch`     | Vitest run / watch (two projects: Node + jsdom)                               |
+| `pnpm test:cov`                | Vitest with V8 coverage; enforces the thresholds (CI runs this)               |
 | `pnpm license:check` / `:add`  | Verify / add MIT headers via `scripts/addlicense.mjs`                         |
 | `pnpm exports:check`           | Fail if our export subpaths escape upstream's surface                         |
 | `pnpm exports:diff`            | Print the export-parity report (`-- --write-docs` regenerates the docs block) |
@@ -134,15 +136,28 @@ rather than writing a fresh tsconfig. `apps/www` and the template set
   outside a git work tree so Docker builds do not fail.
 - Comments are rare and explain _why_, not _what_. Match the surrounding code.
 
-## Testing status
+## Testing
 
-There are no unit or integration tests: no test runner is installed (no
-vitest/jest anywhere) and no `test` script exists. `test.yml` is really a static
+`pnpm test` runs Vitest. `vitest.config.ts` defines two projects: a Node project
+for `create-fumandocs` and a jsdom project for `fumandocs-ui`. `vitest.setup.ts`
+registers jest-dom matchers and stubs `ResizeObserver`, `IntersectionObserver`,
+and `matchMedia`. Tests sit next to the code as `*.test.ts(x)` under each
+package's `src/`, carry the MIT header like any other source file, and are
+excluded from the `fumandocs-ui` tsdown entry so they never reach `dist`.
 
-- build pipeline: lint, prose format, license headers, export parity, template
-  version check, `tsc --noEmit`, package builds, docs-site build.
+- `create.test.ts` scaffolds into a temp directory and asserts the package
+  rewrite: name, script swap, `workspace:` pinning, `.gitignore` rename, and
+  `__PROJECT_NAME__` replacement.
+- Component tests cover branch logic in `callout`, `card`, `codeblock`,
+  `heading`, `mdx`, and `DocsPage` pagination.
+- `toc-geometry.test.ts` and `page-tree.test.ts` cover logic extracted from
+  `toc.tsx` and `docs-layout.tsx`. Keep that math in those pure modules — jsdom
+  has no `getTotalLength`, `getPointAtLength`, `offsetTop`, or `clientHeight`,
+  so it cannot be tested through the component.
 
-The only behavioural check is the scaffold smoke test at the end of CI:
+`test.yml` runs lint, prose format, license headers, export parity, template
+version check, `tsc --noEmit`, `pnpm test:cov`, package builds, and the
+docs-site build. The last behavioural check is the scaffold smoke test:
 
 ```
 build dist/bin.js → scaffold smoke-app --no-git
@@ -150,19 +165,31 @@ build dist/bin.js → scaffold smoke-app --no-git
 → pnpm install && pnpm build in the generated app
 ```
 
-Consequences worth knowing before you change things:
+That end-to-end run is still the only thing that proves the template compiles,
+so keep it. Not covered by unit tests: CSS and visual output (needs Playwright)
+and anything that depends on real layout.
 
-- A runtime branch regression in `fumandocs-ui` components is not caught by CI —
-  a build only proves the export exists and types line up.
-- A template mistake surfaces only after a full install + Next build, or not at
-  all if the smoke test does not touch that file.
-- Best-value places to add fast tests, if you are adding them: the
-  `create-fumandocs` template transformations (pure-ish, no network), and branch
-  logic in `components/{callout,card,codeblock,heading}.tsx` plus
-  `layouts/docs/page.tsx` (prev/next boundary math). `components/toc.tsx` rail
-  geometry depends on `getTotalLength`, `getPointAtLength`, and `offsetTop`,
-  which jsdom does not implement — extract the measurement math first if you
-  want it tested. CSS module output is only worth Playwright screenshots.
+### Coverage
+
+`pnpm test:cov` uses the V8 provider (`@vitest/coverage-v8`, pinned to the same
+version as `vitest` — it is not bundled) and writes `text`, `json`, and `html`
+reports to the gitignored `coverage/` directory. Thresholds live in
+`vitest.config.ts`:
+
+- Suite floor: 80% on lines, statements, branches, and functions. The current
+  baseline is ~82% statements, ~87% branches, ~90% functions, ~83% lines.
+- `components/toc-geometry.ts` and `layouts/docs/page-tree.ts`: 100% on all four
+  metrics. They are pure by design, so there is no excuse for a gap.
+
+Raise the floor as gaps close; do not lower it to make a change pass. Excluded
+from the denominator: test files, `*.d.ts`, `*.module.css`, barrels
+(`index.ts`/`index.tsx`), and the type-only `layouts/shared.ts`.
+
+The one large uncovered file is `create-fumandocs/src/bin.ts` (0%): it is the
+CLI entry point, parses `process.argv`, prompts through `@clack/prompts`, and
+calls `process.exit`. The scaffold smoke test below exercises it end to end, so
+unit tests would mostly assert on mocks. Everything else is at ~75% or above,
+with `toc.tsx` (~75%) and `docs-layout.tsx` (~85%) the next candidates.
 
 ## Common workflows
 
