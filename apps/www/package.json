@@ -10,29 +10,29 @@
     "types:check": "pnpm --filter fumandocs-ui build && next typegen && tsc --noEmit"
   },
   "dependencies": {
-    "@mantine/carousel": "9.7.2",
-    "@mantine/charts": "9.7.2",
-    "@mantine/core": "9.7.2",
-    "@mantine/dates": "9.7.2",
-    "@mantine/hooks": "9.7.2",
-    "@mantine/schedule": "9.7.2",
+    "@mantine/carousel": "9.7.4",
+    "@mantine/charts": "9.7.4",
+    "@mantine/core": "9.7.4",
+    "@mantine/dates": "9.7.4",
+    "@mantine/hooks": "9.7.4",
+    "@mantine/schedule": "9.7.4",
     "@phosphor-icons/react": "^2.1.10",
-    "@plausible-analytics/tracker": "^0.4.6",
+    "@plausible-analytics/tracker": "^0.4.7",
     "dayjs": "^1.11.23",
     "embla-carousel-react": "^8.6.0",
-    "fumadocs-core": "^16.15.12",
-    "fumadocs-mdx": "^15.4.2",
+    "fumadocs-core": "^16.17.9",
+    "fumadocs-mdx": "^15.4.10",
     "fumandocs-ui": "workspace:fumandocs-ui@*",
-    "next": "16.3.3",
-    "react": "^19.2.8",
-    "react-dom": "^19.2.8",
+    "next": "16.4.3",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
     "recharts": "^3.10.1"
   },
   "devDependencies": {
     "@types/mdx": "^2.0.14",
-    "@types/node": "26.3.0",
+    "@types/node": "26.6.6",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.5",
-    "typescript": "^6.0.3"
+    "typescript": "^7.0.2"
   }
 }

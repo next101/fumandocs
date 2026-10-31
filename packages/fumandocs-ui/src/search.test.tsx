@@ -30,6 +30,15 @@ import type { ReactNode } from 'react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { SearchProvider, useSearch } from './search'
 
+function SearchProbe() {
+  const search = useSearch()
+  return (
+    <button type="button" onClick={search.open}>
+      {String(search.enabled)}
+    </button>
+  )
+}
+
 const searchState = vi.hoisted(() => ({
   search: '',
   setSearch: vi.fn(),
@@ -255,16 +264,7 @@ describe('SearchProvider', () => {
 
 describe('useSearch', () => {
   it('is disabled and inert without a provider', () => {
-    function Probe() {
-      const search = useSearch()
-      return (
-        <button type="button" onClick={search.open}>
-          {String(search.enabled)}
-        </button>
-      )
-    }
-
-    render(<Probe />)
+    render(<SearchProbe />)
     const button = screen.getByRole('button')
     expect(button).toHaveTextContent('false')
     fireEvent.click(button)

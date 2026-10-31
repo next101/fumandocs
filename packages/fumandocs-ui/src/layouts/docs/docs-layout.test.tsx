@@ -33,6 +33,11 @@ import { describe, expect, it } from 'vitest'
 import { SearchProvider } from '../../search'
 import { DocsLayout, useDocsLayout } from './docs-layout'
 
+function LayoutProbe() {
+  useDocsLayout()
+  return null
+}
+
 const tree: PageTree.Root = {
   name: 'Docs',
   children: [
@@ -218,11 +223,6 @@ describe('DocsLayout', () => {
   })
 
   it('throws when page components are used outside the layout', () => {
-    function Probe() {
-      useDocsLayout()
-      return null
-    }
-
-    expect(() => render(<Probe />)).toThrow(/inside <DocsLayout>/)
+    expect(() => render(<LayoutProbe />)).toThrow(/inside <DocsLayout>/)
   })
 })

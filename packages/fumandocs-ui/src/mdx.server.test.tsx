@@ -27,6 +27,14 @@ import type { ReactElement } from 'react'
 import { describe, expect, it, vi } from 'vitest'
 import { createRelativeLink } from './mdx.server'
 
+function OverrideLink(props: { href?: string }) {
+  return (
+    <a data-override="" href={props.href}>
+      Child page
+    </a>
+  )
+}
+
 function elementFrom(value: unknown, key: string): unknown {
   return (value as ReactElement<Record<string, unknown>>).props[key]
 }
@@ -57,19 +65,14 @@ describe('createRelativeLink', () => {
   })
 
   it('renders through the override link', async () => {
-    const Override = (props: { href?: string }) => (
-      <a data-override="" href={props.href}>
-        Child page
-      </a>
-    )
     const RelativeLink = createRelativeLink(
       source as never,
       page as never,
-      Override as never
+      OverrideLink as never
     )
 
     const element = await RelativeLink({ href: 'child' })
 
-    expect((element as ReactElement).type).toBe(Override)
+    expect((element as ReactElement).type).toBe(OverrideLink)
   })
 })

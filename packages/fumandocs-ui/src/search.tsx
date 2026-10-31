@@ -42,6 +42,7 @@ import { useDocsSearch } from 'fumadocs-core/search/client'
 import { fetchClient } from 'fumadocs-core/search/client/fetch'
 import {
   createContext,
+  type HTMLAttributes,
   type ReactNode,
   use,
   useEffect,
@@ -87,14 +88,12 @@ function rehypeCustomElements() {
 }
 
 const mdComponents = {
-  mark: (props: Record<string, unknown>) => (
+  mark: (props: HTMLAttributes<HTMLElement>) => (
     <span {...props} className={classes.highlight} />
   ),
   a: 'span',
   // unknown JSX tags from MDX snippets are renamed to <custom> upstream
-  custom: (props: Record<string, unknown>) => (
-    <span>{props.children as ReactNode}</span>
-  ),
+  custom: (props: { children?: ReactNode }) => <span>{props.children}</span>,
 } as const
 
 export interface SearchOptions {
