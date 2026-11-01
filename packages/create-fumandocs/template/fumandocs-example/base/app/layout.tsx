@@ -21,8 +21,14 @@ export const viewport: Viewport = {
 }
 
 export default function Layout({ children }: LayoutProps<'/'>) {
+  // Reserve the scrollbar gutter so the sticky header does not shift between
+  // short and long pages.
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      style={{ scrollbarGutter: 'stable' }}
+    >
       <head>
         <ColorSchemeScript defaultColorScheme="auto" />
       </head>

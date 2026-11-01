@@ -1,30 +1,25 @@
 .back {
-  display: inline-block;
-  margin-bottom: var(--mantine-spacing-lg);
-  font-size: var(--mantine-font-size-sm);
+  width: fit-content;
   color: var(--mantine-color-dimmed);
+  font-size: var(--mantine-font-size-sm);
   text-decoration: none;
 }
 
 .back:hover {
-  text-decoration: underline;
-  text-underline-offset: 3px;
+  color: var(--mantine-color-text);
 }
 
-.header {
-  margin-bottom: var(--mantine-spacing-xl);
-  padding-bottom: var(--mantine-spacing-xl);
-  border-bottom: 1px solid var(--mantine-color-default-border);
+/* The docs page grid places the article itself; keep the blog article aligned
+   with the site container (the grid columns live in layout.module.css). The
+   doubled class outranks `[data-no-sidebar] .page` from fumandocs-ui. */
+:global([data-no-sidebar]) .article.article {
+  padding-inline: var(--mantine-spacing-md);
 }
 
-.title {
-  font-size: clamp(1.75rem, 1.2rem + 2vw, 2.5rem);
-  line-height: 1.15;
-  letter-spacing: -0.02em;
-  text-wrap: balance;
-}
-
-.description {
-  margin-block: var(--mantine-spacing-sm) var(--mantine-spacing-md);
-  line-height: 1.6;
+@media (min-width: 75em) {
+  :global([data-no-sidebar]) .article.article {
+    grid-column: 1;
+    margin-inline: 0;
+    padding-inline: 0;
+  }
 }

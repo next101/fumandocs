@@ -366,6 +366,19 @@ describe('create module selection', () => {
     expect(packageJson.dependencies.zod).toBe('^4.6.5')
   })
 
+  it('scaffolds the blog feed and markdown routes', async () => {
+    const dir = await createProjectWith({ modules: ['docs', 'blog'] })
+
+    await expect(
+      fs.access(path.join(dir, 'app', 'blog', 'rss.xml', 'route.ts'))
+    ).resolves.toBeUndefined()
+    await expect(
+      fs.access(
+        path.join(dir, 'app', 'llms.mdx', 'blog', '[[...slug]]', 'route.ts')
+      )
+    ).resolves.toBeUndefined()
+  })
+
   it('keeps an existing zod pin for blog', async () => {
     await writeTemplate(templateFiles(TOKEN_LAYOUT, { zod: '^4.0.0' }))
     const dir = await outputDir()

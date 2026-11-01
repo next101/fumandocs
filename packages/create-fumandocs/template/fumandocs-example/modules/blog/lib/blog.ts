@@ -5,6 +5,8 @@ import { z } from 'zod'
 const blog = defineCollections({
   type: 'doc',
   dir: 'content/blog',
+  // Powers the "View as Markdown" action and /llms.mdx/blog/*.
+  postprocess: { includeProcessedMarkdown: true },
   schema: z.object({
     title: z.string(),
     description: z.string(),

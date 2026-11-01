@@ -86,7 +86,9 @@ The **docs** module adds `app/docs/`, `app/api/search/route.ts`,
 `app/llms.mdx/`, and `content/docs/`.
 
 The **blog** module adds `app/blog/` (post list and post pages),
-`content/blog/`, `lib/blog.ts`, and `components/blog/`.
+`app/llms.mdx/blog/`, `content/blog/`, `lib/blog.ts`, and `components/blog/`.
+Posts reuse the docs page primitives, so they get the table of contents and
+Markdown actions; the list is also served as RSS at `/blog/rss.xml`.
 
 ## Imports
 

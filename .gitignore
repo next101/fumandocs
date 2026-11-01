@@ -18,3 +18,4 @@ logo-drafts/
 # Local scaffold test apps
 /smoke-app/
 packages/create-fumandocs/my-docs/
+packages/create-fumandocs/mysite/
