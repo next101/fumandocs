@@ -92,8 +92,11 @@
   gap: 16px;
   margin-top: auto;
 }
-/* A lone next/previous card should sit in its natural half, not stretch. */
-.pageFooter > :only-child {
+/* A lone link keeps its natural side: previous left, next right. */
+.pageFooter > .footerLinkPrevious:only-child {
+  grid-column: 1;
+}
+.pageFooter > .footerLinkNext:only-child {
   grid-column: 2;
 }
 .footerLink {
@@ -126,8 +129,9 @@
   .pageFooter {
     grid-template-columns: minmax(0, 1fr);
   }
-  .pageFooter > :only-child {
-    grid-column: auto;
+  .pageFooter > .footerLinkPrevious:only-child,
+  .pageFooter > .footerLinkNext:only-child {
+    grid-column: 1 / -1;
   }
 }
 

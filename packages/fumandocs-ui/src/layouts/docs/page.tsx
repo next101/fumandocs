@@ -111,9 +111,20 @@ export function DocsPage({
           {footer.enabled !== false && (previous || next) && (
             <div className={classes.pageFooter}>
               {previous && (
-                <FooterLink page={previous} direction="Previous Page" />
+                <FooterLink
+                  page={previous}
+                  direction="Previous Page"
+                  className={classes.footerLinkPrevious}
+                />
               )}
-              {next && <FooterLink page={next} direction="Next Page" right />}
+              {next && (
+                <FooterLink
+                  page={next}
+                  direction="Next Page"
+                  right
+                  className={classes.footerLinkNext}
+                />
+              )}
             </div>
           )}
         </article>
@@ -143,10 +154,12 @@ function FooterLink({
   page,
   direction,
   right,
+  className,
 }: {
   page: { url: string; name: ReactNode; description?: ReactNode }
   direction: string
   right?: boolean
+  className?: string
 }) {
   return (
     <Paper
@@ -154,7 +167,7 @@ function FooterLink({
       href={page.url}
       withBorder
       p="md"
-      className={classes.footerLink}
+      className={[classes.footerLink, className].filter(Boolean).join(' ')}
       style={{ textAlign: right ? 'right' : 'left' }}
     >
       <Text fw={500} size="sm">
