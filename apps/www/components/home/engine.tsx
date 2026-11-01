@@ -112,12 +112,7 @@ export function EngineSection() {
           </div>
 
           <div>
-            <Paper
-              withBorder
-              radius="md"
-              shadow="sm"
-              className={editorClasses.editor}
-            >
+            <Paper withBorder shadow="sm" className={editorClasses.editor}>
               <div className={editorClasses.tabBar}>
                 <Group gap={6} pl="md" pr="lg" wrap="nowrap">
                   <span

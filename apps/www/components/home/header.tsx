@@ -93,7 +93,6 @@ export function SiteHeader() {
                 rel="noreferrer"
                 variant="default"
                 size={36}
-                radius="md"
                 aria-label="GitHub repository"
               >
                 <GithubLogoIcon size={18} />
@@ -104,7 +103,6 @@ export function SiteHeader() {
                 onClick={() => toggleColorScheme()}
                 variant="default"
                 size={36}
-                radius="md"
                 aria-label="Toggle color scheme"
               >
                 {/*
@@ -154,7 +152,6 @@ export function SiteHeader() {
             component={Link}
             href="/docs/getting-started"
             onClick={drawerHandlers.close}
-            radius="md"
             mt="md"
             fullWidth
           >

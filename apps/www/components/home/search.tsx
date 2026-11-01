@@ -82,12 +82,7 @@ const mockResults = [
 
 function SearchMockup() {
   return (
-    <Paper
-      withBorder
-      radius="md"
-      shadow="sm"
-      className={searchClasses.searchMockup}
-    >
+    <Paper withBorder shadow="sm" className={searchClasses.searchMockup}>
       <TextInput
         readOnly
         placeholder="Search documentation…"

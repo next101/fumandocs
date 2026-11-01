@@ -48,13 +48,7 @@ import { Terminal } from './terminal'
 
 async function DocsPreview() {
   return (
-    <Paper
-      withBorder
-      radius="md"
-      shadow="md"
-      w="100%"
-      style={{ overflow: 'hidden' }}
-    >
+    <Paper withBorder shadow="md" w="100%" style={{ overflow: 'hidden' }}>
       <Group
         gap={6}
         px="md"

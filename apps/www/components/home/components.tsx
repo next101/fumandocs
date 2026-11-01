@@ -199,7 +199,6 @@ function OverlaysDemo() {
         opened={modalOpened}
         onClose={modalHandlers.close}
         title="Authenticate"
-        radius="md"
       >
         <AuthForm />
       </Modal>
@@ -220,13 +219,12 @@ function OverlaysDemo() {
               Popover
             </Input.Label>
 
-            <Popover radius="md" position="bottom-start" shadow="md">
+            <Popover position="bottom-start" shadow="md">
               <Popover.Target>
                 <Button
                   miw={200}
                   size="lg"
                   variant="default"
-                  radius="md"
                   rightSection={<SlidersHorizontalIcon size={22} />}
                   justify="space-between"
                 >
@@ -245,7 +243,6 @@ function OverlaysDemo() {
                 </Input.Label>
                 <SegmentedControl
                   data={['In progress', 'Delivered']}
-                  radius="md"
                   size="md"
                 />
 
@@ -298,14 +295,10 @@ function OverlaysDemo() {
               closeDelay={400}
               position="bottom-start"
               arrowOffset={15}
-              radius="md"
             >
               <HoverCard.Target>
                 <Group w="max-content">
-                  <Avatar
-                    src="https://avatars.githubusercontent.com/u/79146003?s=200&v=4"
-                    radius="xl"
-                  />
+                  <Avatar src="https://avatars.githubusercontent.com/u/79146003?s=200&v=4" />
                   <Stack gap={5}>
                     <Text size="sm" fw={700} lh={1} c="bright">
                       Mantine
@@ -362,18 +355,10 @@ function OverlaysDemo() {
               Modal and Drawer
             </Input.Label>
             <Group>
-              <Button
-                variant="default"
-                radius="md"
-                onClick={modalHandlers.open}
-              >
+              <Button variant="default" onClick={modalHandlers.open}>
                 Open modal
               </Button>
-              <Button
-                variant="default"
-                radius="md"
-                onClick={drawerHandlers.open}
-              >
+              <Button variant="default" onClick={drawerHandlers.open}>
                 Open drawer
               </Button>
             </Group>
@@ -387,7 +372,6 @@ function OverlaysDemo() {
           <Tooltip.Floating label="Floating tooltip" withinPortal={false}>
             <Paper
               withBorder
-              radius="md"
               p="xl"
               mih={200}
               style={{
@@ -416,7 +400,6 @@ function MenuDemo() {
       width={300}
       position="bottom-start"
       transitionProps={{ transition: 'pop' }}
-      radius="md"
     >
       <Menu.Target>
         <Button
@@ -424,7 +407,6 @@ function MenuDemo() {
           rightSection={<DotsThreeIcon size={24} />}
           miw={200}
           size="lg"
-          radius="md"
           justify="space-between"
         >
           User Menu
@@ -433,10 +415,7 @@ function MenuDemo() {
       <Menu.Dropdown>
         <Menu.Item rightSection={<CaretRightIcon size={18} />}>
           <Group>
-            <Avatar
-              radius="xl"
-              src="https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-8.png"
-            />
+            <Avatar src="https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-8.png" />
             <div>
               <Text fw={500}>Nancy Horsekisser</Text>
               <Text size="xs" c="dimmed">
@@ -530,7 +509,7 @@ function StepperDemo() {
 
 function TabsDemo() {
   return (
-    <Tabs defaultValue="gallery" radius="md">
+    <Tabs defaultValue="gallery">
       <Tabs.List>
         <Tabs.Tab
           value="gallery"
@@ -582,7 +561,7 @@ function NavigationDemo() {
         <Input.Label labelElement="div" size="lg" mb="sm" display="block">
           Pagination
         </Input.Label>
-        <Pagination total={56} size="lg" radius="md" />
+        <Pagination total={56} size="lg" />
       </div>
 
       <div>
@@ -707,9 +686,9 @@ function DataDisplayDemo() {
             }
           />
           <Stack flex={1} gap="sm">
-            <Progress value={72} size="lg" radius="md" />
-            <Progress value={54} size="lg" radius="md" color="teal" />
-            <Progress value={38} size="lg" radius="md" color="orange" />
+            <Progress value={72} size="lg" />
+            <Progress value={54} size="lg" color="teal" />
+            <Progress value={38} size="lg" color="orange" />
           </Stack>
         </Group>
       </div>
@@ -721,16 +700,10 @@ function DataDisplayDemo() {
         <Stack gap="md">
           <Group>
             <Avatar.Group spacing="sm">
-              <Avatar color="blue" radius="xl">
-                FD
-              </Avatar>
-              <Avatar color="teal" radius="xl">
-                MD
-              </Avatar>
-              <Avatar color="grape" radius="xl">
-                UI
-              </Avatar>
-              <Avatar radius="xl">+5</Avatar>
+              <Avatar color="blue">FD</Avatar>
+              <Avatar color="teal">MD</Avatar>
+              <Avatar color="grape">UI</Avatar>
+              <Avatar>+5</Avatar>
             </Avatar.Group>
             <Badge variant="dot" color="blue">
               v0.1
@@ -786,9 +759,7 @@ function FeedbackDemo() {
           <Loader />
           <Loader type="dots" />
           <Loader type="bars" />
-          <Button loading radius="md">
-            Building
-          </Button>
+          <Button loading>Building</Button>
         </Group>
       </div>
 
@@ -800,12 +771,12 @@ function FeedbackDemo() {
           <Group wrap="nowrap">
             <Skeleton height={48} circle />
             <Stack flex={1} gap={8}>
-              <Skeleton height={8} radius="xl" />
-              <Skeleton height={8} radius="xl" w="70%" />
+              <Skeleton height={8} />
+              <Skeleton height={8} w="70%" />
             </Stack>
           </Group>
-          <Skeleton height={8} radius="xl" />
-          <Skeleton height={8} radius="xl" w="60%" />
+          <Skeleton height={8} />
+          <Skeleton height={8} w="60%" />
         </Stack>
       </div>
 
@@ -813,7 +784,7 @@ function FeedbackDemo() {
         <Input.Label labelElement="div" size="lg" mb="sm" display="block">
           Loading overlay
         </Input.Label>
-        <Paper withBorder radius="md" p="xl" pos="relative" mih={120}>
+        <Paper withBorder p="xl" pos="relative" mih={120}>
           <LoadingOverlay
             visible
             zIndex={10}

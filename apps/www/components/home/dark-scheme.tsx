@@ -61,10 +61,10 @@ function DemoCard() {
   const [notifications, setNotifications] = useState('All')
 
   return (
-    <Paper withBorder radius="md" shadow="md" p="xl">
+    <Paper withBorder shadow="md" p="xl">
       <Group justify="space-between" wrap="nowrap">
         <Group wrap="nowrap">
-          <Avatar color="blue" radius="xl" size="lg">
+          <Avatar color="blue" size="lg">
             FD
           </Avatar>
           <div>
@@ -87,16 +87,10 @@ function DemoCard() {
       </Text>
 
       <Group mt="lg" grow>
-        <Button
-          radius="md"
-          variant="gradient"
-          gradient={{ from: 'indigo', to: 'cyan' }}
-        >
+        <Button variant="gradient" gradient={{ from: 'indigo', to: 'cyan' }}>
           Follow
         </Button>
-        <Button radius="md" variant="default">
-          Message
-        </Button>
+        <Button variant="default">Message</Button>
       </Group>
 
       <Group justify="space-between" mt="lg">
@@ -187,7 +181,6 @@ export function DarkSchemeSection() {
             <Group mt="xl">
               <Button
                 variant="default"
-                radius="md"
                 size="md"
                 onClick={() => toggleColorScheme()}
                 leftSection={

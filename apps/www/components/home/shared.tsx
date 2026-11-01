@@ -55,7 +55,7 @@ export interface HomeFeatureData {
 function HomeFeature({ icon, title, description }: HomeFeatureData) {
   return (
     <section className={classes.feature}>
-      <ThemeIcon className={classes.featureIcon} size={50} radius="md">
+      <ThemeIcon className={classes.featureIcon} size={50}>
         {icon}
       </ThemeIcon>
       <div>

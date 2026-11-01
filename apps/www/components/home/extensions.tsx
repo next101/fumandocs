@@ -133,7 +133,7 @@ function ExtensionDemo({
   children: ReactNode
 }) {
   return (
-    <Paper withBorder radius="md" p="lg" component="section">
+    <Paper withBorder p="lg" component="section">
       <Title order={3} size="h4" mb={4}>
         {title}
       </Title>
@@ -190,7 +190,7 @@ function SparklineStatRow({
           <Text fz={28} fw={700} lh={1}>
             {value}
           </Text>
-          <ThemeIcon variant="light" color="teal" size="sm" radius="xl">
+          <ThemeIcon variant="light" color="teal" size="sm">
             {up ? (
               <ArrowUpRightIcon size={12} />
             ) : (

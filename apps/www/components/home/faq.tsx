@@ -134,7 +134,7 @@ export function FaqSection() {
         </Text>
 
         <SimpleGrid cols={{ base: 1, md: 2 }} spacing="md">
-          <Accordion variant="separated" radius="md">
+          <Accordion variant="separated">
             {firstHalf.map((item) => (
               <Accordion.Item key={item.value} value={item.value}>
                 <Accordion.Control>
@@ -149,7 +149,7 @@ export function FaqSection() {
             ))}
           </Accordion>
 
-          <Accordion variant="separated" radius="md">
+          <Accordion variant="separated">
             {secondHalf.map((item) => (
               <Accordion.Item key={item.value} value={item.value}>
                 <Accordion.Control>
