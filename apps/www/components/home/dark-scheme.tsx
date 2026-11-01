@@ -158,7 +158,7 @@ export function DarkSchemeSection() {
 
   return (
     <section className={classes.sectionAlt}>
-      <Container size={1440}>
+      <Container size="xl">
         <Title order={2} className={classes.title}>
           Dark color scheme
         </Title>

@@ -91,7 +91,7 @@ async function DocsPreview() {
 export function HeroSection() {
   return (
     <section className={classes.jumbotron}>
-      <Container size={1440}>
+      <Container size="xl">
         <SimpleGrid cols={{ base: 1, lg: 2 }} spacing={50}>
           <div>
             <Title order={1} className={sharedClasses.title}>

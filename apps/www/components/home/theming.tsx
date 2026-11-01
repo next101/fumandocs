@@ -234,7 +234,7 @@ export function ThemingSection() {
 
   return (
     <section className={classes.section}>
-      <Container size={1440}>
+      <Container size="xl">
         <Title order={2} className={classes.title}>
           Zero Tailwind, one theme
         </Title>

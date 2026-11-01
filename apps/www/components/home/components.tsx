@@ -802,7 +802,7 @@ function FeedbackDemo() {
 export function ComponentsSection() {
   return (
     <section className={classes.section}>
-      <Container size={1440}>
+      <Container size="xl">
         <Title order={2} className={classes.title}>
           The full power of Mantine
         </Title>

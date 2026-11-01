@@ -25,6 +25,9 @@
 
 import Image from 'next/image'
 
+/** Site brand name, used by the blog nav title and RSS feed. */
+export const brandName = 'Fumandocs'
+
 /** The Fumandocs logo tile (dark gradient with a folded-book M). */
 export function Logo({ size = 32 }: { size?: number }) {
   return (
@@ -42,7 +45,7 @@ export function LogoWithTitle({ size = 24 }: { size?: number }) {
   return (
     <>
       <Logo size={size} />
-      Fumandocs
+      {brandName}
     </>
   )
 }

@@ -91,7 +91,7 @@ and fumadocs-mdx builds the page tree for you.
 export function EngineSection() {
   return (
     <section className={classes.sectionAlt}>
-      <Container size={1440}>
+      <Container size="xl">
         <SimpleGrid cols={{ base: 1, md: 2 }} spacing={50}>
           <div>
             <Title order={2} className={classes.title}>

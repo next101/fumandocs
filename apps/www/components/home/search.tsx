@@ -127,7 +127,7 @@ export function SearchSection() {
 
   return (
     <section className={classes.section}>
-      <Container size={1440}>
+      <Container size="xl">
         <SimpleGrid cols={{ base: 1, md: 2 }} spacing={50}>
           <div>
             <Title order={2} className={classes.title}>

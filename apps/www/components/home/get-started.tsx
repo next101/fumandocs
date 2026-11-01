@@ -35,7 +35,7 @@ const installCommand = 'npx create-fumandocs my-docs'
 export function GetStartedSection() {
   return (
     <section className={classes.section}>
-      <Container size={1440}>
+      <Container size="xl">
         <Title order={2} className={classes.title} ta="center">
           Ready to get started?
         </Title>

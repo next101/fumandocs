@@ -269,7 +269,7 @@ function CarouselDemo() {
 export function ExtensionsSection() {
   return (
     <section className={classes.sectionAlt}>
-      <Container size={1440}>
+      <Container size="xl">
         <Title order={2} className={classes.title}>
           Extensions for everything else
         </Title>

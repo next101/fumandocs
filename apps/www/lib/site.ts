@@ -26,4 +26,8 @@
 /** Public origin of the site — set SITE_URL at deploy time. */
 export const siteUrl = process.env.SITE_URL ?? 'http://localhost:3000'
 
+/** Site description used by metadata and the blog RSS feed. */
+export const siteDescription =
+  'Fumadocs documentation sites with Mantine UI — fumadocs-core, fumadocs-mdx, and fumandocs-ui without Tailwind.'
+
 export const repoUrl = 'https://github.com/next101/fumandocs'

@@ -25,8 +25,13 @@
 
 /* Landing header, adapted from mantine.dev DocsHeader */
 
+/* The header height is also consumed by the blog TOC offset. */
+:global(:root) {
+  --site-header-height: 56px;
+}
+
 .header {
-  height: 56px;
+  height: var(--site-header-height);
   border-bottom: 1px solid var(--mantine-color-gray-3);
   position: sticky;
   top: 0;
@@ -47,7 +52,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 56px;
+  height: var(--site-header-height);
 }
 
 .headerSection {

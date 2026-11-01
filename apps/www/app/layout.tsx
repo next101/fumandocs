@@ -27,11 +27,8 @@ import { ColorSchemeScript } from '@mantine/core'
 import { RootProvider } from 'fumandocs-ui/provider/next'
 import type { Metadata } from 'next'
 import { PlausibleTracker } from '@/components/analytics/plausible-tracker'
-import { siteUrl } from '@/lib/site'
+import { siteDescription, siteUrl } from '@/lib/site'
 import './global.css'
-
-const description =
-  'Fumadocs documentation sites with Mantine UI — fumadocs-core, fumadocs-mdx, and fumandocs-ui without Tailwind.'
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -39,17 +36,17 @@ export const metadata: Metadata = {
     default: 'Fumandocs',
     template: '%s | Fumandocs',
   },
-  description,
+  description: siteDescription,
   openGraph: {
     type: 'website',
     siteName: 'Fumandocs',
     title: 'Fumandocs',
-    description,
+    description: siteDescription,
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Fumandocs',
-    description,
+    description: siteDescription,
   },
   icons: {
     icon: [
@@ -81,7 +78,11 @@ export const metadata: Metadata = {
 
 export default function Layout({ children }: LayoutProps<'/'>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      style={{ scrollbarGutter: 'stable' }}
+    >
       <head>
         <ColorSchemeScript defaultColorScheme="auto" />
       </head>
