@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.3.0](https://github.com/next101/fumandocs/compare/v0.2.0...v0.3.0) (2026-11-01)
+
+### Features
+
+* **create-fumandocs:** redesign the blog module to match the docs site ([118844b](https://github.com/next101/fumandocs/commit/118844b47237c3e1dc5ef178ea45d56b4496cc87))
+* **www:** add the blog module ([0f18910](https://github.com/next101/fumandocs/commit/0f1891009f004fe9dc1d2d0e4176b3cd1e70b34a))
+
+### Bug Fixes
+
+* **create-fumandocs:** add breathing room above the blog footer ([5775370](https://github.com/next101/fumandocs/commit/5775370a19904b882d23dd3f9ff8f0f947deb553))
+* **create-fumandocs:** show the site logo in the docs sidebar ([2478026](https://github.com/next101/fumandocs/commit/2478026e24ccd8e3d770d6de3d664ae3dc98872f))
+* **fumandocs-ui:** keep lone pagination cards on their natural side ([b69993e](https://github.com/next101/fumandocs/commit/b69993ed67b2b724461021b1e6ec9a8b6fc45404))
+
 ## 0.2.0 (2026-11-01)
 
 ### Features
