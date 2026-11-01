@@ -24,6 +24,7 @@
  */
 
 import type { MetadataRoute } from 'next'
+import { getPosts } from '@/lib/blog'
 import { siteUrl } from '@/lib/site'
 import { source } from '@/lib/source'
 
@@ -34,6 +35,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: `${siteUrl}${page.url}`,
       changeFrequency: 'weekly' as const,
       priority: 0.7,
+    })),
+    { url: `${siteUrl}/blog`, changeFrequency: 'weekly', priority: 0.7 },
+    ...getPosts().map((post) => ({
+      url: `${siteUrl}${post.url}`,
+      changeFrequency: 'weekly' as const,
+      priority: 0.6,
     })),
   ]
 }

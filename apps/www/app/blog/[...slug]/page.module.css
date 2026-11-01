@@ -1,0 +1,52 @@
+/**
+ * MIT License
+ *
+ * Copyright (c) 2026 Xiao Hanyu (https://xiaohanyu.me)
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *
+ */
+
+.back {
+  width: fit-content;
+  color: var(--mantine-color-dimmed);
+  font-size: var(--mantine-font-size-sm);
+  text-decoration: none;
+}
+
+.back:hover {
+  color: var(--mantine-color-text);
+}
+
+/* The docs page grid places the article itself; keep the blog article aligned
+   with the site container (the grid columns live in layout.module.css). The
+   doubled class outranks `[data-no-sidebar] .page` from fumandocs-ui. */
+:global([data-no-sidebar]) .article.article {
+  padding-inline: var(--mantine-spacing-md);
+  /* Leave room for the fixed footer reveal at the end of the post. */
+  padding-bottom: calc(var(--mantine-spacing-xl) * 3);
+}
+
+@media (min-width: 75em) {
+  :global([data-no-sidebar]) .article.article {
+    grid-column: 1;
+    margin-inline: 0;
+    padding-inline: 0;
+  }
+}

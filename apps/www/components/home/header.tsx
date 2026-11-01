@@ -45,6 +45,7 @@ import sharedClasses from './shared.module.css'
 const mainLinks = [
   { href: '/docs/getting-started', label: 'Get started' },
   { href: '/docs/guides/theming', label: 'Theming' },
+  { href: '/blog', label: 'Blog' },
 ]
 
 export function SiteHeader() {

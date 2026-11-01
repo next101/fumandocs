@@ -42,12 +42,13 @@ interface FooterLink {
 
 const groups: { title: string; links: FooterLink[] }[] = [
   {
-    title: 'Docs',
+    title: 'Content',
     links: [
       { label: 'Getting started', href: '/docs/getting-started' },
       { label: 'Components', href: '/docs/components/callouts' },
       { label: 'Theming', href: '/docs/guides/theming' },
       { label: 'Export compatibility', href: '/docs/export-compatibility' },
+      { label: 'Blog', href: '/blog' },
     ],
   },
   {
