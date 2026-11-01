@@ -14,6 +14,8 @@
    doubled class outranks `[data-no-sidebar] .page` from fumandocs-ui. */
 :global([data-no-sidebar]) .article.article {
   padding-inline: var(--mantine-spacing-md);
+  /* Leave room for the fixed footer reveal at the end of the post. */
+  padding-bottom: calc(var(--mantine-spacing-xl) * 3);
 }
 
 @media (min-width: 75em) {
