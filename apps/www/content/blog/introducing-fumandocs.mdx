@@ -1,0 +1,109 @@
+---
+title: Introducing Fumandocs
+description: A Mantine UI layer for Fumadocs, and why we built it.
+date: 2026-11-01
+tags: ["announcement", "fumandocs", "mantine"]
+---
+
+Fumandocs is a [Mantine](https://mantine.dev) UI layer for
+[Fumadocs](https://fumadocs.dev). It keeps the Fumadocs content engine and
+replaces the official Tailwind-based interface with Mantine components, tokens,
+and themes.
+
+<Callout type="info" title="Not a fork">
+  Fumandocs is an adapter, not a rewrite of the content engine. Your MDX files,
+  `fumadocs-core` APIs, and `fumadocs-mdx` setup stay the same.
+</Callout>
+
+## Why we built it
+
+### 1. Fumadocs is a great docs framework
+
+Fumadocs gets the hard parts right: a content-first MDX pipeline, a page tree,
+search, navigation, and a set of layouts that feel like a real documentation
+product. We liked the engine and wanted to keep using it.
+
+### 2. The official UI assumes Tailwind
+
+The official `fumadocs-ui` package ships a Tailwind-based interface. If your
+project already uses Mantine, or you deliberately avoid Tailwind, you end up
+rebuilding the layout, search, and MDX components yourself.
+
+### 3. We wanted Mantine with Fumadocs
+
+Mantine has the component library, theme system, and accessibility defaults we
+already use. We wanted Fumadocs' content pipeline with Mantine's UI layer — no
+Tailwind, no second design system, and no CSS reset conflicts.
+
+So we built one.
+
+## What Fumandocs provides
+
+`fumandocs-ui` is the published package. It reimplements the Fumadocs UI surface
+with Mantine:
+
+- **Docs layout** — collapsible sidebar, mobile drawer, search trigger, theme
+  switch, and table of contents.
+- **Page primitives** — `DocsPage`, titles, descriptions, prose, page actions,
+  and previous/next navigation.
+- **Provider** — Mantine color scheme plus the Fumadocs root provider.
+- **Search** — a Mantine-native search dialog wired to the Fumadocs search API.
+- **MDX components** — callouts, cards, code blocks, headings, and link
+  handling.
+
+The import paths mirror the upstream package where possible, so the mental model
+is the same:
+
+| Layer          | Fumadocs                 | Fumandocs                |
+| -------------- | ------------------------ | ------------------------ |
+| Content engine | `fumadocs-core`          | same                     |
+| MDX pipeline   | `fumadocs-mdx`           | same                     |
+| UI             | `fumadocs-ui` (Tailwind) | `fumandocs-ui` (Mantine) |
+| Styling        | Tailwind utilities       | Mantine tokens + CSS     |
+
+<Cards>
+  <Card
+    title="Getting started"
+    href="/docs/getting-started"
+    description="Scaffold a site and run it locally"
+  />
+  <Card
+    title="Export compatibility"
+    href="/docs/export-compatibility"
+    description="Which upstream subpaths are supported"
+  />
+</Cards>
+
+## Scaffolding with create-fumandocs
+
+The second package, `create-fumandocs`, sets up a Next.js site with Fumadocs MDX
+and Mantine already wired together. It asks which modules you want — docs, blog,
+or both — plus the site title, description, URL, and package manager.
+
+```bash
+npx create-fumandocs my-docs
+```
+
+Or with pnpm:
+
+```bash
+pnpm create fumandocs my-docs
+```
+
+The generated site includes the docs layout, search route, MDX component map,
+and a working `pnpm dev` setup. If you choose the blog module, it also adds a
+post list, post pages with a table of contents and Markdown export, an RSS feed,
+and draft handling.
+
+There is no Tailwind configuration to maintain: the generated styles come from
+Mantine and `fumandocs-ui/style.css`.
+
+## What's next
+
+Fumandocs is intentionally small: Fumadocs owns content, routing, and search;
+Mantine owns the interface. That split keeps upgrades predictable and lets a
+documentation site reuse the same design system as the rest of the product.
+
+If you are starting a new docs site, try the scaffolder. If you already have a
+Fumadocs project, install `fumandocs-ui` and swap the UI imports while keeping
+the content source unchanged.
