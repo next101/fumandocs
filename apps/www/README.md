@@ -7,7 +7,7 @@ Official demo and documentation for the Fumandocs project.
 From the monorepo root:
 
 ```bash
-pnpm dev:site
+pnpm www:dev
 ```
 
 Or from this directory (`pnpm dev` rebuilds `fumandocs-ui` first):

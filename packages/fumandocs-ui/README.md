@@ -39,5 +39,5 @@ export default function RootLayout({
 }
 ```
 
-See the Fumandocs monorepo `apps/www` for a full site (`pnpm dev:site` from the
+See the Fumandocs monorepo `apps/www` for a full site (`pnpm www:dev` from the
 root).

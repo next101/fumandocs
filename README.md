@@ -37,7 +37,7 @@ export-compatibility on the docs site).
 ```bash
 pnpm install
 pnpm build
-pnpm dev:site      # dogfood: apps/www (fumandocs-www)
+pnpm www:dev      # dogfood: apps/www (fumandocs-www)
 ```
 
 The **only in-repo dogfood app** is `apps/www` (`fumandocs-www`): marketing

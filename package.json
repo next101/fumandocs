@@ -8,7 +8,6 @@
     "clean": "pnpm -r run clean",
     "create-fumandocs": "pnpm --filter create-fumandocs",
     "dev": "pnpm --filter fumandocs-ui dev",
-    "dev:site": "pnpm --filter fumandocs-ui build && pnpm --filter fumandocs-www dev",
     "lint": "biome check",
     "lint:fix": "biome check --write --unsafe",
     "license:add": "node scripts/addlicense.mjs",
@@ -23,7 +22,9 @@
     "test:watch": "vitest",
     "test:cov": "vitest run --coverage",
     "release": "commit-and-tag-version -c .versionrc.cjs",
-    "build:site": "node scripts/compare-fumadocs-ui-exports.mjs --write-docs && pnpm --filter fumandocs-ui build && pnpm --filter fumandocs-www build",
+    "www": "pnpm --filter fumandocs-www",
+    "www:build": "node scripts/compare-fumadocs-ui-exports.mjs --write-docs && pnpm --filter fumandocs-ui build && pnpm --filter fumandocs-www build",
+    "www:dev": "pnpm --filter fumandocs-ui build && pnpm --filter fumandocs-www dev",
     "commitlint": "commitlint --edit",
     "prepare": "node scripts/setup-git-hooks.mjs"
   },

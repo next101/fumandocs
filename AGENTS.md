@@ -32,7 +32,7 @@ Prerequisites: Node >= 22 and pnpm 11.13.0 (CI pins that version).
 | `pnpm install`                 | Install workspace deps; also installs lefthook hooks when in a git work tree  |
 | `pnpm build`                   | `pnpm -r run build` — tsdown for both packages                                |
 | `pnpm dev`                     | `fumandocs-ui` in tsdown watch mode                                           |
-| `pnpm dev:site`                | Build `fumandocs-ui`, then `next dev` on `apps/www`                           |
+| `pnpm www:dev`                 | Build `fumandocs-ui`, then `next dev` on `apps/www`                           |
 | `pnpm lint` / `lint:fix`       | Biome check / check `--write --unsafe`                                        |
 | `pnpm format:prose` / `:fix`   | Prettier over `**/*.{md,mdx}`                                                 |
 | `pnpm types:check`             | `pnpm -r run types:check` (each package's `tsc --noEmit`)                     |
@@ -217,8 +217,8 @@ pnpm dev               # terminal 1: rebuild fumandocs-ui on change
 pnpm --filter fumandocs-www dev   # terminal 2: next dev
 ```
 
-`pnpm dev:site` is the one-shot alternative; it builds the UI once, so further
-UI edits need another build.
+`pnpm www:dev` is the one-shot alternative; it builds the UI once, so further UI
+edits need another build.
 
 **Cut a release**
 
