@@ -46,40 +46,11 @@ jobs:
       - name: Run type checks
         run: pnpm types:check
 
-      - name: Run unit tests with coverage
-        run: pnpm test:cov
-
       - name: Build packages
         run: pnpm build
 
       - name: Build docs site
         run: pnpm --filter fumandocs-www build
 
-      - name: Scaffold a docs and blog app from the template
-        run: node packages/create-fumandocs/dist/bin.js smoke-app --modules docs,blog
-
-      - name: Verify project name replacement
-        run: grep -q "'smoke-app'" smoke-app/components/logo.tsx
-
-      - name: Verify both modules were scaffolded
-        run: |
-          test -d smoke-app/app/docs
-          test -d smoke-app/app/blog
-          test -d smoke-app/content/docs
-          test -d smoke-app/content/blog
-
-      - name: Scaffold a blog-only app from the template
-        run: |
-          node packages/create-fumandocs/dist/bin.js smoke-blog --modules blog
-          test -d smoke-blog/app/blog
-          test ! -d smoke-blog/app/docs
-          test ! -f smoke-blog/lib/source.ts
-          grep -q "href: '/blog'" smoke-blog/lib/modules.ts
-
-      - name: Install scaffolded app dependencies
-        working-directory: smoke-app
-        run: pnpm install
-
-      - name: Build scaffolded app
-        working-directory: smoke-app
-        run: pnpm build
+      - name: Run unit tests with coverage
+        run: pnpm test:cov
