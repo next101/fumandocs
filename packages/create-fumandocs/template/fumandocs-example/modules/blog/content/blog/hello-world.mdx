@@ -6,7 +6,24 @@ tags: ["meta", "nextjs"]
 ---
 
 Welcome to your new blog. Posts are plain MDX files in `content/blog`, and the
-list you just came from is built at request time from their frontmatter.
+list you came from is generated from their frontmatter.
+
+<Callout type="info" title="No CMS required">
+  Add a file, write MDX, and the post appears. Drafts stay out of production
+  builds until you are ready.
+</Callout>
+
+## How posts are discovered
+
+Every `.mdx` file under `content/blog` becomes a page. The loader reads the
+frontmatter, sorts posts by `date`, and builds the index and RSS feed. There is
+no registry or index file to update.
+
+```text
+content/blog/
+  hello-world.mdx
+  writing-in-mdx.mdx
+```
 
 ## Frontmatter
 
@@ -18,17 +35,40 @@ title: Hello, world
 description: The first post on a blog scaffolded with create-fumandocs.
 date: 2026-10-31
 tags: ["meta", "nextjs"]
+draft: false
 ---
 ```
 
-Add `draft: true` to keep a post out of production builds while still seeing it
-in `next dev`.
+| Field         | Required | Notes                         |
+| ------------- | -------- | ----------------------------- |
+| `title`       | yes      | Shown in the list and title   |
+| `description` | yes      | Used in metadata and the list |
+| `date`        | yes      | Sorts newest first            |
+| `tags`        | no       | Shown as badges               |
+| `draft`       | no       | Hidden in production builds   |
+
+Dates are coerced to `Date` objects, so `2026-10-31` and ISO timestamps both
+work.
+
+## Drafts
+
+Set `draft: true` and the post is visible in `next dev` but excluded from the
+production build. The index, sitemap, RSS feed, and Markdown route all skip it.
+
+## Reading and sharing
+
+Each post reuses the docs reading layout:
+
+- The "On this page" rail is built from your headings.
+- "Copy Markdown" fetches the processed post from `/llms.mdx/blog/...`.
+- The "Open" menu links to the post in ChatGPT, Claude, Cursor, and Scira.
+- The list is available as RSS at `/blog/rss.xml`.
 
 ## What's next
 
 Create a file in `content/blog`, give it frontmatter, and it appears in the list
-automatically. No registration or index file to maintain.
+automatically.
 
-Post pages reuse the docs layout, so you get the "On this page" rail, "Copy
-Markdown", and the "Open in…" menu for free. The post list is also available as
-RSS at `/blog/rss.xml`.
+- Edit this post in `content/blog/hello-world.mdx`.
+- Read [Writing in MDX](/blog/writing-in-mdx) for components and code blocks.
+- Add a draft and run `pnpm dev` to preview it.

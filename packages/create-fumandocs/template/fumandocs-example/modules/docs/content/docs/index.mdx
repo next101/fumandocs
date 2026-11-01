@@ -1,13 +1,97 @@
 ---
-title: Hello World
-description: Your first document
+title: Getting started
+description: A content-first docs site built with Fumadocs, Mantine, and Next.js
 ---
 
-Welcome to the docs! You can start writing documents in `/content/docs`.
+This starter pairs the [Fumadocs](https://fumadocs.dev) content engine with
+[Mantine](https://mantine.dev) as the UI layer. Pages are MDX files with
+frontmatter; navigation, search, and the table of contents are generated from
+them.
 
-## What is Next?
+## What's in the box
+
+- **Docs layout** with a collapsible sidebar, mobile drawer, search, and TOC.
+- **Mantine components** available directly in MDX.
+- **Fumandocs helpers** such as callouts and cards, registered globally.
+- **Search** at `/api/search`, powered by the same content source.
+- **Markdown export** at `/llms.mdx/docs/.../content.md`.
+
+## Project structure
+
+```text
+content/
+  docs/
+    index.mdx        # this page
+    components.mdx   # component examples
+    meta.json        # navigation order
+lib/
+  source.ts          # Fumadocs loader for /docs
+app/
+  docs/
+    layout.tsx       # DocsLayout and sidebar title
+    [[...slug]]/
+      page.tsx       # renders each MDX page
+```
+
+## Write a page
+
+Create an `.mdx` file under `content/docs`:
+
+```mdx
+---
+title: Configuration
+description: Site URL, repository links, and theme
+---
+
+Your content starts here.
+```
+
+`title` is required; `description` is optional but recommended for metadata and
+search results. Headings become table-of-contents entries automatically.
+
+## Navigation
+
+`content/docs/meta.json` controls the sidebar order. List page slugs in the
+order you want them:
+
+```json
+{
+  "title": "Documentation",
+  "pages": ["index", "components"]
+}
+```
+
+## Preview and build
+
+```bash
+pnpm dev     # http://localhost:3000/docs
+pnpm build   # production build
+pnpm start   # serve the build
+```
+
+{/* @modules blog */}
+
+The blog lives at `/blog`, with its own content under `content/blog` and an RSS
+feed at `/blog/rss.xml`.
+
+{/* @modules-end */}
+
+## Next steps
 
 <Cards>
-  <Card title="Learn more about Next.js" href="https://nextjs.org/docs" />
-  <Card title="Learn more about Fumadocs" href="https://fumadocs.dev" />
+  <Card
+    title="Component examples"
+    href="/docs/components"
+    description="Mantine and Fumandocs components in MDX"
+  />
+  <Card
+    title="Fumadocs documentation"
+    href="https://fumadocs.dev"
+    description="Content, search, and layout APIs"
+  />
+  <Card
+    title="Mantine documentation"
+    href="https://mantine.dev"
+    description="The full component library"
+  />
 </Cards>

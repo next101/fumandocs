@@ -5,10 +5,18 @@ date: 2026-10-24
 tags: ["mdx", "tutorial"]
 ---
 
-MDX is Markdown with JSX. That means ordinary prose stays simple, and you can
-drop in a component wherever Markdown runs out of expressiveness.
+import { Alert, Button, Group } from "@mantine/core";
 
-## Components are already available
+MDX is Markdown with JSX. Ordinary prose stays simple, and you can drop in a
+component wherever Markdown runs out of expressiveness.
+
+## Markdown first
+
+Headings, lists, tables, links, and fenced code blocks all work as usual. The
+outline on the right is generated from your headings, so structure longer posts
+with `##` and `###` sections.
+
+## Global components
 
 The Fumandocs MDX components are registered globally, so there is nothing to
 import:
@@ -16,6 +24,29 @@ import:
 <Callout title="Tip" type="tip">
   Callouts, cards, code blocks, and headings all come from `fumandocs-ui/mdx`.
 </Callout>
+
+## Mantine components
+
+Import Mantine components at the top of the file and use them like any other JSX
+element:
+
+<Alert title="Mantine works inside posts" color="blue">
+  The same components used across the site are available here.
+</Alert>
+
+<Group mt="md">
+  <Button>Primary</Button>
+  <Button variant="default">Default</Button>
+</Group>
+
+```mdx
+import { Alert, Button, Group } from "@mantine/core";
+
+<Group>
+  <Button>Primary</Button>
+  <Button variant="default">Default</Button>
+</Group>
+```
 
 ## Code blocks
 
@@ -41,3 +72,21 @@ export function greeting(name: string): string {
 | `date`        | yes      | Sorted newest first       |
 | `tags`        | no       | Defaults to an empty list |
 | `draft`       | no       | Hidden in production      |
+
+## Links and images
+
+Link to other posts with root-relative URLs such as
+[Hello, world](/blog/hello-world), or to external sites like
+[Fumadocs](https://fumadocs.dev).
+
+Images work like normal Markdown. Put the file under `public/` and reference it
+from the post:
+
+```mdx
+![A screenshot](/screenshot.png)
+```
+
+## Keep the outline useful
+
+The table of contents only includes headings, so avoid using `##` for decorative
+text. Short paragraphs and one idea per section make long posts easier to scan.

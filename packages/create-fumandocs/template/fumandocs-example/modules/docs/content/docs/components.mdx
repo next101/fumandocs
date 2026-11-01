@@ -1,19 +1,138 @@
 ---
 title: Components
-description: Callouts, cards, and code blocks that ship with fumandocs-ui
+description:
+  Mantine components and Fumandocs MDX helpers you can use in any page
 ---
 
-Fumandocs adds a small set of MDX components on top of Fumadocs, styled with
-Mantine. They are available in every document out of the box.
+import {
+  Accordion,
+  AccordionControl,
+  AccordionItem,
+  AccordionPanel,
+  Alert,
+  Badge,
+  Button,
+  Code,
+  Group,
+  Paper,
+  Progress,
+  SimpleGrid,
+  Stack,
+  Tabs,
+  TabsList,
+  TabsPanel,
+  TabsTab,
+  Text,
+  TextInput,
+} from "@mantine/core";
 
-## Callout
+Every page renders inside Mantine's provider, so you can import components from
+`@mantine/core` and use them directly in MDX. Fumandocs also registers a few
+helpers — callouts, cards, and heading anchors — globally.
 
-<Callout type="info" title="Tip">
-  Use callouts to highlight notes, warnings, and ideas. The `info`, `idea`, and
-  `warn` variants all follow your Mantine theme.
+## Buttons
+
+<Group>
+  <Button>Primary</Button>
+  <Button variant="default">Default</Button>
+  <Button variant="outline">Outline</Button>
+  <Button variant="subtle">Subtle</Button>
+</Group>
+
+```mdx
+import { Button, Group } from "@mantine/core";
+
+<Group>
+  <Button>Primary</Button>
+  <Button variant="outline">Outline</Button>
+</Group>
+```
+
+## Badges
+
+<Group>
+  <Badge>Default</Badge>
+  <Badge color="blue">Blue</Badge>
+  <Badge variant="light" color="green">
+    Light
+  </Badge>
+  <Badge variant="outline">Outline</Badge>
+</Group>
+
+## Inputs
+
+<TextInput
+  label="Project name"
+  description="Used for the package name and page titles."
+  placeholder="my-docs"
+/>
+
+## Layout
+
+<SimpleGrid cols={{ base: 1, sm: 2 }} spacing="md">
+  <Paper withBorder p="md">
+    <Text fw={600}>Group</Text>
+    <Text size="sm" c="dimmed" mt={4}>
+      {"Lay out items in a row."}
+    </Text>
+  </Paper>
+  <Paper withBorder p="md">
+    <Text fw={600}>Stack</Text>
+    <Text size="sm" c="dimmed" mt={4}>
+      {"Lay out items in a column."}
+    </Text>
+  </Paper>
+</SimpleGrid>
+
+## Tabs
+
+<Tabs defaultValue="npm">
+  <TabsList>
+    <TabsTab value="npm">npm</TabsTab>
+    <TabsTab value="pnpm">pnpm</TabsTab>
+  </TabsList>
+  <TabsPanel value="npm" pt="md">
+    <Code block>npx create-fumandocs my-docs</Code>
+  </TabsPanel>
+  <TabsPanel value="pnpm" pt="md">
+    <Code block>pnpm create fumandocs my-docs</Code>
+  </TabsPanel>
+</Tabs>
+
+## Accordion
+
+<Accordion variant="separated">
+  <AccordionItem value="content">
+    <AccordionControl>Where does content live?</AccordionControl>
+    <AccordionPanel>
+      Docs pages are MDX files under <Code>content/docs</Code>.
+    </AccordionPanel>
+  </AccordionItem>
+  <AccordionItem value="theme">
+    <AccordionControl>How do I change the theme?</AccordionControl>
+    <AccordionPanel>
+      Pass a Mantine theme to <Code>RootProvider</Code> in{" "}
+      <Code>app/layout.tsx</Code>.
+    </AccordionPanel>
+  </AccordionItem>
+</Accordion>
+
+## Tables
+
+Standard Markdown tables render with Mantine's `Table`:
+
+| Component | Import          |
+| --------- | --------------- |
+| `Button`  | `@mantine/core` |
+| `Alert`   | `@mantine/core` |
+| `Callout` | global          |
+
+## Fumandocs helpers
+
+<Callout type="info" title="No import needed">
+  `Callout`, `Cards`, and `Card` are registered in the MDX component map, so
+  they work in every page without an import.
 </Callout>
-
-## Cards
 
 <Cards>
   <Card
@@ -28,8 +147,8 @@ Mantine. They are available in every document out of the box.
   />
 </Cards>
 
-## Code blocks
+## Styling
 
-```ts
-console.log("Hello, Fumandocs");
-```
+Use Mantine props and CSS variables such as `var(--mantine-color-dimmed)` and
+`var(--mantine-spacing-md)` instead of utility classes. The site has no Tailwind
+dependency, and both light and dark schemes come from the same tokens.

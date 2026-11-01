@@ -1,0 +1,55 @@
+---
+title: Deploying your blog
+description: Environment variables, builds, and what to check before going live.
+date: 2026-10-17
+tags: ["deploy", "nextjs"]
+---
+
+Your blog is a standard Next.js app, so it deploys anywhere Next.js runs:
+Vercel, a Node server, or a container.
+
+## Set the public URL
+
+`NEXT_PUBLIC_SITE_URL` is used by `robots.txt`, the sitemap, and the RSS feed.
+Copy the example file and set it to your production origin:
+
+```bash
+cp .env.example .env.local
+```
+
+```dotenv
+NEXT_PUBLIC_SITE_URL=https://blog.example.com
+NEXT_PUBLIC_REPO_URL=https://github.com/you/blog
+```
+
+The repository URL is optional; it powers the GitHub links in the header and
+footer.
+
+## Build locally
+
+```bash
+pnpm install
+pnpm build
+pnpm start
+```
+
+`pnpm build` pre-renders the index, every post, the RSS feed, and the Markdown
+exports. Draft posts are excluded from the production build.
+
+## Checklist
+
+- [ ] `NEXT_PUBLIC_SITE_URL` points at the production origin.
+- [ ] `pnpm build` completes without type errors.
+- [ ] `/blog/rss.xml` returns the expected posts.
+- [ ] A draft post is not reachable in production.
+- [ ] Page titles and descriptions look right.
+
+## Hosting notes
+
+- **Vercel** detects Next.js automatically; add the environment variables in the
+  project settings.
+- **Node server** run `pnpm build` then `pnpm start` behind your reverse proxy.
+- **Containers** build the app in the image and run `pnpm start`.
+
+The RSS and Markdown routes are static, so they work with any host that can
+serve the Next.js build.
