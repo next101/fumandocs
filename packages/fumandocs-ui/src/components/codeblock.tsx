@@ -76,7 +76,6 @@ export function CodeBlock({
     <Paper
       component="figure"
       withBorder
-      radius="xs"
       {...props}
       className={[classes.root, props.className].filter(Boolean).join(' ')}
     >

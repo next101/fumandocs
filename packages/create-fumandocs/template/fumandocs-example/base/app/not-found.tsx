@@ -17,7 +17,6 @@ export default function NotFound() {
         <LinkButton
           href="/"
           variant="default"
-          radius="md"
           size="md"
           mt="lg"
           leftSection={<ArrowLeftIcon size={16} />}

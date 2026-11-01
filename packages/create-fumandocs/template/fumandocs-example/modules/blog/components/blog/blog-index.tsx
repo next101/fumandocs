@@ -51,7 +51,6 @@ export function BlogIndex() {
                         key={tag}
                         variant="default"
                         size="sm"
-                        radius="sm"
                         tt="none"
                         fw={500}
                       >

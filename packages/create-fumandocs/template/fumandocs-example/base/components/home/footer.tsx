@@ -147,7 +147,6 @@ export function SiteFooter() {
                     href={repoUrl}
                     target="_blank"
                     rel="noreferrer"
-                    radius="md"
                     leftSection={<GithubLogoIcon size={16} />}
                     className={`${classes.socialBtn} ${classes.githubBtn}`}
                   >
@@ -159,7 +158,6 @@ export function SiteFooter() {
                   href="https://www.npmjs.com/package/fumandocs-ui"
                   target="_blank"
                   rel="noreferrer"
-                  radius="md"
                   leftSection={<PackageIcon size={16} />}
                   className={`${classes.socialBtn} ${classes.npmBtn}`}
                 >

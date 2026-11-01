@@ -77,7 +77,6 @@ export function Callout({
   return (
     <Paper
       withBorder
-      radius="xs"
       {...props}
       data-type={resolved}
       className={[classes.root, props.className].filter(Boolean).join(' ')}

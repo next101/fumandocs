@@ -132,7 +132,7 @@
     display: block;
     height: 40px;
     border: 1px solid var(--mantine-color-default-border);
-    border-radius: var(--mantine-radius-md);
+    border-radius: var(--mantine-radius-default);
     background: var(--mantine-color-body);
     box-shadow: var(--mantine-shadow-lg);
   }
@@ -176,7 +176,7 @@
     overflow: auto;
     padding: 8px;
     border: 1px solid var(--mantine-color-default-border);
-    border-radius: var(--mantine-radius-md);
+    border-radius: var(--mantine-radius-default);
     background: var(--mantine-color-body);
     box-shadow: var(--mantine-shadow-lg);
   }

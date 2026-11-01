@@ -90,10 +90,9 @@ export function FeaturesSection() {
             <Paper
               key={feature.title}
               withBorder
-              radius="md"
               className={classes.featureCard}
             >
-              <ThemeIcon className={classes.featureIcon} size={50} radius="md">
+              <ThemeIcon className={classes.featureIcon} size={50}>
                 {feature.icon}
               </ThemeIcon>
               <Text component="h3" className={classes.featureTitle} mt="md">

@@ -89,7 +89,7 @@
   margin-block: 16px;
   overflow: hidden;
   border: 1px solid var(--mantine-color-gray-3);
-  border-radius: var(--mantine-radius-xs);
+  border-radius: var(--mantine-radius-default);
 }
 .codeTabs [role="tablist"] {
   padding-inline: 8px;

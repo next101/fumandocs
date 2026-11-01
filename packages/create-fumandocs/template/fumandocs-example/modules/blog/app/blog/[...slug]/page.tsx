@@ -33,14 +33,7 @@ export default async function Page(props: PageProps<'/blog/[...slug]'>) {
               {formatDate(page.data.date)}
             </time>
             {page.data.tags.map((tag) => (
-              <Badge
-                key={tag}
-                variant="default"
-                size="sm"
-                radius="sm"
-                tt="none"
-                fw={500}
-              >
+              <Badge key={tag} variant="default" size="sm" tt="none" fw={500}>
                 {tag}
               </Badge>
             ))}

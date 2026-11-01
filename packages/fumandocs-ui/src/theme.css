@@ -39,3 +39,9 @@
 :root:root[data-mantine-color-scheme="dark"] {
   --mantine-color-dimmed: var(--mantine-color-dark-1);
 }
+
+/* Mantine pins Kbd to radius-sm, so keycaps in the sidebar search and the
+   search dialog would stay rounder than their inputs. Follow the theme. */
+:root .mantine-Kbd-root {
+  border-radius: var(--mantine-radius-default);
+}

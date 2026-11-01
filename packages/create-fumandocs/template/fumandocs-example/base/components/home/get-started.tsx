@@ -47,7 +47,6 @@ export function GetStartedSection() {
                 variant="subtle"
                 color={copied ? 'green' : 'gray'}
                 size={32}
-                radius="sm"
                 aria-label="Copy install command"
               >
                 {copied ? <CheckIcon size={16} /> : <CopyIcon size={16} />}

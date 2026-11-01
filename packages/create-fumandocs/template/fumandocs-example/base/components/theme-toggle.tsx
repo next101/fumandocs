@@ -13,7 +13,6 @@ export function ColorSchemeToggle() {
         onClick={() => toggleColorScheme()}
         variant="default"
         size={36}
-        radius="md"
         aria-label="Toggle color scheme"
       >
         {/*

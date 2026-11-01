@@ -153,7 +153,6 @@ function FooterLink({
       component={Link}
       href={page.url}
       withBorder
-      radius="md"
       p="md"
       className={classes.footerLink}
       style={{ textAlign: right ? 'right' : 'left' }}

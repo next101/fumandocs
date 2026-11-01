@@ -88,7 +88,7 @@
 }
 .prose code:not(pre code) {
   border: 1px solid var(--mantine-color-gray-3);
-  border-radius: 5px;
+  border-radius: var(--mantine-radius-default);
   background: var(--mantine-color-gray-1);
   padding: 0.1em 0.32em;
   font-size: 0.875em;
@@ -107,7 +107,7 @@
 .prose img {
   max-width: 100%;
   height: auto;
-  border-radius: var(--mantine-radius-md);
+  border-radius: var(--mantine-radius-default);
 }
 
 :where([data-mantine-color-scheme="dark"]) .prose code:not(pre code) {

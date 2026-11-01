@@ -4,7 +4,7 @@
   margin: 0;
   padding: 14px 16px;
   min-height: 254px;
-  border-radius: var(--mantine-radius-md);
+  border-radius: var(--mantine-radius-default);
   background-color: var(--mantine-color-dark-8);
   color: var(--mantine-color-dark-0);
   font-family: var(--mantine-font-family-monospace);

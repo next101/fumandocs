@@ -47,7 +47,7 @@
   line-height: 1;
   padding: 7px 10px;
   font-size: var(--mantine-font-size-sm);
-  border-radius: var(--mantine-radius-md);
+  border-radius: var(--mantine-radius-default);
   font-weight: 600;
 
   &:hover {

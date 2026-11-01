@@ -10,7 +10,7 @@
   justify-content: space-between;
   gap: var(--mantine-spacing-md);
   padding: var(--mantine-spacing-md) var(--mantine-spacing-lg);
-  border-radius: var(--mantine-radius-md);
+  border-radius: var(--mantine-radius-default);
   background-color: var(--mantine-color-gray-1);
   color: var(--mantine-color-gray-9);
   font-family: var(--mantine-font-family-monospace);

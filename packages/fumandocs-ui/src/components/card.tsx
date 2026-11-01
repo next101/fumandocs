@@ -58,12 +58,7 @@ export function Card({
   const content = (
     <>
       {icon && (
-        <ThemeIcon
-          variant="default"
-          radius="md"
-          mb="sm"
-          className={classes.icon}
-        >
+        <ThemeIcon variant="default" mb="sm" className={classes.icon}>
           {icon}
         </ThemeIcon>
       )}
@@ -87,7 +82,6 @@ export function Card({
         external={external}
         withBorder
         padding="md"
-        radius="xs"
         className={classes.root}
         {...props}
       >
@@ -97,13 +91,7 @@ export function Card({
   }
 
   return (
-    <MantineCard
-      withBorder
-      padding="md"
-      radius="xs"
-      className={classes.root}
-      {...props}
-    >
+    <MantineCard withBorder padding="md" className={classes.root} {...props}>
       {content}
     </MantineCard>
   )

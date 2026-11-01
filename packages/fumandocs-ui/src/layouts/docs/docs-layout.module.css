@@ -170,7 +170,7 @@ only the background extends to the browser edge. */
   min-height: 32px;
   margin-block: 1px;
   padding: 6px 12px;
-  border-radius: var(--mantine-radius-md);
+  border-radius: var(--mantine-radius-default);
   color: var(--mantine-color-gray-7);
   font-size: 0.875rem;
   line-height: 1.35;
@@ -200,7 +200,7 @@ only the background extends to the browser edge. */
   padding: 2px;
   padding-right: 0;
   border: 1px solid var(--mantine-color-gray-3);
-  border-radius: 8px;
+  border-radius: var(--mantine-radius-default);
   background: color-mix(in srgb, var(--mantine-color-gray-1) 50%, transparent);
   color: var(--mantine-color-dimmed);
 }
@@ -234,7 +234,7 @@ only the background extends to the browser edge. */
   display: inline-flex;
   padding: 3px;
   border: 1px solid transparent;
-  border-radius: 6px;
+  border-radius: var(--mantine-radius-default);
 }
 :where([data-mantine-color-scheme="light"])
   .themeToggleIcon[data-scheme="light"],
@@ -319,7 +319,7 @@ only the background extends to the browser edge. */
     width: var(--docs-sidebar-width);
     height: calc(100dvh - 16px);
     border: 1px solid var(--mantine-color-gray-3);
-    border-radius: 12px;
+    border-radius: var(--mantine-radius-default);
     transform: translateX(calc(-1 * var(--docs-sidebar-width)));
   }
   .sidebar[data-collapsed="true"][data-hovered="true"] {
@@ -350,7 +350,7 @@ only the background extends to the browser edge. */
     display: flex;
     padding: 2px;
     border: 1px solid var(--mantine-color-gray-3);
-    border-radius: 12px;
+    border-radius: var(--mantine-radius-default);
     background: var(--mantine-color-gray-1);
     color: var(--mantine-color-dimmed);
     box-shadow: var(--mantine-shadow-lg);
