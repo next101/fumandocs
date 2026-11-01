@@ -43,8 +43,7 @@ import classes from './header.module.css'
 import sharedClasses from './shared.module.css'
 
 const mainLinks = [
-  { href: '/docs/getting-started', label: 'Get started' },
-  { href: '/docs/guides/theming', label: 'Theming' },
+  { href: '/docs', label: 'Docs' },
   { href: '/blog', label: 'Blog' },
 ]
 
@@ -151,7 +150,7 @@ export function SiteHeader() {
           ))}
           <Button
             component={Link}
-            href="/docs/getting-started"
+            href="/docs"
             onClick={drawerHandlers.close}
             mt="md"
             fullWidth
