@@ -45,7 +45,7 @@ No Tailwind CSS or PostCSS. Styles are pulled in via CSS `@import` in
 ```
 
 Customize Mantine via `RootProvider` in `app/layout.tsx` — the scaffold uses
-Mantine's `dark` palette as the primary color.
+Mantine's `gray` palette as the primary color.
 
 <!-- @modules docs -->
 

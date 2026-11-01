@@ -26,7 +26,7 @@ export default function Layout({ children }: LayoutProps<'/'>) {
         <ColorSchemeScript defaultColorScheme="auto" />
       </head>
       <body>
-        <RootProvider theme={{ primaryColor: 'dark', defaultRadius: 'xs' }}>
+        <RootProvider theme={{ primaryColor: 'gray', defaultRadius: 'xs' }}>
           {children}
         </RootProvider>
       </body>

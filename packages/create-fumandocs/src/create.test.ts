@@ -150,6 +150,37 @@ describe('create', () => {
     expect(readme.startsWith('# my-app\n')).toBe(true)
   })
 
+  it('leaves no template placeholders behind', async () => {
+    const outputDir = await createProject('my-app')
+    const textExtensions = new Set([
+      '.ts',
+      '.tsx',
+      '.md',
+      '.mdx',
+      '.json',
+      '.mjs',
+      '.css',
+    ])
+    const entries = await fs.readdir(outputDir, {
+      withFileTypes: true,
+      recursive: true,
+    })
+    const leftovers: string[] = []
+
+    for (const entry of entries) {
+      if (!entry.isFile()) continue
+      if (!textExtensions.has(path.extname(entry.name))) continue
+
+      const filePath = path.join(entry.parentPath, entry.name)
+      const content = await fs.readFile(filePath, 'utf8')
+      if (/__(?:PROJECT_NAME|SITE_TITLE|SITE_DESCRIPTION)__/.test(content)) {
+        leftovers.push(path.relative(outputDir, filePath))
+      }
+    }
+
+    expect(leftovers).toEqual([])
+  })
+
   it('does not install dependencies by default', async () => {
     const outputDir = await createProject()
 
