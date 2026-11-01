@@ -18,7 +18,7 @@ export function BlogIndex() {
   const years = [...new Set(posts.map((post) => post.data.date.getFullYear()))]
 
   return (
-    <Container size={1440} py={{ base: 48, md: 72 }}>
+    <Container size="xl" py={{ base: 48, md: 72 }}>
       <div className={classes.index}>
         <div className={classes.main}>
           <Stack gap="xs" mb={40}>

@@ -108,7 +108,7 @@ export function SiteFooter() {
     <div className={classes.root}>
       <div className={classes.spacer} />
       <footer className={classes.wrapper} ref={ref}>
-        <Container size={1440}>
+        <Container size="xl">
           <div className={classes.inner}>
             <div className={classes.logoSection}>
               <Link href="/" className={sharedClasses.logo}>

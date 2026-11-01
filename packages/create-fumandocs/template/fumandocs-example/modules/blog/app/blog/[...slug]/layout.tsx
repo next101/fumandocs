@@ -10,7 +10,7 @@ export default function PostLayout({
   children,
 }: LayoutProps<'/blog/[...slug]'>) {
   return (
-    <Container size={1440}>
+    <Container size="xl">
       <DocsLayout
         tree={blogTree}
         nav={{ enabled: false, title: brandName }}

@@ -23,7 +23,7 @@ export function GetStartedSection() {
 
   return (
     <section className={sharedClasses.section}>
-      <Container size={1440}>
+      <Container size="xl">
         <Title order={2} className={sharedClasses.title} ta="center">
           Start building your site
         </Title>

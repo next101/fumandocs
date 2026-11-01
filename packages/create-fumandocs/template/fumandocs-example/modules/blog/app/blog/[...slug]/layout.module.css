@@ -1,5 +1,5 @@
-/* The blog shares the site's 1440px container, so the article's left edge and
-   the TOC's right edge line up with the header and footer. */
+/* The blog shares the site's container, so the article's left edge and the
+   TOC's right edge line up with the header and footer. */
 @media (min-width: 75em) {
   .layout[data-no-sidebar] {
     grid-template-columns: minmax(0, 1fr) var(--docs-toc-width, 268px);

@@ -24,7 +24,7 @@ export function SiteHeader() {
 
   return (
     <header className={classes.header}>
-      <Container size={1440} h="100%">
+      <Container size="xl" h="100%">
         <div className={classes.headerMain}>
           <div className={classes.headerSection}>
             <Burger

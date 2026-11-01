@@ -5,7 +5,7 @@ import sharedClasses from '@/components/home/shared.module.css'
 
 export default function NotFound() {
   return (
-    <Container size={1440} py={120}>
+    <Container size="xl" py={120}>
       <Stack align="center" ta="center" gap="md">
         <Title order={1} className={sharedClasses.title} data-order="1">
           404

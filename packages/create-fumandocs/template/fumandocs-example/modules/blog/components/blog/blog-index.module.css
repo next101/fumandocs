@@ -18,7 +18,7 @@
 }
 
 /* Article column on the left, meta rail on the right, both inside the same
-   1440px container as the site header and footer. */
+   site container as the header and footer. */
 .index {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 268px;
