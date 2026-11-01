@@ -238,12 +238,27 @@ describe('DocsLayout', () => {
   })
 
   it('renders the sidebar footer links', () => {
-    layout({ githubUrl: 'https://github.com/example/repo' })
+    const { container } = layout({
+      githubUrl: 'https://github.com/example/repo',
+    })
 
     expect(screen.getByRole('link', { name: 'GitHub' })).toHaveAttribute(
       'href',
       'https://github.com/example/repo'
     )
+    expect(container.querySelector('[data-plain]')).toBeNull()
+  })
+
+  it('renders the theme switch in a plain bar without footer links', () => {
+    const { container } = layout()
+
+    expect(
+      screen.getByRole('button', { name: 'Toggle Theme' })
+    ).toBeInTheDocument()
+    expect(container.querySelector('[data-plain]')).toBeInTheDocument()
+    expect(
+      container.querySelector('[data-plain] .mantine-Group-root')
+    ).toBeNull()
   })
 
   it('omits the footer entirely when nothing is configured', () => {

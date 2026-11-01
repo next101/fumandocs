@@ -189,7 +189,7 @@ only the background extends to the browser edge. */
 }
 .sidebarFooter {
   flex: 0 0 auto;
-  padding: 8px 16px 16px;
+  padding: 8px 12px 16px;
 }
 /* Enclosed bar like upstream fumadocs-ui: footer links on the left,
    theme toggle pinned to the right with a divider. */
@@ -203,6 +203,14 @@ only the background extends to the browser edge. */
   border-radius: 8px;
   background: color-mix(in srgb, var(--mantine-color-gray-1) 50%, transparent);
   color: var(--mantine-color-dimmed);
+}
+/* With only the theme switch there is nothing to enclose: render a plain
+   flex row and let the switch sit on the right. */
+.sidebarFooterBar[data-plain] {
+  justify-content: flex-end;
+  padding: 0;
+  border: 0;
+  background: transparent;
 }
 .themeToggle {
   display: inline-flex;
@@ -218,6 +226,9 @@ only the background extends to the browser edge. */
 }
 .themeToggle:hover {
   color: var(--mantine-color-text);
+}
+.sidebarFooterBar[data-plain] .themeToggle {
+  border-left: 0;
 }
 .themeToggleIcon {
   display: inline-flex;

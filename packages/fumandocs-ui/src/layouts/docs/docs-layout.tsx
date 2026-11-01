@@ -51,6 +51,7 @@ import { usePathname } from 'fumadocs-core/framework'
 import Link from 'fumadocs-core/link'
 import type * as PageTree from 'fumadocs-core/page-tree'
 import {
+  Children,
   type ComponentProps,
   createContext,
   type ReactNode,
@@ -469,14 +470,15 @@ function SidebarFooter({
   themeSwitch: { enabled?: boolean }
   children?: ReactNode
 }) {
-  const hasLinks = Boolean(githubUrl) || Boolean(children)
+  const hasLinks = Boolean(githubUrl) || Children.toArray(children).length > 0
   const showThemeSwitch = themeSwitch.enabled !== false
-  /* v8 ignore next -- DocsLayout always passes JSX children, so this guard is
-   * unreachable from the layout. */
   if (!hasLinks && !showThemeSwitch) return null
   return (
     <div className={classes.sidebarFooter}>
-      <div className={classes.sidebarFooterBar}>
+      <div
+        className={classes.sidebarFooterBar}
+        data-plain={hasLinks ? undefined : true}
+      >
         {hasLinks && (
           <Group gap={2} wrap="nowrap">
             {githubUrl && (
