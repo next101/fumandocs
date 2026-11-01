@@ -11,31 +11,82 @@ app with Fumadocs MDX, local search, and Mantine wired as the UI layer.
 ```bash
 npx create-fumandocs my-docs
 cd my-docs
-npm install   # if you skipped --install
+git init          # the CLI does not create a repository
+npm install       # if you skipped the install prompt
 npm run dev
 ```
 
 Open [http://localhost:3000/docs](http://localhost:3000/docs).
 
-<Callout type="idea" title="Package manager">
-  The CLI prompts for npm, pnpm, yarn, or bun, detecting your current one as the
-  default. Pass `--install` to install dependencies automatically.
-</Callout>
+## Prompts
+
+With no flags, the CLI asks for:
+
+- **Modules**: docs (selected by default) and/or blog.
+- **Site title**: used for the logo wordmark and metadata; defaults to the
+  project name.
+- **Site description**: metadata and footer copy; defaults to "Built with
+  Fumadocs and Mantine".
+- **Site URL**: must be an http(s) URL; defaults to `https://example.com`.
+- **Package manager**: npm, pnpm, yarn, or bun, with the detected manager as the
+  default.
+- **Install dependencies**: defaults to yes.
+
+## Options
+
+| Flag                   | Description                                        |
+| ---------------------- | -------------------------------------------------- |
+| `--modules <list>`     | Modules: `docs`, `blog` (default: `docs`)          |
+| `--title <text>`       | Site title, defaults to the project name           |
+| `--description <text>` | Site description                                   |
+| `--url <url>`          | Public site URL, defaults to `https://example.com` |
+| `--install`            | Install dependencies without asking                |
+| `--pm <name>`          | Package manager: `npm`, `pnpm`, `yarn`, or `bun`   |
+
+Each prompt except the project name has a matching flag; the project name is the
+positional argument, and passing a flag skips its prompt.
+
+Selecting neither module exits without writing anything. In CI (`CI=1`) the CLI
+skips all prompts and scaffolds `my-docs` with the docs module, the project-name
+title, default description and URL, and the detected package manager, without
+installing dependencies.
+
+## Environment
+
+The scaffold writes `.env.example`:
+
+```dotenv
+NEXT_PUBLIC_SITE_URL=https://example.com
+
+# Optional: your repository, used by the GitHub links.
+NEXT_PUBLIC_REPO_URL=
+```
+
+Copy it to `.env.local` and fill in your values. `NEXT_PUBLIC_SITE_URL` feeds
+`robots.ts` and `sitemap.ts`; when `NEXT_PUBLIC_REPO_URL` is empty, the GitHub
+links are hidden. Without a site URL the app falls back to
+`http://localhost:3000`.
 
 ## What gets generated
 
-| Path                      | Purpose                                   |
-| ------------------------- | ----------------------------------------- |
-| `app/layout.tsx`          | Mantine color scheme and `RootProvider`   |
-| `app/global.css`          | Mantine + `fumandocs-ui` styles           |
-| `app/page.tsx`            | Starter landing page                      |
-| `app/docs/`               | Docs layout and MDX page route            |
-| `app/api/search/route.ts` | Search endpoint backed by `fumadocs-core` |
-| `app/llms.mdx/`           | Markdown output for the copy/view actions |
-| `content/docs/`           | Your MDX content                          |
-| `lib/source.ts`           | Fumadocs content source                   |
-| `components/mdx.tsx`      | Default MDX component map                 |
-| `next.config.mjs`         | Fumadocs MDX plugin and Shiki themes      |
+| Path                 | Purpose                                   |
+| -------------------- | ----------------------------------------- |
+| `app/layout.tsx`     | Mantine color scheme and `RootProvider`   |
+| `app/global.css`     | Mantine + `fumandocs-ui` styles           |
+| `app/page.tsx`       | Starter landing page                      |
+| `app/robots.ts`      | Robots file driven by the site URL        |
+| `app/sitemap.ts`     | Sitemap driven by the site URL            |
+| `lib/site.ts`        | Site URL, description, and repository URL |
+| `lib/source.ts`      | Fumadocs content source                   |
+| `components/mdx.tsx` | Default MDX component map                 |
+| `next.config.mjs`    | Fumadocs MDX plugin and Shiki themes      |
+| `.env.example`       | Site URL and repository URL               |
+
+The **docs** module adds `app/docs/`, `app/api/search/route.ts`,
+`app/llms.mdx/`, and `content/docs/`.
+
+The **blog** module adds `app/blog/` (post list and post pages),
+`content/blog/`, `lib/blog.ts`, and `components/blog/`.
 
 ## Imports
 
