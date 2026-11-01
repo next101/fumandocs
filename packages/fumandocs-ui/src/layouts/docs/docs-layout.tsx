@@ -190,11 +190,7 @@ export function DocsLayout({
               />
               {sidebar.banner}
               {searchToggle.enabled !== false && <SearchButton />}
-              <ScrollArea
-                className={classes.sidebarScroll}
-                type="auto"
-                offsetScrollbars="y"
-              >
+              <ScrollArea className={classes.sidebarScroll} type="auto">
                 {renderNavigation(() => undefined)}
               </ScrollArea>
               <SidebarFooter githubUrl={githubUrl} themeSwitch={themeSwitch}>

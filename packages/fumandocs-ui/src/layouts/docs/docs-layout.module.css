@@ -127,9 +127,9 @@ only the background extends to the browser edge. */
   font-size: 15px;
 }
 .searchButton {
-  width: calc(var(--docs-sidebar-width) - 20px);
+  width: calc(var(--docs-sidebar-width) - 24px);
   height: 34px;
-  margin-inline: 10px;
+  margin-inline: 12px;
   margin-bottom: 8px;
   padding-inline: 10px 7px;
   border-color: var(--mantine-color-gray-3);
