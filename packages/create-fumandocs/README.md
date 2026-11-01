@@ -54,7 +54,7 @@ A Next.js App Router project with:
 - `fumadocs-core` + `fumadocs-mdx` for content, routing, and page trees
 - Content in `content/docs/` and/or `content/blog/` (MDX), site config in `app/`
 - `.env.example` with `NEXT_PUBLIC_SITE_URL`, used by `robots.ts` and
-  `sitemap.ts`
+  `sitemap.ts`, and an optional `NEXT_PUBLIC_REPO_URL` for the GitHub links
 
 ## Requirements
 

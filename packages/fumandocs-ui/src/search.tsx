@@ -27,6 +27,8 @@
 
 import {
   Box,
+  CloseButton,
+  Group,
   Kbd,
   Loader,
   Modal,
@@ -179,68 +181,96 @@ function SearchDialog({
   const { search, setSearch, query } = useDocsSearch({
     client: fetchClient({ api }),
   })
-  const results = query.data === 'empty' || !query.data ? [] : query.data
+  const results = (
+    query.data === 'empty' || !query.data ? [] : query.data
+  ).filter((item) => hasVisibleText(item.content))
   const inputRef = useRef<HTMLInputElement>(null)
 
   return (
-    <Modal
+    <Modal.Root
       opened={opened}
       onClose={onClose}
-      title="Search documentation"
       centered
       size="lg"
       transitionProps={{
         onEntered: () => inputRef.current?.focus(),
       }}
     >
-      <TextInput
-        ref={inputRef}
-        autoFocus
-        value={search}
-        onChange={(event) => setSearch(event.currentTarget.value)}
-        placeholder="Search documentation…"
-        rightSection={query.isLoading ? <Loader size="xs" /> : <Kbd>Esc</Kbd>}
-        size="md"
-      />
-      <ScrollArea.Autosize mah="60vh" mt="md">
-        <Stack gap={4}>
-          {search.length === 0 &&
-            links.map((item) => (
-              <SearchResult
-                key={item.url}
-                href={item.url}
-                onClick={onClose}
-                title={item.title}
-              />
-            ))}
-          {results.map((item) => (
-            <SearchResult
-              key={item.id}
-              href={item.url}
-              onClick={onClose}
-              title={
-                typeof item.content === 'string' ? (
-                  <mdRenderer.Markdown components={mdComponents}>
-                    {item.content}
-                  </mdRenderer.Markdown>
-                ) : (
-                  item.content
-                )
-              }
-              description={item.breadcrumbs?.join(' / ')}
-            />
-          ))}
-          {search.length > 0 && !query.isLoading && results.length === 0 && (
-            <Text c="dimmed" ta="center" py="xl">
-              No results found.
-            </Text>
-          )}
-          {query.error && (
-            <Text c="red">Search failed: {query.error.message}</Text>
-          )}
-        </Stack>
-      </ScrollArea.Autosize>
-    </Modal>
+      <Modal.Overlay />
+      <Modal.Content>
+        <Modal.Body>
+          <Group justify="space-between" mb="md" wrap="nowrap">
+            <Modal.Title>Search documentation</Modal.Title>
+            <CloseButton aria-label="Close search" onClick={onClose} />
+          </Group>
+          <TextInput
+            ref={inputRef}
+            autoFocus
+            value={search}
+            onChange={(event) => setSearch(event.currentTarget.value)}
+            placeholder="Search documentation…"
+            rightSection={
+              query.isLoading ? <Loader size="xs" /> : <Kbd>Esc</Kbd>
+            }
+            size="md"
+          />
+          <ScrollArea.Autosize mah="60vh" mt="md">
+            <Stack gap={4}>
+              {search.length === 0 &&
+                links.map((item) => (
+                  <SearchResult
+                    key={item.url}
+                    href={item.url}
+                    onClick={onClose}
+                    title={item.title}
+                  />
+                ))}
+              {results.map((item) => (
+                <SearchResult
+                  key={item.id}
+                  href={item.url}
+                  onClick={onClose}
+                  title={
+                    typeof item.content === 'string' ? (
+                      <mdRenderer.Markdown components={mdComponents}>
+                        {item.content}
+                      </mdRenderer.Markdown>
+                    ) : (
+                      item.content
+                    )
+                  }
+                  description={item.breadcrumbs?.join(' / ')}
+                />
+              ))}
+              {search.length > 0 &&
+                !query.isLoading &&
+                results.length === 0 && (
+                  <Text c="dimmed" ta="center" py="xl">
+                    No results found.
+                  </Text>
+                )}
+              {query.error && (
+                <Text c="red">Search failed: {query.error.message}</Text>
+              )}
+            </Stack>
+          </ScrollArea.Autosize>
+        </Modal.Body>
+      </Modal.Content>
+    </Modal.Root>
+  )
+}
+
+/**
+ * Search indexes can contain raw MDX or JSX snippets. A tag-only snippet
+ * renders to nothing, which would leave an unnamed link in the results list.
+ */
+function hasVisibleText(content: unknown): boolean {
+  if (typeof content !== 'string') return true
+  return (
+    content
+      .replace(/<[^>]*>/g, ' ')
+      .replace(/[`*_>#[\]~]/g, ' ')
+      .trim() !== ''
   )
 }
 

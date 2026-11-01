@@ -2,6 +2,7 @@ import { ColorSchemeScript } from '@mantine/core'
 import { RootProvider } from 'fumandocs-ui/provider/next'
 import type { Metadata, Viewport } from 'next'
 import { brandName } from '@/components/logo'
+import { siteDescription } from '@/lib/site'
 import './global.css'
 
 export const metadata: Metadata = {
@@ -9,7 +10,7 @@ export const metadata: Metadata = {
     default: brandName,
     template: `%s | ${brandName}`,
   },
-  description: '__SITE_DESCRIPTION__',
+  description: siteDescription,
 }
 
 export const viewport: Viewport = {

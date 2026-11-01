@@ -88,9 +88,13 @@
 }
 .pageFooter {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 16px;
   margin-top: auto;
+}
+/* A lone next/previous card should sit in its natural half, not stretch. */
+.pageFooter > :only-child {
+  grid-column: 2;
 }
 .footerLink {
   border-color: var(--mantine-color-gray-3);
@@ -111,7 +115,7 @@
 @media (max-width: 47.99em) {
   .page {
     gap: 18px;
-    padding: 28px 16px 24px;
+    padding: 28px 16px 80px;
   }
   .docsTitle {
     font-size: 1.65rem;
@@ -121,6 +125,9 @@
   }
   .pageFooter {
     grid-template-columns: minmax(0, 1fr);
+  }
+  .pageFooter > :only-child {
+    grid-column: auto;
   }
 }
 

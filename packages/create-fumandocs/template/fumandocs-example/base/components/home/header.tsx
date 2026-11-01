@@ -15,6 +15,7 @@ import Link from 'next/link'
 import { LogoWithTitle } from '@/components/logo'
 import { ColorSchemeToggle } from '@/components/theme-toggle'
 import { navLinks, primaryLink } from '@/lib/modules'
+import { repoUrl } from '@/lib/site'
 import classes from './header.module.css'
 import sharedClasses from './shared.module.css'
 
@@ -51,20 +52,22 @@ export function SiteHeader() {
           </div>
 
           <div className={classes.headerControls}>
-            <Tooltip label="GitHub repository" position="bottom">
-              <ActionIcon
-                component="a"
-                href="https://github.com/next101/fumandocs"
-                target="_blank"
-                rel="noreferrer"
-                variant="default"
-                size={36}
-                radius="md"
-                aria-label="GitHub repository"
-              >
-                <GithubLogoIcon size={18} />
-              </ActionIcon>
-            </Tooltip>
+            {repoUrl && (
+              <Tooltip label="GitHub repository" position="bottom">
+                <ActionIcon
+                  component="a"
+                  href={repoUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  variant="default"
+                  size={36}
+                  radius="md"
+                  aria-label="GitHub repository"
+                >
+                  <GithubLogoIcon size={18} />
+                </ActionIcon>
+              </Tooltip>
+            )}
             <ColorSchemeToggle />
           </div>
         </div>

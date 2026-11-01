@@ -17,6 +17,7 @@ import {
 } from '@phosphor-icons/react/ssr'
 import Link from 'next/link'
 import { primaryLink } from '@/lib/modules'
+import { repoUrl } from '@/lib/site'
 import classes from './hero.module.css'
 import { LinkButton } from './shared'
 import sharedClasses from './shared.module.css'
@@ -117,26 +118,32 @@ export function HeroSection() {
                 <span className={classes.eqFu}>fu</span>
                 <span className={classes.eqRest}>madocs</span>
               </a>
-              <span className={classes.eqOp}>+</span>
-              <a
-                href="https://mantine.dev"
-                target="_blank"
-                rel="noreferrer"
-                className={`${classes.eqTerm} ${classes.eqManBg}`}
-                title="Mantine — the UI library"
-              >
-                <span className={classes.eqMan}>man</span>
-                <span className={classes.eqRest}>tine</span>
-              </a>
-              <span className={classes.eqOp}>+</span>
-              <span className={`${classes.eqTerm} ${classes.eqDocsBg}`}>
-                <span className={classes.eqDocs}>docs</span>
+              <span className={classes.eqGroup}>
+                <span className={classes.eqOp}>+</span>
+                <a
+                  href="https://mantine.dev"
+                  target="_blank"
+                  rel="noreferrer"
+                  className={`${classes.eqTerm} ${classes.eqManBg}`}
+                  title="Mantine — the UI library"
+                >
+                  <span className={classes.eqMan}>man</span>
+                  <span className={classes.eqRest}>tine</span>
+                </a>
               </span>
-              <span className={classes.eqOp}>=</span>
-              <span className={classes.eqResult}>
-                <span className={classes.eqFu}>fu</span>
-                <span className={classes.eqMan}>man</span>
-                <span className={classes.eqDocs}>docs</span>
+              <span className={classes.eqGroup}>
+                <span className={classes.eqOp}>+</span>
+                <span className={`${classes.eqTerm} ${classes.eqDocsBg}`}>
+                  <span className={classes.eqDocs}>docs</span>
+                </span>
+              </span>
+              <span className={classes.eqGroup}>
+                <span className={classes.eqOp}>=</span>
+                <span className={classes.eqResult}>
+                  <span className={classes.eqFu}>fu</span>
+                  <span className={classes.eqMan}>man</span>
+                  <span className={classes.eqDocs}>docs</span>
+                </span>
               </span>
             </p>
 
@@ -150,18 +157,20 @@ export function HeroSection() {
               >
                 Get Started
               </LinkButton>
-              <Button
-                component="a"
-                href="https://github.com/next101/fumandocs"
-                target="_blank"
-                rel="noreferrer"
-                className={classes.action}
-                data-github
-                justify="space-between"
-                rightSection={<GithubLogoIcon size={26} />}
-              >
-                GitHub
-              </Button>
+              {repoUrl && (
+                <Button
+                  component="a"
+                  href={repoUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className={classes.action}
+                  data-github
+                  justify="space-between"
+                  rightSection={<GithubLogoIcon size={26} />}
+                >
+                  GitHub
+                </Button>
+              )}
             </div>
           </div>
 

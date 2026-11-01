@@ -84,7 +84,9 @@ export function DocsPage({
     <AnchorProvider toc={toc}>
       {showMobileToc && (
         <details className={tocClasses.mobileToc}>
-          <summary>On this page</summary>
+          <summary>
+            <span className={tocClasses.mobileTocLabel}>On this page</span>
+          </summary>
           <nav>
             {toc.map((item) => (
               <a key={item.url} href={item.url}>
@@ -116,7 +118,7 @@ export function DocsPage({
           )}
         </article>
         {showToc && (
-          <aside className={tocClasses.root}>
+          <aside className={tocClasses.root} aria-label="On this page">
             {tableOfContent.header}
             <div className={tocClasses.title}>
               <span aria-hidden>☷</span>

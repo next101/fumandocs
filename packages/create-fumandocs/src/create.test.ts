@@ -136,11 +136,16 @@ describe('create', () => {
       path.join(outputDir, 'app', 'layout.tsx'),
       'utf8'
     )
+    const site = await fs.readFile(
+      path.join(outputDir, 'lib', 'site.ts'),
+      'utf8'
+    )
 
     expect(logo).toContain('"my-app"')
     expect(logo).not.toContain('__SITE_TITLE__')
-    expect(layout).toContain('"Built with Fumadocs and Mantine"')
-    expect(layout).not.toContain('__SITE_DESCRIPTION__')
+    expect(site).toContain('"Built with Fumadocs and Mantine"')
+    expect(site).not.toContain('__SITE_DESCRIPTION__')
+    expect(layout).toContain('siteDescription')
   })
 
   it('prefixes the README with the project name', async () => {
@@ -382,26 +387,24 @@ describe('create site metadata', () => {
       path.join(dir, 'components', 'logo.tsx'),
       'utf8'
     )
-    const layout = await fs.readFile(
-      path.join(dir, 'app', 'layout.tsx'),
-      'utf8'
-    )
+    const site = await fs.readFile(path.join(dir, 'lib', 'site.ts'), 'utf8')
 
     expect(logo).toContain('"Acme Docs"')
-    expect(layout).toContain('"Everything Acme"')
+    expect(site).toContain('"Everything Acme"')
   })
 
   it('writes .env.example with the site URL', async () => {
     const dir = await createProjectWith({ siteUrl: 'https://docs.acme.dev' })
     const env = await fs.readFile(path.join(dir, '.env.example'), 'utf8')
 
-    expect(env).toBe('NEXT_PUBLIC_SITE_URL=https://docs.acme.dev\n')
+    expect(env).toContain('NEXT_PUBLIC_SITE_URL=https://docs.acme.dev\n')
+    expect(env).toContain('NEXT_PUBLIC_REPO_URL=\n')
   })
 
   it('defaults the URL when none is provided', async () => {
     const dir = await createProjectWith()
     const env = await fs.readFile(path.join(dir, '.env.example'), 'utf8')
 
-    expect(env).toBe('NEXT_PUBLIC_SITE_URL=https://example.com\n')
+    expect(env).toContain('NEXT_PUBLIC_SITE_URL=https://example.com\n')
   })
 })

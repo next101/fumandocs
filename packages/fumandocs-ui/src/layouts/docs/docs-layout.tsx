@@ -176,6 +176,7 @@ export function DocsLayout({
           <>
             <aside
               className={classes.sidebar}
+              aria-label="Documentation sidebar"
               data-collapsed={collapsed || undefined}
               data-hovered={(collapsed && hovered) || undefined}
               onPointerEnter={onPeekEnter}

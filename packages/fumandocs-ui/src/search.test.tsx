@@ -195,6 +195,39 @@ describe('SearchProvider', () => {
     expect(screen.getByText('Node result')).toBeInTheDocument()
   })
 
+  it('skips results with no visible text', async () => {
+    searchState.search = 'hello'
+    searchState.query.data = [
+      { id: '1', url: '/docs/a', content: '<Card title="Mantine" />' },
+      { id: '2', url: '/docs/b', content: 'Visible result' },
+    ]
+
+    renderSearch(
+      <SearchProvider>
+        <span>content</span>
+      </SearchProvider>
+    )
+
+    await openDialog()
+
+    expect(screen.getByText('Visible result')).toBeInTheDocument()
+    expect(screen.getAllByRole('link')).toHaveLength(1)
+  })
+
+  it('names the dialog close button', async () => {
+    renderSearch(
+      <SearchProvider>
+        <span>content</span>
+      </SearchProvider>
+    )
+
+    await openDialog()
+
+    expect(
+      screen.getByRole('button', { name: 'Close search' })
+    ).toBeInTheDocument()
+  })
+
   it('renders inert custom elements instead of host components', async () => {
     searchState.search = 'hello'
     searchState.query.data = [

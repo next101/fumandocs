@@ -100,7 +100,7 @@ source, rebuild before expecting the site to change.
    (`fumandocs-ui` is pinned from its own package version by `constants.ts`). An
    unresolvable `workspace:` dep throws.
 3. Strips `@modules` blocks for modules that were not selected.
-4. Writes `.env.example` with `NEXT_PUBLIC_SITE_URL`.
+4. Writes `.env.example` with `NEXT_PUBLIC_SITE_URL` and `NEXT_PUBLIC_REPO_URL`.
 5. Replaces the `'__SITE_TITLE__'` and `'__SITE_DESCRIPTION__'` tokens (quotes
    included, which keeps them valid TS) in `.ts .tsx .md .mdx .json .mjs .css`
    files it copies.

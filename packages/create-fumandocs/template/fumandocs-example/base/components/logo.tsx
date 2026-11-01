@@ -11,8 +11,8 @@ export function Logo({ size = 32 }: { size?: number }) {
       width={size}
       height={size}
       viewBox="0 0 64 64"
-      role="img"
-      aria-label="Fumandocs"
+      aria-hidden="true"
+      focusable="false"
     >
       <defs>
         <linearGradient id="fumandocs-logo-bg" x1="0" y1="0" x2="1" y2="1">

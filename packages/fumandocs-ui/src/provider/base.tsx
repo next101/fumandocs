@@ -31,6 +31,7 @@ import {
   type MantineThemeOverride,
 } from '@mantine/core'
 import type { ReactNode } from 'react'
+import '../theme.css'
 import { type SearchOptions, SearchProvider } from '../search'
 import classes from './base.module.css'
 

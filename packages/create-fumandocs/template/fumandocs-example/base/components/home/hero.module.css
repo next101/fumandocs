@@ -70,7 +70,7 @@
 }
 
 .eqMan {
-  color: var(--mantine-color-blue-7);
+  color: var(--mantine-color-blue-8);
   font-weight: 700;
 }
 
@@ -119,9 +119,33 @@
   background-color: var(--mantine-color-dark-5);
 }
 
+/* Tinted chips in dark mode need light text to stay above 4.5:1. */
+:where([data-mantine-color-scheme="dark"]) .eqFuBg .eqFu {
+  color: var(--mantine-color-violet-1);
+}
+
+:where([data-mantine-color-scheme="dark"]) .eqFuBg .eqRest {
+  color: var(--mantine-color-white);
+}
+
+:where([data-mantine-color-scheme="dark"]) .eqManBg .eqMan {
+  color: var(--mantine-color-blue-1);
+}
+
+:where([data-mantine-color-scheme="dark"]) .eqManBg .eqRest {
+  color: var(--mantine-color-white);
+}
+
 .eqOp {
   color: var(--mantine-color-dimmed);
   font-weight: 400;
+}
+
+/* Keep an operator glued to the term it introduces when the row wraps. */
+.eqGroup {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .eqResult {
@@ -157,11 +181,13 @@
   }
 
   &[data-github] {
-    background-color: var(--mantine-color-dark-7);
-    color: var(--mantine-color-white);
+    border: 1px solid var(--mantine-color-default-border);
+    border-bottom: 3px solid var(--mantine-color-gray-4);
+    background-color: transparent;
+    color: var(--mantine-color-bright);
 
     &:hover {
-      background-color: var(--mantine-color-black);
+      background-color: var(--mantine-color-gray-0);
     }
   }
 
@@ -171,9 +197,14 @@
 }
 
 :where([data-mantine-color-scheme="dark"]) .action[data-github] {
+  border-color: var(--mantine-color-dark-4);
   border-bottom-color: var(--mantine-color-dark-5);
-  background-color: var(--mantine-color-gray-1);
-  color: var(--mantine-color-black);
+  background-color: transparent;
+  color: var(--mantine-color-bright);
+
+  &:hover {
+    background-color: var(--mantine-color-dark-6);
+  }
 }
 
 /* Browser window chrome of the docs preview */
@@ -197,8 +228,8 @@
   width: 0;
   background: linear-gradient(
     90deg,
-    var(--mantine-color-blue-5),
-    var(--mantine-color-teal-5)
+    var(--mantine-primary-color-5),
+    var(--mantine-primary-color-7)
   );
   opacity: 0;
   animation: window-load-bar 2.8s ease-out 0.3s 1 forwards;

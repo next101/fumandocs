@@ -26,3 +26,10 @@
   overflow-x: auto;
   white-space: nowrap;
 }
+
+@media (max-width: 36em) {
+  .commandCode {
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+}

@@ -116,36 +116,32 @@
 }
 .mobileToc {
   display: none;
-  /* Skip the sidebar columns so grid auto-placement puts the bar (and the
-     article after it) in row 1 instead of below the 100dvh sidebar. */
-  grid-column: 3 / -1;
-}
-[data-no-sidebar] .mobileToc {
-  grid-column: 2 / -1;
 }
 
 @media (max-width: 74.99em) {
   .root {
     display: none;
   }
+  /* A floating control instead of a bar above the page title: the title leads
+     the document, and the TOC stays reachable while scrolling. */
   .mobileToc {
-    position: sticky;
-    top: 0;
-    z-index: 10;
+    position: fixed;
+    right: 16px;
+    bottom: max(16px, env(safe-area-inset-bottom));
+    z-index: 20;
     display: block;
-    /* Share row 1 with the article: the bar overlays its top 40px. */
-    grid-row: 1;
     height: 40px;
-    border-bottom: 1px solid var(--mantine-color-gray-3);
-    background: color-mix(in srgb, var(--mantine-color-body) 80%, transparent);
-    backdrop-filter: blur(10px);
+    border: 1px solid var(--mantine-color-default-border);
+    border-radius: var(--mantine-radius-md);
+    background: var(--mantine-color-body);
+    box-shadow: var(--mantine-shadow-lg);
   }
   .mobileToc summary {
     display: flex;
     height: 40px;
     cursor: pointer;
     align-items: center;
-    padding-inline: 20px;
+    padding-inline: 14px;
     color: var(--mantine-color-dimmed);
     font-size: 0.8125rem;
     list-style: none;
@@ -172,12 +168,17 @@
     transform: rotate(225deg) translateY(-2px);
   }
   .mobileToc nav {
+    position: absolute;
+    right: 0;
+    bottom: calc(100% + 8px);
+    width: min(280px, calc(100vw - 32px));
     max-height: 50vh;
     overflow: auto;
     padding: 8px;
-    border-bottom: 1px solid var(--mantine-color-gray-3);
+    border: 1px solid var(--mantine-color-default-border);
+    border-radius: var(--mantine-radius-md);
     background: var(--mantine-color-body);
-    box-shadow: var(--mantine-shadow-md);
+    box-shadow: var(--mantine-shadow-lg);
   }
   .mobileToc nav a {
     display: block;
@@ -188,10 +189,25 @@
   }
 }
 
-/* Below 48em the bar docks under the sticky mobile header. */
+/* Below 48em the floating control clears the safe area on notched devices. */
 @media (max-width: 47.99em) {
   .mobileToc {
-    top: var(--docs-mobile-header-height, 56px);
+    right: 12px;
+  }
+  /* Icon-only on phones so the pill covers as little content as possible. */
+  .mobileToc summary {
+    padding-inline: 10px;
+  }
+  .mobileTocLabel {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
   }
 }
 

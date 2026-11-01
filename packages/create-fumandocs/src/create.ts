@@ -149,7 +149,11 @@ export async function create(createOptions: CreateOptions): Promise<void> {
 
   await fs.writeFile(
     path.join(outputDir, '.env.example'),
-    `NEXT_PUBLIC_SITE_URL=${siteUrl}\n`
+    `NEXT_PUBLIC_SITE_URL=${siteUrl}
+
+# Optional: your repository, used by the GitHub links.
+NEXT_PUBLIC_REPO_URL=
+`
   )
 
   const replacedFiles = await applyTemplateValues(outputDir, {

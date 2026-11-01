@@ -7,6 +7,7 @@ import Link from 'next/link'
 import { useRef } from 'react'
 import { LogoWithTitle } from '@/components/logo'
 import { navLinks } from '@/lib/modules'
+import { repoUrl, siteDescription } from '@/lib/site'
 import classes from './footer.module.css'
 import sharedClasses from './shared.module.css'
 
@@ -33,26 +34,22 @@ const groups: { title: string; links: FooterLink[] }[] = [
       },
     ],
   },
-  {
-    title: 'Community',
-    links: [
-      {
-        label: 'GitHub',
-        href: 'https://github.com/next101/fumandocs',
-        external: true,
-      },
-      {
-        label: 'Issues',
-        href: 'https://github.com/next101/fumandocs/issues',
-        external: true,
-      },
-      {
-        label: 'Releases',
-        href: 'https://github.com/next101/fumandocs/releases',
-        external: true,
-      },
-    ],
-  },
+  ...(repoUrl
+    ? [
+        {
+          title: 'Community',
+          links: [
+            { label: 'GitHub', href: repoUrl, external: true },
+            { label: 'Issues', href: `${repoUrl}/issues`, external: true },
+            {
+              label: 'Releases',
+              href: `${repoUrl}/releases`,
+              external: true,
+            },
+          ],
+        },
+      ]
+    : []),
 ]
 
 function LinksGroup({ title, links }: { title: string; links: FooterLink[] }) {
@@ -98,6 +95,8 @@ export function SiteFooter() {
   const ref = useRef<HTMLElement>(null)
 
   useWindowEvent('scroll', () => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+
     const diff = getRemainingScrollDistance() - 30
     if (ref.current) {
       const translate = diff > 0 ? diff / 2 : 0
@@ -116,7 +115,7 @@ export function SiteFooter() {
                 <LogoWithTitle />
               </Link>
               <Text className={classes.description} fz="sm">
-                The Fumadocs content engine with Mantine as the UI layer
+                {siteDescription}
               </Text>
             </div>
 
@@ -142,17 +141,19 @@ export function SiteFooter() {
                 <a href="https://mantine.dev">Mantine</a>
               </Text>
               <div className={classes.social}>
-                <Button
-                  component="a"
-                  href="https://github.com/next101/fumandocs"
-                  target="_blank"
-                  rel="noreferrer"
-                  radius="md"
-                  leftSection={<GithubLogoIcon size={16} />}
-                  className={`${classes.socialBtn} ${classes.githubBtn}`}
-                >
-                  Star on GitHub
-                </Button>
+                {repoUrl && (
+                  <Button
+                    component="a"
+                    href={repoUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    radius="md"
+                    leftSection={<GithubLogoIcon size={16} />}
+                    className={`${classes.socialBtn} ${classes.githubBtn}`}
+                  >
+                    Star on GitHub
+                  </Button>
+                )}
                 <Button
                   component="a"
                   href="https://www.npmjs.com/package/fumandocs-ui"
